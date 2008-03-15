@@ -1,0 +1,322 @@
+
+[top]
+type=container
+shader$button-off-up=greenbutton
+shader$button-off-down=greenbutton-down
+shader$button-on-up=greenbutton-down
+shader$button-on-down=greenbutton
+
+[structwnd helper]
+parent=top
+type=structureviewhelper
+ship_prop=ship
+
+[left panel]
+parent=top
+type=frame
+x=0
+y=0
+width=512
+height=768
+shader$frame=screwpanel1
+
+[right panel]
+parent=top
+type=frame
+x=512
+y=0
+width=512
+height=768
+; todo
+shader$frame=screenframe1
+
+;;;
+
+[structure view frame]
+parent=left panel
+type=frame
+x=16
+y=16
+width=480
+height=604
+shader$frame=screenframe1
+
+[structure view]
+parent=structure view frame
+type=structureview
+x=8
+y=8
+width=472
+height=588
+struct_prop=ship.structure
+helper_prop=ui.$$structwnd helper
+
+;;;
+
+[crew frame]
+parent=left panel
+type=frame
+title= CREW 
+layout=true
+y=624
+x=16
+shader$frame=roundrect
+
+[crew vbox]
+parent=crew frame
+type=scrollbox
+vbar=true
+boxwidth=430
+boxheight=72
+
+[crew list]
+parent=crew vbox
+type=stringlist
+model_prop=ui.$$structwnd helper.crewlistmodel
+
+;[crew resources]
+;parent=left panel
+;type=label
+;y=720
+;x=16
+;minchars=30
+;text_prop=ui.$$structwnd helper.crewlistmodel.selected.contents
+
+[crew htab]
+parent=left panel
+type=table
+rows=1
+cols=8
+y=724
+x=16
+colpadding=8
+layout=true
+
+[crew.1]
+parent=crew htab
+type=label
+text=Location:
+
+[crew.2]
+parent=crew htab
+type=label
+text_prop=ui.$$structwnd helper.crewlistmodel.selected.module
+minchars=30
+
+[crew.3]
+parent=crew htab
+type=button
+text=Move
+value_prop=ui.$$structwnd helper.movecrew
+action=true
+
+;;;
+
+[right table]
+parent=right panel
+type=table
+x=24
+y=24
+rows=10
+rowpadding=8
+layout=true
+shader$frame=roundrect
+
+[shipname]
+parent=right table
+type=label
+text_prop=ship.name
+shader$text=title
+minchars=35
+
+;;;
+
+[stats table]
+parent=right table
+type=table
+rows=5
+cols=2
+colpadding=8
+rowpadding=4
+
+[emptymass.a]
+parent=stats table
+type=label
+text=Empty Mass:
+
+[emptymass.b]
+parent=stats table
+type=numlabel
+units=kg
+text_prop=ship.structure.emptymass
+minchars=12
+align=2
+
+[qmass.a]
+parent=stats table
+type=label
+text=Consumables Mass:
+
+[qmass.b]
+parent=stats table
+type=numlabel
+units=kg
+text_prop=ship.structure.supply.mass
+minchars=12
+align=2
+
+[othermass.a]
+parent=stats table
+type=label
+text=Crew/Atmosphere Mass:
+
+[othermass.b]
+parent=stats table
+type=numlabel
+units=kg
+text_prop=ship.structure.miscmass
+minchars=12
+align=2
+
+[mass.a]
+parent=stats table
+type=label
+text=Total Mass:
+
+[mass.b]
+parent=stats table
+type=numlabel
+units=kg
+text_prop=ship.structure.mass
+minchars=12
+align=2
+
+[nummods.a]
+parent=stats table
+type=label
+text=# of modules:
+
+[nummods.b]
+parent=stats table
+type=label
+text_prop=ship.structure.modulecount
+minchars=12
+align=2
+
+
+;;;
+
+[resources frame]
+parent=right table
+type=frame
+title= RESOURCES 
+layout=true
+
+[resources vbox]
+parent=resources frame
+type=resourcesbox
+vbar=true
+boxwidth=420
+boxheight=150
+rescolumns=1
+resset_prop=ui.$$structwnd helper.supply
+
+;;;
+
+[modules frame]
+parent=right table
+type=frame
+title= MODULES 
+layout=true
+
+[modules vbox]
+parent=modules frame
+type=scrollbox
+vbar=true
+boxwidth=420
+boxheight=150
+
+[modules list]
+parent=modules vbox
+type=stringlist
+model_prop=ui.$$structwnd helper.modlistmodel
+
+;;;
+
+[modinfo table]
+parent=right table
+type=table
+rows=1
+cols=4
+rowpadding=4
+colpadding=8
+
+[detachbtn]
+parent=modinfo table
+type=button
+text=Detach!
+value_prop=ui.$$structwnd helper.selmodule.detach
+action=true
+
+[shutdownbtn]
+parent=modinfo table
+type=button
+text=Shutdown!
+value_prop=ui.$$structwnd helper.selmodule.shutdown
+action=true
+
+;[pressure.a]
+;parent=modinfo table
+;type=label
+;text=Pressure:
+
+;[pressure.b]
+;parent=modinfo table
+;type=label
+;text_prop=ui.$$structwnd helper.selmodule.atmosphere
+;minchars=11
+
+;;;
+
+[caps frame]
+parent=right table
+type=frame
+title= CAPABILITIES 
+layout=true
+
+[caps vbox]
+parent=caps frame
+type=scrollbox
+vbar=true
+boxwidth=420
+boxheight=150
+
+[caps list]
+parent=caps vbox
+type=stringlist
+model_prop=ui.$$structwnd helper.caplistmodel
+
+;;;
+
+[capinfo table]
+parent=right table
+type=table
+rows=1
+cols=2
+rowpadding=4
+colpadding=8
+
+[armedbtn]
+parent=capinfo table
+type=button
+text=ARMED
+bool_prop=ui.$$structwnd helper.selcap.armed
+flags=2
+
+[activebtn]
+parent=capinfo table
+type=button
+text=ACTIVE
+bool_prop=ui.$$structwnd helper.selcap.active
+flags=2
+

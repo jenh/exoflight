@@ -1,0 +1,25 @@
+
+sequence "Lunar Eclipse" {
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.001;
+	@orbelem.semimajor = 1838;
+	@orbelem.incl = 5 deg;
+	@orbelem.raan = 0;
+	@orbelem.argperi = 0;
+	@orbelem.trueanom = 100 deg;
+	@orbelem.epochticks = game.tick;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Luna;
+	@traj.orbelemgeo = @orbelem;
+--	ship.traj = @traj;
+
+	@ui.ship =? ship;
+
+	@ort = new Orientation;
+	@ort.eulerpyr = [80 deg, 0 deg, 0 deg]; 
+	ship.trajectory.planetrefort = @ort;
+
+}
+

@@ -1,0 +1,268 @@
+
+[Set Position]
+type=com.fasterlight.exo.newgui.SetPositionWindow
+x=192
+y=144
+title=Set Vehicle Position
+layout=true
+
+;;
+;; Set position in orbit
+;; dialog page
+;;
+
+[table0]
+parent=Set Position
+type=table
+cols=1
+rows=3
+rowpadding=16
+
+;;;
+
+[table2]
+parent=table0
+type=table
+rows=1
+cols=2
+rowpadding=8
+colpadding=16
+layout=true
+
+[parent.a]
+parent=table2
+type=label
+text=Orbiting body:
+
+[parent.b]
+parent=table2
+type=combobox
+model.list_prop=ui.game.planets
+model.sel_prop=ui.$Set Position.body
+
+[table1]
+parent=table0
+type=table
+rows=12
+cols=3
+rowpadding=8
+colpadding=24
+layout=true
+colflags#0=2
+
+[radius.a]
+parent=table1
+type=label
+text=Orbiting Body Radius:
+
+[radius.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.body.telemetry.radius
+units=km
+
+[radius.spacer]
+parent=table1
+type=label
+
+[spacer1.a]
+parent=table1
+type=label
+
+[spacer1.b]
+parent=table1
+type=label
+
+[spacer1.spacer]
+parent=table1
+type=label
+
+[semimaj.a]
+parent=table1
+type=label
+text=Semimajor Axis (a):
+
+[semimaj.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.semimajor
+editable=true
+units=km
+minchars=11
+
+[semimaj.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=ui.$Set Position.flags#0
+
+[ecc.a]
+parent=table1
+type=label
+text=Eccentricity (e):
+
+[ecc.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.eccent
+editable=true
+format=#.#####
+minchars=11
+
+[ecc.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=ui.$Set Position.flags#1
+
+[peri.a]
+parent=table1
+type=label
+text=  Altitude of Periapsis:
+
+[peri.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.alt_periapsis
+editable=true
+units=km
+minchars=11
+
+[peri.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=ui.$Set Position.flags#2
+
+[apo.a]
+parent=table1
+type=label
+text=  Altitude of Apoapsis:
+
+[apo.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.alt_apoapsis
+editable=true
+units=km
+minchars=11
+
+[apo.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=ui.$Set Position.flags#3
+
+[spacer2.a]
+parent=table1
+type=label
+
+[spacer2.b]
+parent=table1
+type=label
+
+[spacer2.spacer]
+parent=table1
+type=label
+
+[incl.a]
+parent=table1
+type=label
+text=Inclination (i):
+
+[incl.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.elements.incl
+editable=true
+minchars=11
+units=rad\0176
+
+[incl.spacer]
+parent=table1
+type=label
+
+[longasc.a]
+parent=table1
+type=label
+text=Long Asc Node (\0164):
+
+[longasc.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.elements.longascnode
+editable=true
+minchars=11
+units=rad\0176
+
+[longasc.spacer]
+parent=table1
+type=label
+
+[argperi.a]
+parent=table1
+type=label
+text=Arg of Periapsis (\023):
+
+[argperi.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.elements.argperi
+editable=true
+minchars=11
+units=rad\0176
+
+[argperi.spacer]
+parent=table1
+type=label
+
+[trueanom.a]
+parent=table1
+type=label
+text=True Anomaly (\014):
+
+[trueanom.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.elements.trueanom
+editable=true
+minchars=11
+units=rad\0176
+
+[trueanom.spacer]
+parent=table1
+type=label
+
+
+
+;;;
+
+[LR Buttons]
+parent=table0
+type=table
+cols=3
+colpadding=16
+
+[Back]
+parent=LR Buttons
+type=button
+text=<<Back
+value_prop=loaddialog
+action=panels/dialogs/setposition.txt
+
+[Cancel]
+parent=LR Buttons
+type=button
+text=Cancel
+action=Cancel
+
+[Done]
+parent=LR Buttons
+type=button
+text=Done
+action=Accept-orbit
+

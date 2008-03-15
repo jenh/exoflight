@@ -1,0 +1,66 @@
+
+sequence "Apollo 11 TLI" {
+
+	@orbelem = new KeplerianElements;
+	-- e = (apo-peri)/(apo+peri); p = (apo+peri)/2
+	@orbelem.eccent = 0.0002118;
+	-- 185.94 x 183.16 km
+	@orbelem.periapsis = 6561.30; -- must be after eccent set
+	@orbelem.incl = 32.521 deg;
+--	@orbelem.raan = 2.420197 deg;
+	@orbelem.raan = 356 deg;
+	@orbelem.argperi = 162.3072 deg;
+	@orbelem.trueanom = 280 deg;
+	@orbelem.epochticks = -984350807827;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+
+	@ort = new Orientation;
+	@traj.velrefort = @ort;
+	ship.traj = @traj;
+
+	ship.structure.'$Apollo CM'.$RCS.armed = false;
+	ship.structure.'$S-IVB'.$APS.armed = true;
+	ship.structure.'$S-IVB'.'$guidance system'.active = true;
+	ship.attsys.guidmode = "aoa";
+
+	@supply = new ResourceSet;
+	@supply.contents = "LO2:60985,LH2:13275";
+	ship.structure.'$S-IVB'.$tanks.supply = @supply;
+
+--
+
+	ship.name = "Apollo 11";
+
+	@ui.ship =? ship;
+	@ui.message =? "You are 300 km above the Earth, and you are preparing to enter TLI (Translunar Injection). In 3 days you will land the first men on the moon! Whoo hoo!";
+
+--
+
+	wait for 10;
+	ship.targsys.target = game.$Luna;
+--	ship.targsys.computing = true;
+
+	ship.maneuvsys.elements.periapsis = 6603.81;
+	ship.maneuvsys.elements.apo_wrs_peri = 551612;
+	ship.maneuvsys.elements.incl = 31.386 deg;
+	ship.maneuvsys.elements.raan = 356.220 deg;
+	ship.maneuvsys.elements.argperi = 4.531 deg;
+	ship.maneuvsys.useargperi = true;
+
+	wait for 20;
+	wait until 9856.2; -- +002:44:16.20
+//	wait for condition (ship.targsys.leavetime < 260) interval 1;
+	
+	ship.structure.'$S-IVB.$J-2 engine'.fired = true;
+	ship.attsys.guidmode = "igm";
+
+	wait for 10;
+	wait for condition (ship.attctrl.guidance.tgo < 1) interval 0.5;
+	wait for condition (ship.attctrl.guidance.tgo < 0.2) interval 0.125;
+	ship.structure.'$S-IVB.$J-2 engine'.fired = false;
+	ship.attsys.guidmode = "aoa";
+}
+

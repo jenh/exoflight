@@ -1,0 +1,32 @@
+
+sequence "X-15 Test" {
+
+	@ort = new Orientation;
+	@ort.eulerpyr = [1 deg,0 deg,0 deg];
+	ship.trajectory.planetrefort = @ort;
+
+	@x15 = ship.structure.'$X-15';
+
+	@ui.ship =? ship;
+
+	wait for 1;
+	@x15.$engine.armed = true;
+	@x15.'$control surfaces'.armed = false;
+
+--	@x15.$RCS.armed = true;
+--	@x15.'$guidance system'.active = true;
+--	ship.attsys.guidmode = "aoa";
+
+	wait for 1;
+	@x15.$engine.throttle = 1;
+	wait for 5;
+	@x15.$flaps.value = 1;
+	@x15.'$control surfaces'.armed = true;
+	@x15.$RCS.armed = false;
+
+	wait for condition (ship.telemetry.altagl > 0.01) interval 1;
+
+	ship.attsys.guidmode = "aoa";
+
+}
+

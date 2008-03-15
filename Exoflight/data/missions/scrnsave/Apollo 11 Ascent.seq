@@ -1,0 +1,27 @@
+
+sequence "Apollo 11 Ascent" {
+
+	@lam = ship.structure.'$Apollo LAM';
+	@ldm = ship.structure.'$Apollo LDM';
+
+-- launch!
+
+	ship.launchsys.incl = 182.15 deg;
+	ship.launchsys.longascnode = 224 deg;
+
+	wait for 5;
+
+"Descent module separation"
+	@ldm.detach = true;
+	wait for 0.1;
+"Ignite ascent engine"
+	@lam.'$guidance system'.active = true;
+	@lam.'$ascent engine'.armed = true;
+	@lam.'$ascent engine'.throttle = 1;
+	wait for 3;
+
+"Launch trajectory"
+	ship.attsys.guidmode = 'igm';
+
+}
+

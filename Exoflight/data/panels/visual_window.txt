@@ -1,0 +1,22 @@
+
+[top]
+type=container
+
+[Main Visual Portal]
+parent=top
+type=singletoncontainer
+group=Visual
+maximize=true
+x=0
+y=0
+width=1024
+height=768
+
+[crosshair]
+parent=top
+type=label
+x=508
+y=380
+text=+
+shader$text=computext
+

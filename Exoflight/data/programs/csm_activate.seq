@@ -1,0 +1,17 @@
+
+sequence "CSM Activate" {
+
+	@sm = ship.structure.'$Apollo SM';
+	@cm = ship.structure.'$Apollo CM';
+
+	@sm.'$fuel cells'.active = true;
+
+	@resset = new ResourceSet;
+	@resset.'#E' = 9999;
+	@cm.'$main bus'.supply = @resset;
+	@cm.'$main bus'.active = true;
+
+	@cm.'$RCS'.armed = true;
+
+}
+

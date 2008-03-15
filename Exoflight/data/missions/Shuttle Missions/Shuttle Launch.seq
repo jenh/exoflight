@@ -1,0 +1,11 @@
+
+sequence "Shuttle Docking" {
+
+---
+
+	@ui.ship =? ship;
+	@ui.message =? "Launch the shuttle!";
+
+	wait until 1000;
+}
+

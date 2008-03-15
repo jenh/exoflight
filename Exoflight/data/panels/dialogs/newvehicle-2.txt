@@ -1,0 +1,112 @@
+
+;;;
+;;; CB (Choose Base) Table
+;;;
+
+[CB Table]
+type=table
+width=600
+height=400
+rows=2
+cols=2
+rowpadding=8
+colpadding=8
+
+; upper-left
+
+[CB View Pane]
+parent=CB Table
+type=frame
+shader$frame=screenframe1
+
+[CB Slideshow]
+parent=CB View Pane
+type=slideshow
+width=256
+height=256
+inifile_prop=ui.$New Vehicle.bases_sshow
+
+parent=CB View Pane
+type=slideshow
+width=256
+height=256
+;inifile=uitexs/illust/A-4.ini
+
+; upper-right
+
+[CB Description Table]
+parent=CB Table
+type=table
+rows=2
+cols=1
+rowpadding=16
+align=1
+
+[CB Base Name]
+parent=CB Description Table
+type=label
+minchars=30
+text_prop=ui.$New Vehicle.bases_lm.selected.name
+shader$text=title
+align=1
+
+[CB Base Description]
+parent=CB Description Table
+type=wraptext
+minxchars=30
+minrows=10
+rowpadding=4
+text_prop=ui.$New Vehicle.bases_lm.selected.description
+
+; lower-left
+
+[CB Info Table]
+parent=CB Table
+type=table
+rows=5
+cols=2
+rowpadding=4
+colpadding=8
+
+; lower-right
+
+[CB LR Table]
+parent=CB Table
+type=table
+rows=2
+rowpadding=8
+
+[CB List Frame]
+parent=CB LR Table
+type=frame
+shader$frame=screenframe1
+
+[CB List Box]
+parent=CB List Frame
+type=scrollbox
+vbar=true
+boxwidth=200
+boxheight=100
+
+[CB Base List]
+parent=CB List Box
+type=stringlist
+model_prop=ui.$New Vehicle.bases_lm
+
+[CB LR Buttons]
+parent=CB LR Table
+type=table
+cols=2
+colpadding=16
+
+[CB Back]
+parent=CB LR Buttons
+type=button
+text=<<Back
+action=Back
+
+[CB Done]
+parent=CB LR Buttons
+type=button
+text=Done
+action=Accept

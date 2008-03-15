@@ -1,0 +1,28 @@
+
+sequence "Gemini Intercept" {
+
+	wait until -45;
+
+"Wait for intercept time"
+	ship.attsys.guidmode = "lambert";
+	ship.attctrl.guidance.targtime = @targtime;
+
+"Prepare for burn"
+	ship.guidancecap.active = true;
+
+	wait until 0;
+"Wait for attitude lock"
+	ship.guidancecap.active = true;
+	wait for condition (ship.attctrl.locked == true) interval 0.25;
+
+"Engine start"
+	@dir = ship.attctrl.guidance.direction;
+	ship.attsys.transz = 1;
+	wait for 0.5;
+	wait for condition (@dir != ship.attctrl.guidance.direction) interval 0.0625;
+
+"Engine shutdown"
+	ship.attsys.transz = 0;
+	wait for 1;
+
+}

@@ -1,0 +1,60 @@
+
+sequence "Apollo 11 Landing" {
+
+-- prepare LM
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.015;
+	@orbelem.periapsis = 1753; -- must be after eccent set
+	@orbelem.incl = 182.1 deg; -- ??
+	@orbelem.raan = 224 deg;
+	@orbelem.argperi = 180 deg;
+	@orbelem.trueanom = -6 deg;
+	@orbelem.epochticks = game.tick;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Luna;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+	ship.guidancecap.settingidx = 1; -- lo band
+
+-- prepare CSM
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.016;
+	@orbelem.periapsis = 1753; -- must be after eccent set
+	@orbelem.incl = 182.15 deg; -- ??
+	@orbelem.raan = 224 deg;
+	@orbelem.argperi = 180 deg;
+	@orbelem.trueanom = -8 deg;
+	@orbelem.epochticks = game.tick;
+
+	@CSM = game.agency.'preparevehicle$Apollo CSM';
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Luna;
+	@traj.orbelemgeo = @orbelem;
+	@CSM.traj = @traj;
+
+	@CSM.attsys.guidmode = "aoa";
+	@CSM.guidancecap.active = true;
+
+-- crew
+
+	game.agency.'crew#7'.module = ship.structure.'$Apollo LAM';
+	game.agency.'crew#16'.module = ship.structure.'$Apollo LAM';
+	game.agency.'crew#22'.module = @CSM.structure.'$Apollo CM';
+
+	@ui.ship =? ship;
+	@ui.message =? "You are in the Eagle, 110 km above the moon.  You are about to begin the powered descent to the lunar surface.";
+
+	ship.targsys.target = game.'$Apollo 11';
+	ship.targsys.progtype = "landing";
+	ship.targsys.active = true;
+
+--	wait for 30;
+--	ship.sequencer.'abort' = true;
+
+}
+

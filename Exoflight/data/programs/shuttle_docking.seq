@@ -1,0 +1,14 @@
+
+sequence "Shuttle Docking" {
+
+"Activate probe"
+	ship.structure.'$Orbiter.$probe'.active = true;
+	wait for 3;
+"Docking program"
+	ship.attsys.guidmode = "docking";
+	ship.structure.'$Orbiter'.'$guidance system'.active = true;
+
+-- todo: wait until docked?
+
+}
+

@@ -1,0 +1,132 @@
+
+[Realism Settings]
+type=settingswindow
+center=true
+layout=true
+title=Realism Settings
+
+;;
+;; Realism Settings Dialog Box
+;;
+
+[table0]
+type=table
+parent=Realism Settings
+cols=1
+rows=5
+rowpadding=16
+
+[table0.spacer]
+type=label
+parent=table0
+
+;;;
+
+[table1]
+parent=table0
+type=table
+rows=3
+cols=4
+rowpadding=8
+colpadding=16
+colflags#0=2
+colflags#2=2
+
+[aerostress.label]
+parent=table1
+type=label
+text=Aero Stress
+
+[aerostress.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=$$Realism Settings.settings.Ship/DoAerostress
+
+[heating.label]
+parent=table1
+type=label
+text=Heating
+
+[heating.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=$$Realism Settings.settings.Ship/DoHeating
+
+[crewsim.label]
+parent=table1
+type=label
+text=Simulate Crew
+
+[crewsim.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=$$Realism Settings.settings.Crew/DoCrew
+
+[drag.label]
+parent=table1
+type=label
+text=Drag
+
+[drag.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=$$Realism Settings.settings.Trajectory/Drag
+
+[thirdbody.label]
+parent=table1
+type=label
+text=3rd Body
+
+[thirdbody.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=$$Realism Settings.settings.Trajectory/ThirdBody
+
+[j2.label]
+parent=table1
+type=label
+text=J2
+
+[j2.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=$$Realism Settings.settings.Trajectory/J2
+
+;;;
+
+[Buttons]
+parent=table0
+type=table
+cols=3
+colpadding=16
+
+[Cancel]
+parent=Buttons
+type=button
+text=Cancel
+action=Close
+
+[Apply]
+parent=Buttons
+type=button
+text=Apply
+action=Apply
+
+[Done]
+parent=Buttons
+type=button
+text=Done
+action=Accept
+

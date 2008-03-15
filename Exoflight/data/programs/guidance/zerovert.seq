@@ -1,0 +1,6 @@
+
+sequence "Zero Vertical guidance" {
+
+	ship.attctrl.guidance = new ZeroVerticalProgram;
+
+}

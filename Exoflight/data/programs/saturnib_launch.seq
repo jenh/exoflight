@@ -1,0 +1,114 @@
+
+sequence "Saturn V Launch" {
+
+	ship.trajectory.locked = true;
+	@S_I = ship.structure.'$S-IB';
+	@S_I_Int = ship.structure.'$S-IB Interstage';
+	@S_IV = ship.structure.'$S-IVB';
+	@guidsys = @S_IV.'$guidance system';
+	ship.maneuvsys.updatelaunch = true;
+
+	set abort "MODE I ABORT" goto ABORT_I;
+
+	wait until -17;
+"Activate guidance system"
+	ship.attsys.guidmode = "pyr";
+	ship.attctrl.guidance.pitch = 90 deg;
+	ship.attctrl.guidance.roll = -90 deg;
+	@S_I.'$gimbal system'.armed = true;
+
+	wait until -6;
+"Activate main engines"
+	@S_I.'$engine 1'.fired = 1;
+	@S_I.'$engine 2'.fired = 1;
+	@S_I.'$engine 3'.fired = 1;
+	@S_I.'$engine 4'.fired = 1;
+	@S_I.'$engine 5'.fired = 1;
+	@S_I.'$engine 6'.fired = 1;
+	@S_I.'$engine 7'.fired = 1;
+	@S_I.'$engine 8'.fired = 1;
+
+	wait until 0;
+"Liftoff"
+	ship.trajectory.locked = false;
+	wait until 1;
+
+"Yaw maneuver"
+	@guidsys.active = true;
+	ship.attctrl.guidance.pitch = 89 deg;
+	ship.attctrl.guidance.yaw = -89 deg;
+	ship.attctrl.guidance.roll = 90 deg;
+	wait until 9;
+"End yaw maneuver"
+	ship.attctrl.guidance.pitch = 89.999 deg;
+
+	wait until 12;
+"Tilt & roll program"
+	ship.attsys.guidmode = "pyr";
+	ship.attctrl.guidance.pitch = 89 deg;
+	ship.attctrl.guidance.yaw = ship.launchsys.azimuth;
+
+	wait until 35;
+"Begin gravity turn"
+	ship.attsys.guidmode = "aoa";
+	ship.attctrl.guidance.pitch = -0.25 deg;
+	ship.attctrl.guidance.doincl = true;
+
+	wait for condition (@S_I.'$engine 1'.active == false) interval 0.125 timeout 180;
+	wait for condition (@S_I.'$engine 2'.active == false) interval 0.125 timeout 180;
+	wait for condition (@S_I.'$engine 3'.active == false) interval 0.125 timeout 180;
+	wait for condition (@S_I.'$engine 4'.active == false) interval 0.125 timeout 180;
+	wait for condition (@S_I.'$engine 5'.active == false) interval 0.125 timeout 180;
+	wait for condition (@S_I.'$engine 6'.active == false) interval 0.125 timeout 180;
+	wait for condition (@S_I.'$engine 7'.active == false) interval 0.125 timeout 180;
+	wait for condition (@S_I.'$engine 8'.active == false) interval 0.125 timeout 180;
+
+	wait for 8.8;
+
+"Detach stage 1"
+	@S_I.jettison = true;
+
+	wait for 6.0;
+
+"Ignite third stage"
+	@S_IV.'$gimbal system'.armed = true;
+	@S_IV.'$J-2 engine'.armed = true;
+	@S_IV.'$J-2 engine'.throttle = 1;
+	ship.attctrl.guidance.tau_bias = 0;
+	ship.launchsys.glimit = 0;
+	wait for 2;
+
+"Wait for circular orbit"
+	wait for condition (ship.attctrl.guidance.tgo < 1) interval 0.125 timeout 500;
+
+"Engine shutdown"
+	@S_IV.'$J-2 engine'.throttle = 0;
+	@guidsys.active = false;
+
+"---END LAUNCH SEQUENCE---"
+	stop;
+
+---
+
+ABORT_I:
+"MODE I ABORT"
+	ship.jettisonmult =? "~S-V Escape Tower|Apollo CM";
+	ship.trajectory.locked =? false;
+"Active escape motor"
+	@motor = ship.structure.'$S-V Escape Tower'.'$launch motor';
+	@motor.armed = true;
+	@motor.throttle = 1;
+	wait for condition (@motor.active == false) interval 1 timeout 60;
+	wait for condition (ship.telemetry.vertvel < 0) interval 1;
+--	wait for condition (ship.telemetry.altagl < 3) interval 1;
+"Jettison escape tower"
+	@escape = ship.structure.'$S-V Escape Tower'.get_jettison;
+	@motor = @escape.structure.'$S-V Escape Tower'.'$jettison motor';
+	@motor.armed = true;
+	@motor.throttle = 1;
+	wait for 3;
+"Deploy chute"
+	ship.structure.'$Apollo CM'.'$main chute'.deployed = true;
+
+}
+

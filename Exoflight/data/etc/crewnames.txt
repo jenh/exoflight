@@ -1,0 +1,171 @@
+0	Carpenter, M. Scott
+1	Cooper, L. Gordon, Jr.
+2	Glenn, John H., Jr.
+3	Grissom, Virgil I.
+4	Schirra, Walter M., Jr.
+5	Shepard, Alan B., Jr.
+6	Slayton, Donald K.
+7	Armstrong, Neil A.
+8	Borman, Frank
+9	Conrad, Charles, Jr.
+10	Lovell, James A., Jr.
+11	McDivitt, James A.
+12	See, Elliot M., Jr.
+13	Stafford, Thomas P.
+14	White, Edward H., II
+15	Young, John W.
+16	Aldrin, Buzz
+17	Anders, William A.
+18	Bassett, Charles A., II
+19	Bean, Alan L.
+20	Cernan, Eugene A.
+21	Chaffee, Roger B.
+22	Collins, Michael
+23	Cunningham, Walter
+24	Eisele, Donn F.
+25	Freeman, Theodore C.
+26	Gordon, Richard F., Jr.
+27	Schweickart, Russell L.
+28	Scott, David R.
+29	Williams, Clifton C.,
+30	Garriott, Owen K.
+31	Gibson, Edward G.
+32	Graveline, Duane E.
+33	Kerwin, Joseph P.
+34	Michel, F. Curtis
+35	Schmitt, Harrison H.
+36	Brand, Vance D.
+37	Bull, John S.
+38	Carr, Gerald P.
+39	Duke, Charles M., Jr.
+40	Engle, Joe H.
+41	Evans, Ronald E.
+42	Givens, Edward G., Jr.
+43	Haise, Fred W., Jr.
+44	Irwin, James B.
+45	Lind, Don L.
+46	Lousma, Jack R.
+47	Mattingly, Thomas K.,
+48	McCandless, Bruce, II
+49	Mitchell, Edgar D.
+50	Pogue, William R.
+51	Roosa, Stuart A.
+52	Swigert, John L., Jr.
+53	Weitz, Paul J.
+54	Worden, Alfred M.
+55	Allen, Joseph P.
+56	Chapman, Philip K.
+57	England, Anthony W.
+58	Henize, Karl G.
+59	Holmquest, Donald L.
+60	Lenoir, William B.
+61	Llewellyn, John A.
+62	Musgrave, F. Story
+63	O'Leary, Brian T.
+64	Parker, Robert A. R.
+65	Thornton, William E.
+66	Bobko, Karol J.
+67	Crippen, Robert L.
+68	Fullerton, Charles G.
+69	Hartsfield, Henry W.,
+70	Overmyer, Robert F.
+71	Peterson, Donald H.
+72	Truly, Richard H.
+73	Bluford, Guion S., Jr.
+74	Brandenstein, Daniel C.
+75	Buchli, James F.
+76	Coats, Michael L.
+77	Covey, Richard O.
+78	Creighton, John O.
+79	Fabian, John M.
+80	Fisher, Anna L.
+81	Gardner, Dale A.
+82	Gibson, Robert L.
+83	Gregory, Frederick D.
+84	Griggs, S. David
+85	Hart, Terry J.
+86	Hauck, Frederick H.
+87	Hawley, Steven A.
+88	Hoffman, Jeffrey A.
+89	Lucid, Shannon W.
+90	McBride, Jon A.
+91	McNair, Ronald E.
+92	Mullane, Richard M.
+93	Nagel, Steven R.
+94	Nelson, George D.
+95	Onizuka, Ellison S.
+96	Resnik, Judith A.
+97	Ride, Sally K.
+98	Scobee, Francis R.
+99	Seddon, Margaret Rhea
+100	Shaw, Brewster H., Jr.
+101	Shriver, Loren J.
+102	Stewart, Robert L.
+103	Sullivan, Kathryn D.
+104	Walker, David M.
+105	Williams, Donald E.
+106	van Hoften, James D. A.
+107	Bagian, James P.
+108	Blaha, John E
+109	Bolden, Charles F., Jr.
+110	Bridges, Roy D., Jr.
+111	Chang-Diaz, Franklin R.
+112	Cleave, Mary L.
+113	Dunbar, Bonnie J.
+114	Fisher, William F.
+115	Gardner, Guy S.
+116	Grabe, Ronald J.
+117	Hilmers, David C.
+118	Leestma, David C.
+119	Lounge, John M.
+120	O'Connor, Bryan D.
+121	Richards, Richard N.
+122	Ross, Jerry L.
+123	Smith, Michael J.
+124	Spring, Sherwood C.
+125	Springer, Robert C.
+126	Adamson, James C.
+127	Baker, Ellen S.
+128	Brown, Mark N.
+129	Cameron, Kenneth D.
+130	Carter, Manley Jr.
+131	Casper, John H.
+132	Culbertson, Frank L.,
+133	Gutierrez, Sidney M.
+134	Hammond, L. Blaine, Jr.
+135	Ivins, Marsha S.
+136	Lee, Mark C.
+137	Low, G. David
+138	McCulley, Michael J.
+139	Shepherd, William M.
+140	Thornton, Kathryn C.
+141	Veach, Charles Lacy
+142	Wetherbee, James D.
+143	Apt, Jerome
+144	Baker, Michael A.
+145	Cabana, Robert D.
+146	Duffy, Brian
+147	Gemar, Charles D.
+148	Godwin, Linda M.
+149	Henricks, Terence T.
+150	Hieb, Richard J.
+151	Jernigan, Tamara E.
+152	Meade, Carl J.
+153	Oswald, Stephen S.
+154	Thorne, Stephen D.
+155	Thuot, Pierre J.
+156	Akers, Thomas D.
+157	Allen, Andrew M.
+158	Bowersox, Kenneth D.
+159	Brown, Curtis L., Jr.
+160	Chilton, Kevin P.
+161	Davis, N. Jan
+162	Foale, C. Michael
+163	Harbaugh, Gregory J.
+164	Jemison, Mae C.
+165	McMonagle, Donald R.
+166	Melnick, Bruce E.
+167	Readdy, William F.
+168	Reightler, Kenneth S.,
+169	Runco, Mario, Jr.
+170	Voss, James S.

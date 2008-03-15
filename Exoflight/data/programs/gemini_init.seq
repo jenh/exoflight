@@ -1,0 +1,23 @@
+
+sequence "Gemini Init" {
+
+	@equip = ship.structure.'$Gemini Equipment';
+	@reentry = ship.structure.'$Gemini Reentry';
+
+	@equip.'$fuel cells'.active = true;
+
+	@reentry.'$main bus'.sources = @equip.'$fuel cells';
+	@reentry.'$main bus'.addsource = @reentry.$batteries;
+	@reentry.'$main bus'.active = true;
+
+	@reentry.'$ECS'.sources = @reentry.'$main bus';
+	@reentry.'$ECS'.addsource = @equip.'$cryogenic tanks';
+	@reentry.'$ECS'.addsource = @reentry.'$secondary oxygen';
+
+	-- set atmosphere
+
+	@atmo = new ResourceSet;
+	@atmo.'#O2' = 1.1175;
+	@reentry.atmosphere = @atmo;
+
+}

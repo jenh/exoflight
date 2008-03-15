@@ -1,0 +1,65 @@
+
+--
+-- Source: http://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+--
+
+sequence "Setup Martian Satellites" {
+
+--
+-- Phobos
+--
+
+@traj = new OrbitTrajectory;
+@elem = new KeplerianElements;
+@elem.eccent	= 0.0151;
+@elem.semimajor = 9378;
+@elem.incl	= 1.08 deg;
+@traj.parent = game.$Mars;
+@traj.orbelemgeo = @elem;
+
+@elev = new RasterLODElevationModel;
+@elev.fileprefix = "elevtexs/Phobos/Phobos-elev";
+@elev.maxprecision = 7;
+@elev.mindisplacement = -5.915;
+@elev.maxdisplacement = 0;
+
+@p = new Planet;
+@p.name = "Phobos";
+@p.mass = 10.6e15;
+@p.radius = 14.043; -- max radius
+@p.traj = @traj;
+@p.spinaxis = [36.41 deg, 83.94 deg];
+@p.rot0 = 0;
+@p.rotperiod = 0.31891;
+@p.elevmodel = @elev;
+
+--
+-- Deimos
+--
+
+@traj = new OrbitTrajectory;
+@elem = new KeplerianElements;
+@elem.eccent	= 0.0005;
+@elem.semimajor = 23459;
+@elem.incl	= 1.79 deg;
+@traj.parent = game.$Mars;
+@traj.orbelemgeo = @elem;
+
+@elev = new RasterLODElevationModel;
+@elev.fileprefix = "elevtexs/Deimos/Deimos-elev";
+@elev.maxprecision = 7;
+@elev.mindisplacement = -4.8246;
+@elev.maxdisplacement = 0;
+
+@p = new Planet;
+@p.name = "Deimos";
+@p.mass = 1.8e15;
+@p.radius = 8.4068; -- max radius
+@p.traj = @traj;
+@p.spinaxis = [2086 deg, 4809 deg]; --??
+@p.rot0 = 0;
+@p.rotperiod = 1.26244;
+@p.elevmodel = @elev;
+
+
+}

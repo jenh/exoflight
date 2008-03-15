@@ -1,0 +1,32 @@
+
+sequence "Esacpe Test" {
+
+-- prepare LM
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.015;
+	@orbelem.periapsis = 1753; -- must be after eccent set
+	@orbelem.incl = 182.1 deg; -- ??
+	@orbelem.raan = 224 deg;
+	@orbelem.argperi = 180 deg;
+	@orbelem.trueanom = -6 deg;
+	@orbelem.epochticks = game.tick;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Luna;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+---
+
+	@ui.ship =? ship;
+
+	wait for 10;
+	ship.structure.'$Apollo LDM'.'$descent engine'.armed = true;
+	ship.maneuvsys.apoapsis = 130000;
+	ship.maneuvsys.active = true;
+
+	wait for condition (ship.maneuvsys.active == false) interval 1;
+	ship.guidancecap.active = false;
+}
+

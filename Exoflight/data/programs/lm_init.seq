@@ -1,0 +1,12 @@
+
+sequence "LM Init" {
+
+	@ldm = ship.structure.'$Apollo LDM';
+	@lam = ship.structure.'$Apollo LAM';
+
+	@lam.'$guidance system'.sources = @ldm.'$batteries';
+	@lam.'$guidance system'.addsource = @lam.'$batteries';
+	@lam.'$ECS'.sources = @ldm.'$batteries';
+	@lam.'$ECS'.addsource = @lam.'$batteries';
+}
+

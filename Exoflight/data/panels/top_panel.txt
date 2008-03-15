@@ -1,0 +1,147 @@
+
+;;;
+;;; The top panel, containing the ground track and visual view
+;;;
+
+[top]
+type=container
+width=1024
+height=372
+
+[Top Pager]
+parent=top
+type=pagestack
+width=1024
+height=372
+pagenum=0
+
+;;;
+
+[topframe]
+type=frame
+parent=Top Pager
+x=0
+y=0
+width=1024
+height=372
+shader$frame=screwpanel-small
+
+[Ground Track Pane]
+parent=topframe
+type=frame
+x=0
+y=0
+width=650
+height=352
+shader$frame=screenframe1
+
+[Ground Track]
+parent=Ground Track Pane
+type=groundtrack
+x=12
+y=16
+width=626
+height=313
+
+[Visual Pane]
+parent=topframe
+type=frame
+x=672
+y=0
+width=352
+height=352
+shader$frame=screenframe1
+
+[Visual Portal]
+parent=Visual Pane
+type=singletoncontainer
+x=12
+y=12
+width=328
+height=328
+group=Visual
+maximize=true
+active=true
+
+[Visual]
+parent=Visual Portal
+type=visual
+x=0
+y=0
+width=328
+height=328
+
+;;;
+
+[selname]
+parent=Ground Track Pane
+type=label
+x=32
+y=332
+text_prop=selected.name
+shader$text=computext
+editable=true
+
+[localtime]
+parent=Ground Track Pane
+type=label
+x=32
+y=4
+text_prop=game.localdate
+shader$text=computext
+
+[pospane]
+parent=Ground Track Pane
+type=table
+x=450
+y=332
+cols=2
+rows=1
+colpadding=10
+layout=true
+shader$text=computext
+
+[lat]
+parent=pospane
+type=numlabel
+minchars=10
+units=lat
+text_prop=selected.telemetry.lat
+
+[long]
+parent=pospane
+type=numlabel
+minchars=10
+units=long
+text_prop=selected.telemetry.long
+
+;[dist]
+;parent=pospane
+;type=numlabel
+;minchars=10
+;units=km
+;text_prop=selected.telemetry.cendist
+
+;;;
+
+[Half Visual Portal]
+parent=Top Pager
+type=singletoncontainer
+x=0
+y=0
+width=1024
+height=372
+group=Visual
+maximize=true
+
+;;;
+
+[Half Tactical Portal]
+parent=Top Pager
+type=singletoncontainer
+x=0
+y=0
+width=1024
+height=372
+group=Tactical
+maximize=true

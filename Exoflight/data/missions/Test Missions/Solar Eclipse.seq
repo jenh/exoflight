@@ -1,0 +1,12 @@
+
+sequence "Solar Eclipse" {
+
+	@traj = new LandedTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.landpos = [20 deg, -10 deg, 6388];
+	ship.traj = @traj;
+
+	@ui.ship =? ship;
+
+}
+

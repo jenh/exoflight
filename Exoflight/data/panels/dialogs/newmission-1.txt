@@ -1,0 +1,127 @@
+
+;;;
+;;; (Choose Mission) Table
+;;;
+
+[Table]
+type=table
+rows=2
+cols=2
+rowpadding=8
+colpadding=8
+
+; upper-left
+
+[View Pane]
+parent=Table
+type=frame
+shader$frame=screenframe1
+
+[Slideshow]
+parent=View Pane
+type=slideshow
+width=256
+height=256
+inifile_prop=ui.$New Mission.mission_sshow
+
+; upper-right
+
+[Description Table]
+parent=Table
+type=table
+rows=2
+cols=1
+rowpadding=16
+align=1
+
+[Mission Name]
+parent=Description Table
+type=label
+minchars=30
+text_prop=ui.$New Mission.mission_lm.selected.name
+shader$text=title
+align=1
+
+[Mission Description]
+parent=Description Table
+type=wraptext
+minxchars=30
+minrows=14
+rowpadding=4
+text_prop=ui.$New Mission.mission_lm.selected.description
+
+; lower-left
+
+[Cat Table]
+parent=Table
+type=table
+rows=2
+cols=1
+rowpadding=4
+colpadding=8
+
+[label1]
+parent=Cat Table
+type=label
+text=Category:
+
+[Cat List Frame]
+parent=Cat Table
+type=frame
+shader$frame=screenframe1
+
+[Cat List Box]
+parent=Cat List Frame
+type=scrollbox
+vbar=true
+boxwidth=200
+boxheight=80
+
+[Category List]
+parent=Cat List Box
+type=stringlist
+model_prop=ui.$New Mission.category_lm
+
+; lower-right
+
+[LR Table]
+parent=Table
+type=table
+rows=2
+rowpadding=8
+
+[List Frame]
+parent=LR Table
+type=frame
+shader$frame=screenframe1
+
+[List Box]
+parent=List Frame
+type=scrollbox
+vbar=true
+boxwidth=200
+boxheight=100
+
+[Mission List]
+parent=List Box
+type=stringlist
+model_prop=ui.$New Mission.mission_lm
+
+[LR Buttons]
+parent=LR Table
+type=table
+cols=2
+colpadding=16
+
+[Cancel]
+parent=LR Buttons
+type=button
+text=Cancel
+action=Cancel
+
+[Done]
+parent=LR Buttons
+type=button
+text=Done
+action=Accept
+

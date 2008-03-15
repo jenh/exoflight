@@ -1,0 +1,144 @@
+
+[Graphics Settings]
+type=settingswindow
+center=true
+layout=true
+title=Graphics Settings
+
+;;
+;; Graphics Settings Dialog Box
+;;
+
+[table0]
+type=table
+parent=Graphics Settings
+cols=1
+rows=5
+rowpadding=16
+
+[table0.spacer]
+type=label
+parent=table0
+
+;;;
+
+[table0a]
+parent=table0
+type=table
+rows=3
+cols=2
+colpadding=8
+
+[table1]
+parent=table0
+type=table
+rows=5
+cols=2
+rowpadding=8
+colpadding=16
+colflags#0=2
+colflags#1=1
+
+[roamplanets.label]
+parent=table1
+type=label
+text=ROAM Planets
+
+[roamplanets.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=$$Graphics Settings.settings.Visual/UseROAM
+
+[doclouds.label]
+parent=table1
+type=label
+text=Clouds
+
+[doclouds.check]
+parent=table1
+type=checkbox
+width=16
+height=16
+bool_prop=$$Graphics Settings.settings.Visual/DoClouds
+
+;
+
+[table2]
+parent=table0
+type=table
+rows=3
+cols=2
+colpadding=16
+rowpadding=8
+
+[staralpha.label]
+parent=table2
+type=label
+text=Star Brightness
+
+[staralpha.slider]
+parent=table2
+type=slider
+vert=false
+width=100
+value_prop=$$
+flo=0
+fhi=1
+fvalue_prop=$$Graphics Settings.settings.Visual/StarAlphaFactor
+
+[ambientlight.label]
+parent=table2
+type=label
+text=Ambient Light
+
+[ambientlight.slider]
+parent=table2
+type=slider
+vert=false
+width=100
+flo=0
+fhi=0.5
+fvalue_prop=$$Graphics Settings.settings.Visual/AmbientLight
+
+[planetlight.label]
+parent=table2
+type=label
+text=Lighting Contrast
+
+[planetlight.slider]
+parent=table2
+type=slider
+vert=false
+width=100
+flo=0
+fhi=0.5
+fvalue_prop=$$Graphics Settings.settings.Visual/PlanetLightingContrast
+
+;;;
+
+[Buttons]
+parent=table0
+type=table
+cols=3
+colpadding=16
+
+[Cancel]
+parent=Buttons
+type=button
+text=Cancel
+action=Close
+
+[Apply]
+parent=Buttons
+type=button
+text=Apply
+action=Apply
+
+[Done]
+parent=Buttons
+type=button
+text=Done
+action=Accept
+

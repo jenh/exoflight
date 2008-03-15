@@ -1,0 +1,14 @@
+
+[sepbtn]
+type=button
+value_prop=detach
+action=true
+text=DETACH
+layout=true
+shader$button-off-up=redbutton
+shader$button-off-down=redbutton-down
+shader$button-on-up=redbutton-down
+shader$button-on-down=redbutton
+shader$text=text-8pt
+x=4
+y=280

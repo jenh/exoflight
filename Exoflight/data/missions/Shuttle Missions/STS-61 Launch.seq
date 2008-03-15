@@ -1,0 +1,30 @@
+
+sequence "STS-61 Launch" {
+
+	ship.name = "STS-61";
+	@Orbiter = ship.structure.'$Orbiter';
+
+	wait for 0.5;
+
+	ship.launchsys.incl = 28.65 deg;
+	ship.launchsys.burntime = 470;
+	ship.launchsys.timetolaunch = 60;
+	ship.launchsys.targalt = 115;
+	ship.launchsys.targapo = 270;
+	ship.launchsys.active = true;
+
+	@ui.message =? "Launch the shuttle!";
+	@ui.ship =? ship;
+
+	-- set up crew
+
+	game.agency.'crew#77'.module = @Orbiter;
+	game.agency.'crew#158'.module = @Orbiter;
+	game.agency.'crew#62'.module = @Orbiter;
+	game.agency.'crew#160'.module = @Orbiter;
+	game.agency.'crew#162'.module = @Orbiter;
+	game.agency.'crew#164'.module = @Orbiter;
+	game.agency.'crew#166'.module = @Orbiter;
+	
+}
+

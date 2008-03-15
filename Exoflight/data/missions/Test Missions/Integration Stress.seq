@@ -1,0 +1,18 @@
+
+sequence "Integration Stress" {
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 500;
+	@orbelem.periapsis = 6378.1364; -- must be after eccent set
+	@orbelem.incl = 182.1 deg; -- ??
+	@orbelem.raan = 224 deg;
+	@orbelem.argperi = 180 deg;
+	@orbelem.trueanom = -0.2 deg;
+	@orbelem.epochticks = game.tick;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+}
+

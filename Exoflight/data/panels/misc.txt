@@ -1,0 +1,25 @@
+;;
+
+[Last Message]
+type=hintlabel
+x=0
+y=4
+width=1016
+height=10
+minchars=80
+shader$text=computext
+align=2
+text_prop=game.lastmessage
+sustaintime=5000
+
+;[Console Window]
+;load=panels/dialogs/console.txt
+;visible=false
+;center=true
+;shader$text=text-10pt
+
+[Messages Window]
+load=panels/dialogs/message.txt
+visible=false
+center=true
+

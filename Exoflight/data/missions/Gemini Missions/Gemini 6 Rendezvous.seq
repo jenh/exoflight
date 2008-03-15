@@ -1,0 +1,154 @@
+
+sequence "Gemini 6 Rendezvous" {
+
+	ship.name = "Gemini 6";
+
+	@reentry = ship.structure.'$Gemini Reentry';
+	@equip = ship.structure.'$Gemini Equipment';
+
+-- prepare target zone
+
+	@targzone = game.agency.newbase;
+	@targzone.name = "Recovery Ship";
+	@targzone.modelname = "Navy Destroyer";
+
+	@traj = new LandedTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.landpos = [-75.5 deg, 28 deg, 0];
+	@targzone.traj = @traj;
+
+-- prepare Gemini
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.008272;
+	@orbelem.semimajor = 6593.896;
+	@orbelem.incl = 28.87 deg; -- ??
+	@orbelem.raan = 158.714 deg;
+	@orbelem.argperi = 105.41225 deg;
+	@orbelem.trueanom = 284.3615 deg;
+	@orbelem.epochticks = -1100147271349;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+
+	@ort = new Orientation;
+	@traj.velrefort = @ort;
+
+	ship.traj = @traj;
+
+-- prepare Agena Target Vehicle
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.00031;
+	@orbelem.periapsis = 6676; -- must be after eccent set
+	@orbelem.incl = 28.869 deg; -- ??
+	@orbelem.raan = 158.713 deg;
+	@orbelem.argperi = -169.023 deg;
+	@orbelem.trueanom = -30 deg;
+	@orbelem.epochticks = -1100150968320;
+
+	@agena = game.agency.'preparevehicle$Agena Target Vehicle';
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+
+	@agena.traj = @traj;
+
+	-- set up crew
+
+	game.agency.'crew#4'.module = @reentry;
+	game.agency.'crew#13'.module = @reentry;
+
+	@ui.ship =? ship;
+	@ui.message =? "You have just entered orbit and jettisoned the Titan 2nd stage.  Our objective is to rendezvous with the Agena Target Vehicle in about 8 hours.  The mission plan is this: We will make two burns to circularize our orbit at 270 km, then perform a burn to get into a transfer orbit to rendezvous with the Agena.  After braking, we will dock with the Agena.  Now await instructions for your first task.";
+
+	-- turn on life support
+	@reentry.'$main bus'.active = true;
+	wait for 2;
+	@reentry.'$ECS'.active = true;
+	@equip.'$OAMS'.armed = true;
+
+	ship.attsys.guidmode = "aoa";
+	ship.guidancecap.active = true;
+	ship.
+
+-- setup UI
+
+	@ui.selected =? ship;
+	@ui.ship =? ship;
+	ship.targsys.target = @agena;
+
+	wait for 10;
+
+-- do first burn
+
+	@ui.message =? "You are currently in a 270 x 160 km orbit.  The target vehicle is in a 300 km circular orbit, so we will raise our periapsis to 270 km.";
+
+	wait for 10;
+
+	@ui.message =? "First wait until the spacecraft reaches an altitude of 270 km -- this will occur at about +001:58:30 MET.  We will then perform the circularization maneuver.";
+
+-- wait for apoapsis
+
+	wait for condition (ship.telemetry.alt > 268) interval 2 timeout 10800;
+
+	@ui.message =? "We are now near an altitude of 270 km.  Select the GUIDANC screen on the MEDS and make sure your guidance mode is 'PRO'.";
+
+	wait for condition (ship.attsys.guidmode == "aoa") interval 5 timeout 600;
+	wait for condition (ship.attctrl.locked == true) interval 5 timeout 600;
+
+	@ui.message =? "Great, you are in the correct attitude for the circularization maneuver.  Switch to the DISPLAY screen now.";
+
+	wait for 5;
+
+	@ui.message =? "Wait until your vertical velocity is close to zero (VVEL on the DISPLAY screen, or on the VVEL ribbon).  The closer your VVEL is to zero at the end of the burn, the more circular your final orbit will be.";
+
+	wait for 10;
+
+	@ui.message =? "[You can use the 'F' and 'S' keys to accelerate and deaccelerate time, so you can get there faster.]";
+
+	wait for condition (ship.telemetry.vertvel < 0.003) interval 1 timeout 600;
+
+	@ui.message =? "Now hold down the 'PgUp' key (on the keypad) to thrust forward with the OAMS.  Watch your periapsis and stop when your periapsis is within 2 km of your apoapsis.";
+
+-- wait for circular orbit
+
+	wait for condition (ship.telemetry.periapsis > 267) interval 2 timeout 10800;
+
+	@ui.message =? "Good!  You have entered a nearly-circular 270 km orbit.";
+
+	wait for 5;
+
+	@ui.message =? "Now you have to compute the burn to intercept the Agena.  Go to the INTERCP screen and press the Compute button.  This will calculate the optimum departure and arrival times for intercept.";
+
+	wait for condition (ship.targsys.computing == true) interval 1 timeout 600;
+	wait for condition (ship.targsys.computing == false) interval 1 timeout 600;
+
+	@ui.message =? "The intercept computation is done.  Now press the Activate button to start the interception sequence.";
+
+	wait for condition (ship.targsys.active == true) interval 3 timeout 10800;
+	wait for 3;
+
+	@ui.message =? "We're go for the intercept burn.  [You might want to use 'Shift-F' here to accelerate time. The time rate will automatically return to normal when the intercept time approaches. Turning the guidance system off (GUID ON switch) will allow you to accelerate at a higher rate.]";
+
+	wait for condition (ship.targsys.active == false) interval 10 timeout 40000;
+
+	@ui.message =? "The intercept burn is now complete.  Your ship is now in a transfer orbit to the Agena.  Watch the RANGE indicator on the INTERCP screen.  When it gets below 3 km, we need to start braking.";
+
+	wait for condition (ship.targsys.range < 3) interval 15 timeout 7200;
+
+	@ui.message =? "Now it's time to begin braking.  On the INTERCP screen, for the MIN TTI value, enter '15 min'.  This means that the autopilot will always try to keep your time-to-intercept at or above 15 minutes.";
+
+	wait for condition (ship.attctrl.guidance.mintti == 900) interval 2 timeout 3600;
+
+	@ui.message =? "Good!  Now activate the guidance system (if it hasn't been already) and hold down the PgUp key (on the keypad) to begin braking.  Watch the \0129V indicator -- it should start to decrease.  Let go of the PgUp key when it gets close to zero.";
+
+	wait for condition (ship.targsys.closure < 0.005) interval 2 timeout 3600;
+	wait for 2;
+
+	@ui.message =? "Good enough!  You should now be closing with the Agena at a rate of below 4 m/s.  You're done with the rendezvous phase; now go on to the Docking mission!";
+
+}
+

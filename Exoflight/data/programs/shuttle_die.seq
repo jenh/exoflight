@@ -1,0 +1,101 @@
+
+sequence "Shuttle Launch" {
+
+	@Orbiter = 'ship.structure.$Orbiter';
+	'ship.trajectory.locked' = true;
+
+	wait until -9;
+"Arm engines"
+	@Orbiter.'$main engines.armed' = true;
+	'ship.structure.#1.$engine.armed' = true;
+	'ship.structure.#2.$engine.armed' = true;
+
+"Activate internal power"
+	wait until -6;
+	@Orbiter.'$fuel cells.active' = true;
+
+	wait until -3;
+"Activate main engines"
+	@Orbiter.'$main engines.addsource' = 'ship.structure.$External Tank.$tank';
+	@Orbiter.'$main engines.active' = true;
+	-- use main engine gimbals, and SRV gimbals
+	@Orbiter.'$guidance system.rcscaps' = @Orbiter.'$gimbal system';
+	@Orbiter.'$guidance system.addrcs' = 'ship.structure.#1.$gimbals';
+	@Orbiter.'$guidance system.addrcs' = 'ship.structure.#2.$gimbals';
+
+	wait until 0;
+"Fire SRB's, liftoff"
+	-- todo: uniquely named SRB's; don't refer by index
+	'ship.structure.#1.$engine.active' = true;
+	'ship.structure.#2.$engine.active' = true;
+	'ship.trajectory.locked' = false;
+	wait until 1;
+
+"Wait to clear launch tower"
+	wait for condition ('ship.telemetry.altagl' > 0.08) interval 0.1 timeout 6;
+
+"Activate guidance system"
+	@guidance = game.classloader.'com/fasterlight/exo/ship/PYRProgram';
+	@guidance.pitch=77 deg;
+	@guidance.incl=@incl;
+	@guidance.roll=179.9 deg;
+	ship.attctrl.guidance = @guidance;
+	@Orbiter.'$guidance system.active' = true;
+
+	wait until 26;
+"Throttle down to 65%"
+	@Orbiter.'$main engines.throttle' = 0.65;
+
+	wait until 28;
+"Start gravity turn"
+	@guidance = game.classloader.'com/fasterlight/exo/ship/AngleOfAttackProgram';
+	'ship.attctrl.guidance' = @guidance;
+
+	wait until 60;
+"Throttle up to 106%"
+	@Orbiter.'$main engines.throttle' = 1.06;
+
+	wait until 80;
+"Detach SRB's"
+	'ship.structure.#2'.detach = true;
+	'ship.structure.#1'.detach = true;
+
+"Detach all"
+	'ship.structure.$External Tank.detach' = true;
+	'ship.structure.$A-4.detach' = true;
+	wait for 2;
+	@foo.structure.'$A-4.$engine.active' = true;
+
+"Orbiter on RCS"
+	@Orbiter.'$guidance system.rcscaps' = @Orbiter.'$RCS primary';
+	wait for 10;
+
+"Roll over"
+	@guidance.roll = 0 deg;
+	@guidance.pitch = 0 deg;
+
+"Wait for < 15 km"
+	wait for condition (ship.telemetry.altagl < 15) interval 0.25;
+
+"Pitch up"
+	@guidance.pitch=2.5 deg;
+	ship.attctrl.guidance = @guidance;
+
+
+"Wait for < 585 m"
+	wait for condition (ship.telemetry.altagl < 0.585) interval 0.25;
+
+"Preflare"
+	@guidance.pitch = 10 deg;
+
+"Wait for < 100 m"
+	 wait for condition (ship.telemetry.altagl < 0.100) interval 0.05;
+
+"Flare"
+	@guidance.pitch = 22 deg;
+	wait for condition (ship.telemetry.vertvel < 0) interval 0.05;
+
+"Nose Down"
+	@guidance.pitch = 0 deg;
+
+}

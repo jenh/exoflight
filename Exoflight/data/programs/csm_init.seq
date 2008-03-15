@@ -1,0 +1,17 @@
+
+sequence "CSM Init" {
+
+	@sm = ship.structure.'$Apollo SM';
+	@cm = ship.structure.'$Apollo CM';
+
+	@cm.'$main bus'.sources = @sm.'$fuel cells';
+	@cm.'$main bus'.addsource = @cm.'$batteries';
+
+	-- set atmosphere
+
+	@atmo = new ResourceSet;
+--	@atmo.'#O2' = 2.737;
+	@atmo.'#O2' = 12.25;
+	@cm.atmosphere = @atmo;
+}
+

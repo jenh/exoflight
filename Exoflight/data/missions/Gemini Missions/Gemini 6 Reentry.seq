@@ -1,0 +1,134 @@
+
+sequence "Gemini 6 Reentry" {
+
+	ship.name = "Gemini 6";
+
+	@reentry = ship.structure.'$Gemini Reentry';
+	@retro = ship.structure.'$Gemini Retrograde';
+	@equip = ship.structure.'$Gemini Equipment';
+	@agena = ship.structure.'$Agena Target';
+
+-- prepare target zone
+
+	@targzone = game.agency.newbase;
+	@targzone.name = "Recovery Ship";
+	@targzone.modelname = "Navy Destroyer";
+
+	@traj = new LandedTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.landpos = [-75.5 deg, 28 deg, 0];
+	@targzone.traj = @traj;
+
+-- prepare Gemini
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.00067;
+	@orbelem.periapsis = 6667; -- must be after eccent set
+	@orbelem.incl = 28.87 deg; -- ??
+	@orbelem.raan = 158.712 deg;
+	@orbelem.argperi = -169.014 deg;
+	@orbelem.trueanom = -30 deg;
+	@orbelem.epochticks = -1100150968320;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	@ort = new Orientation;
+	@traj.velrefort = @ort;
+	ship.traj = @traj;
+
+	-- set up crew
+
+	game.agency.'crew#4'.module = @reentry;
+	game.agency.'crew#13'.module = @reentry;
+
+	-- turn on life support
+	@reentry.'$main bus'.active = true;
+	wait for 2;
+	@reentry.'$ECS'.active = true;
+	@equip.'$OAMS'.armed = true;
+	@reentry.'$guidance system'.active = true;
+
+-- setup UI
+
+	@ui.ship =? ship;
+	@ui.message =? "It is 23 hours into the mission, and now it's time to undock and come home.  First, separate from the Agena by pressing the DETACH button on the Agena's control panel (you may have to drag the panel into view using the mouse).";
+
+	wait for condition (@agena.structure.thing != ship) interval 2 timeout 600;
+	wait for 2;
+
+	@ui.message =? "Now, we have to also jettison the Equipment module to expose the Retrograde module, which contains the retro rockets needed to get us home.  To do this, triple-click (click three times in rapid succession) the Equipment module panel with the RIGHT mouse button.";
+
+	wait for condition (@equip.structure.thing != ship) interval 2 timeout 600;
+	wait for 2;
+
+	@ui.message =? "You may see a GUID warning light on the bottom of your console.  This is because we were using the Equipment module's RCS system, and now we need to use the Reentry module's RCS system.  Press the ARM button on the Reentry control panel to arm the RCS, then press the GUID caution light to clear the warning.";
+
+	wait for condition (@reentry.$RCS.armed == true) interval 2 timeout 600;
+	wait for condition (ship.warnsys.warnings.GUID == false) interval 2 timeout 600;
+	wait for 3;
+
+	@ui.message =? "We are GO for deorbit.  Our target landing site is about 14 degrees of longitude east of Key West, FL.  You should see a small symbol there.  Click on the symbol to select it, then press 'T' to select it as your ship's target.";
+
+	wait for condition (ship.targsys.target == @targzone) interval 2 timeout 600;
+	wait for 2;
+
+	@ui.message =? "Good.  Now press the '1' key to select your ship again.";
+	wait for condition (@ui.selected == ship) interval 2 timeout 600;
+	wait for 3;
+
+	@ui.message =? "Now let's turn the ship into the proper orientation for retrofire -- the aft end should be facing into the direction of travel.  Select the GUIDANC screen on the MEDS, then press the RETRO button.";
+	wait for condition (ship.attsys.guidmode == "aoa-aft") interval 1 timeout 600;
+	wait for 1;
+	wait for condition (ship.attctrl.locked == true) interval 1 timeout 600;
+	wait for 2;
+
+	@ui.message =? "Great, we're in the proper position for retrofire.  Arm the four retrorockets by flipping up each of the ARM switches on the Gemini Retrograde control panel.";
+	wait for condition (@retro.'$rocket 1'.armed == true) interval 1 timeout 600;
+	wait for condition (@retro.'$rocket 2'.armed == true) interval 1 timeout 600;
+	wait for condition (@retro.'$rocket 3'.armed == true) interval 1 timeout 600;
+	wait for condition (@retro.'$rocket 4'.armed == true) interval 1 timeout 600;
+
+	@ui.message =? "We are GO for retrofire.  Bring up the REENTRY screen on your MEDS.  At the prescribed time, you will press the Activate button on this screen to fire the retros.  Now please stand by while we confirm the retrofire time...";
+	wait for 10;
+
+	@ui.message =? "...Retrofire will take place at 23:41:00 MET.";
+	wait until 85230;
+
+	@ui.message =? "30 seconds until retrofire.";
+	wait until 85290;
+
+	@ui.message =? "Hope retrofire went pleasantly.  (If not, there's little you can do about it!)  Now jettison the Retrograde module by triple-clicking with the right mouse button.";
+	wait for condition (@retro.structure.thing != ship) interval 1 timeout 600;
+	wait for 3;
+
+	@ui.message =? "Now you should be getting a readout on the REENTRY screen.  This screen will show your predicted range to target, maximum G, and landing position.  The important readouts are RANGE ERR (downrange error) and LAT ERR (crossrange error).  Thrust fore and aft to correct the downrange error, and left and right to correct the crossrange error.  Small errors (<20 km for crossrange, <200 km downrange) will be corrected by the reentry control system.";
+	wait for 20;
+
+	@ui.message =? "Starting at about 95 km, the reentry guidance system will kick in and fly you the rest of the way in.";
+
+	wait for condition (ship.telemetry.alt < 100) interval 2 timeout 1800;
+
+	@ui.message =? "You are below 100 km -- the ionization shield will soon cut off communication with the ground. Good luck and have a pleasant reentry!";
+
+	wait for condition (ship.telemetry.alt < 40) interval 2 timeout 1800;
+
+	@ui.message =? "We have reestablished contact. Keep your attitude control system on until about 5 km. Then switch it off and deploy the parachute (the CHUTE switch on your Reentry module control panel).";
+
+	wait for condition (ship.telemetry.alt < 3) interval 5 timeout 3600;
+	@ui.message =? "You should have deployed the chute by now.";
+
+	wait for condition (ship.trajectory.type == "landed") interval 3 timeout 3600;
+	wait for 2;
+
+	@ui.message =? "Splashdown! Welcome home!";
+
+--	ship.targsys.target = @targzone;
+--	ship.maneuvsys.periapsis = -50;
+--	ship.maneuvsys.active = true;
+
+--	wait for condition (ship.telemetry.periapsis <= 50) interval 1;
+	
+
+}
+

@@ -1,0 +1,38 @@
+
+sequence "Apollo 11 Post-TLI" {
+
+	@orbelem = new KeplerianElements;
+	@orbelem.periapsis = 6603.81; -- must be after eccent set
+	@orbelem.apo_wrs_peri = 551612;
+	@orbelem.incl = 31.386 deg;
+	@orbelem.raan = 356.076 deg;
+	@orbelem.argperi = 4.51889 deg;
+	@orbelem.trueanom = 14.91502 deg;
+	@orbelem.epochdate = "07/16/1969 12:22:13 EST";
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+
+	@ort = new Orientation;
+	@traj.velrefort = @ort;
+	ship.traj = @traj;
+
+	ship.structure.'$Apollo CM'.$RCS.armed = false;
+	ship.structure.'$S-IVB'.$APS.armed = true;
+--	ship.structure.'$S-IVB'.'$guidance system'.active = true;
+	ship.attsys.guidmode = "aoa";
+
+	@supply = new ResourceSet;
+	@supply.contents = "LO2:8000,LH2:3000";
+	ship.structure.'$S-IVB'.$tanks.supply = @supply;
+
+--
+
+	ship.name = "Apollo 11";
+
+	@ui.ship =? ship;
+	@ui.message =? "You have just completed the TLI burn, and are enroute to the Moon!";
+
+}
+

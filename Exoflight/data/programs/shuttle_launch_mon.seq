@@ -1,0 +1,21 @@
+
+sequence "Shuttle Launch Monitor" {
+
+	@Orbiter = ship.structure.'$Orbiter';
+
+	wait until -10;
+	@gsound.play = "sounds/voice/go_autoseqstart.wav";
+
+	wait until -7;
+	@gsound.play = "sounds/voice/go_enginestart.wav";
+
+	wait until 5;
+	@gsound.play = "sounds/voice/houston_ctrl.wav";
+
+	wait until 20;
+	@gsound.play = "sounds/voice/roll_program.wav";
+
+	wait until 24;
+	@gsound.play = "sounds/voice/roger_roll.wav";
+}
+

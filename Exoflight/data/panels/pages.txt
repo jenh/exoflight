@@ -1,0 +1,48 @@
+
+[Pages]
+type=pagestack
+x=0
+y=0
+width=1024
+height=768
+
+;;;
+
+[Launch Window]
+load=panels/main_panel.txt
+parent=Pages
+x=0
+y=0
+width=1024
+height=768
+
+;;;
+
+[Tactical Window]
+load=panels/tactical_window.txt
+parent=Pages
+x=0
+y=0
+width=1024
+height=768
+
+;;;
+
+[Visual Window]
+load=panels/visual_window.txt
+parent=Pages
+x=0
+y=0
+width=1024
+height=768
+
+;;;
+
+[Structure Window]
+load=panels/structure_window.txt
+parent=Pages
+x=0
+y=0
+width=1024
+height=768
+

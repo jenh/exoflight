@@ -1,0 +1,95 @@
+
+sequence "Gemini 6 Launch" {
+
+-- prepare Agena Target Vehicle
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.00031;
+	@orbelem.periapsis = 6676; -- must be after eccent set
+	@orbelem.incl = 28.869 deg; -- ??
+	@orbelem.raan = 158.713 deg;
+	@orbelem.argperi = -169.023 deg;
+	@orbelem.trueanom = -30 deg;
+	@orbelem.epochticks = -1100150968320;
+
+	@agena = game.agency.'preparevehicle$Agena Target Vehicle';
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	@agena.traj = @traj;
+
+-- prepare target zone
+
+	@targzone = game.agency.newbase;
+	@targzone.name = "Recovery Ship";
+	@targzone.modelname = "Navy Destroyer";
+
+	@traj = new LandedTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.landpos = [-75.5 deg, 28 deg, 0];
+	@targzone.traj = @traj;
+
+-- prepare Gemini
+
+	ship.name = "Gemini 6";
+
+	@reentry = ship.structure.'$Gemini Reentry';
+	@sust = ship.structure.'$Titan 2 Sustainer';
+
+	ship.targsys.target = @agena;
+
+	ship.launchsys.incl = 28.87 deg;
+	ship.launchsys.burntime = 336;
+	ship.launchsys.ascending = false;
+	ship.launchsys.timetolaunch = 60;
+
+	ship.launchsys.targalt = 161;
+	ship.launchsys.targapo = 270;
+	ship.launchsys.active = true;
+
+	-- set up crew
+
+	game.agency.'crew#4'.module = @reentry;
+	game.agency.'crew#13'.module = @reentry;
+
+	@ui.ship =? ship;
+	@ui.message =? "The objective of the Gemini 6 mission is to launch, rendezvous with an unmanned Agena module, and return safely to Earth.  The first step is to launch the Gemini spacecraft aboard a Titan-2 rocket. This phase is automatic, so all you must do is monitor the flight path and make sure nothing goes wrong. At the end of the 7-minute burn, you will be in a 160 x 270 km orbit around the Earth.";
+
+	@reentry.'$main bus'.active = true;
+
+	wait until -45;
+
+	@ui.message =? "Launch will commence at T=0 seconds. [You may use the 'F' key to speed up the simulation.  It will return to normal speed when something \"interesting\" happens.]";
+
+	-- turn on life support
+	@reentry.'$ECS'.active = true;
+
+	wait until 26;
+
+	@ui.message =? "The rocket is making a \"gravity turn\", which is a slow sweeping arc with the nose of the rocket always facing into the wind.  This is an efficient trajectory for getting into orbit, and it also keeps aerodynamic stresses to a minimum.";
+
+	wait for condition (ship.telemetry.dynpres > 24) interval 2 timeout 160;
+	wait for condition (ship.telemetry.dynpres < 23) interval 1 timeout 60;
+
+	@ui.message =? "The vehicle has just passed MAXQ, or \"region of maximum dynamic pressure\".  This is when the most aerodynamic stress is on the rocket, and consequently is one of the most dangerous periods during a rocket's ascent.";
+
+	wait until 140;
+
+	@ui.message =? "[First-stage separation is coming up.  Try pressing the 'C' key once -- it will give you an interesting view of the separation!]";
+
+	wait until 158;
+
+	@ui.message =? "The first stage (booster) has just detached, and the second stage (sustainer) has ignited.";
+
+	wait for condition (ship.telemetry.periapsis > 0) interval 4 timeout 600;
+	wait for 5;
+
+	@ui.message =? "You are now in orbit.  The Gemini Reentry Module now has attitude control of the spacecraft, using the OAMS thrusters of the Equipment Module.  You may now detach the Titan 2 Sustainer by triple-clicking on its control panel.";
+
+	wait for condition (@sust.ship != ship) interval 3 timeout 1200;
+	wait for 1;
+
+	@ui.message =? "You are ready for the rendezvous phase of the mission.";
+}
+

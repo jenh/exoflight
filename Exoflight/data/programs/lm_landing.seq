@@ -1,0 +1,133 @@
+
+sequence "Apollo Landing" {
+
+	@gsound =? game.vars.gsound;
+
+	@ldm = ship.structure.'$Apollo LDM';
+	@lam = ship.structure.'$Apollo LAM';
+
+	wait until -55;
+"Arm DPS"
+	@ldm.'$descent engine'.armed = true;
+	@gsound.say =? "Descent engine armed.";
+	wait until -50;
+
+"Set braking attitude"
+	ship.attsys.guidmode = "approach";
+	ship.attctrl.guidance.heightbias = 0.25;
+	ship.attctrl.guidance.timebias = 30;
+	@lam.'$guidance system'.active = true;
+	@lam.$RCS.armed = true;
+"Wait for attitude lock"
+	wait for condition (ship.attctrl.locked == true) interval 0.25 timeout 90;
+	@gsound.say =? "Attitude lock.";
+	wait for 1;
+	set abort "ABORT" goto Abort_NoStage;
+
+	wait until 0;
+"Begin braking phase"
+	@ldm.'$descent engine'.throttle = 0.10;
+	@gsound.say =? "Ignition, 10 percent.";
+
+	wait until 25;
+"Throttle to 100%"
+	ship.attctrl.guidance.adjthrottle = true;
+	@ldm.'$descent engine'.throttle = 1.00;
+	@gsound.say =? "100 percent.";
+
+	wait for condition (ship.telemetry.vertvel < 0.10) interval 0.5 timeout 1000;
+	set abort "ABORT STAGE" goto Abort_Stage;
+	@gsound.says =? "Altitude is ";
+	@gsound.saynum =? 'ship.telemetry.altagl';
+	@gsound.say =? " km.";
+	@gsound.says =? "Velocity is ";
+	@gsound.saynum =? 'ship.telemetry.velocity';
+	@gsound.say =? " km/s.";
+	@gsound.says =? "Pitch is ";
+	@gsound.saynum =? 'ship.telemetry.ppitch';
+	@gsound.say =? " degrees.";
+
+	wait for condition (ship.telemetry.altagl < 2.28) interval 0.5 timeout 1200;
+"High gate"
+	@gsound.say =? "High gate.";
+	ship.attctrl.guidance.heightbias = 0.0;
+	ship.attctrl.guidance.noroll = true;
+
+	@gsound.says =? "Altitude is ";
+	@gsound.saynum =? 'ship.telemetry.altagl';
+	@gsound.say =? " km.";
+	@gsound.says =? "Velocity is ";
+	@gsound.saynum =? 'ship.telemetry.velocity';
+	@gsound.say =? " km/s.";
+
+	wait for condition (ship.telemetry.altagl < 0.15) interval 0.5 timeout 1200;
+"Low gate"
+	@gsound.say =? "Low gate.";
+	ship.attctrl.guidance.heightbias = -0.06;
+--	ship.attctrl.guidance.timebias = 30;
+
+	@gsound.says =? "Altitude is ";
+	@gsound.saynum =? 'ship.telemetry.altagl';
+	@gsound.say =? " km.";
+	@gsound.says =? "Velocity is ";
+	@gsound.saynum =? 'ship.telemetry.velocity';
+	@gsound.say =? " km/s.";
+
+	wait for condition (ship.telemetry.altagl < 0.006) interval 0.5 timeout 1200;
+"Lunar contact"
+	@gsound.say =? "Contact light.";
+	wait for 1;
+"Engine stop"
+	@gsound.say =? "Engine stop.";
+	@lam.'$guidance system'.active = false;
+	@ldm.'$descent engine'.throttle = 0.0;
+
+	wait for condition (ship.trajectory.type == "landed") interval 0.1 timeout 10;
+"Contact!"
+	wait for 1;
+	@gsound.say =? "[We copy you down, Eagle.]";
+"---END LANDING SEQUENCE---"
+	stop;
+
+---
+
+Abort_NoStage:
+"ABORT"
+	@ldm.'$descent engine'.throttle = 1;
+	goto Abort_A;
+
+Abort_Stage:
+"ABORT STAGE"
+	ship.attsys.rcsmanual = 0; -- auto mode
+	ship.attsys.guidmode = "pyr";
+	ship.attctrl.guidance.pitch = ship.telemetry.fpitch;
+	ship.attctrl.guidance.yaw = ship.telemetry.fyaw;
+	ship.attctrl.guidance.roll = ship.telemetry.froll;
+	@ldm.'$descent engine'.throttle = 0;
+	wait for 0.3;
+"Descent module separation"
+	@ldm.detach = true;
+	wait for 0.2;
+"Ignite ascent engine"
+	@lam.'$guidance system'.active = true;
+	@lam.'$ascent engine'.armed = true;
+	@lam.'$ascent engine'.throttle = 1;
+	wait for 0.2;
+
+Abort_A:
+"Pitch up"
+	ship.attsys.guidmode = "pyr";
+	ship.attctrl.guidance.pitch = 90 deg;
+	wait for 3;
+"Target CSM"
+	ship.targsys.target = game.universe.'$Apollo CSM';
+	ship.launchsys.targalt = 17;
+	ship.launchsys.targapo = 83;
+	ship.attsys.guidmode = "igm";
+-- todo: end condition
+--	wait for condition (ship.attctrl.guidance.tgo < 0.5) interval 0.125;
+--"Engine shutdown"
+--	@lam.'$ascent engine'.throttle = 0;
+--	@ldm.'$descent engine'.throttle =? 0;
+}
+

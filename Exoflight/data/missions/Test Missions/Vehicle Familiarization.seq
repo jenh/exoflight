@@ -1,0 +1,11 @@
+
+sequence "Vehicle Familiarization" {
+	
+	@ui.ship =? ship;
+
+	@ui.demo.add = @ui.'$$Ground Track Pane';
+	@ui.message = "This is the ~ground track~.  It displays the position of your ship projected on a map of the Earth.";
+--	wait for condition (@ui.demo.iscleared == true) interval 1;
+
+}
+

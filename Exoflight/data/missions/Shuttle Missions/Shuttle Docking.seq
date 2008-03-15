@@ -1,0 +1,59 @@
+
+sequence "Shuttle Docking" {
+
+-- prepare shuttle
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.016;
+	@orbelem.periapsis = 6900.95; -- must be after eccent set
+	@orbelem.incl = 182.15 deg; -- ??
+	@orbelem.raan = 224 deg;
+	@orbelem.argperi = 180 deg;
+	@orbelem.trueanom = -64.993 deg;
+	@orbelem.epochticks = game.tick;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+-- prepare MIR
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.016;
+	@orbelem.periapsis = 6901; -- must be after eccent set
+	@orbelem.incl = 182.15 deg; -- ??
+	@orbelem.raan = 224 deg;
+	@orbelem.argperi = 180 deg;
+	@orbelem.trueanom = -65 deg;
+	@orbelem.epochticks = game.tick;
+
+	@Mir = game.agency.'preparevehicle$Mir';
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	@Mir.traj = @traj;
+
+---
+
+	@ui.ship =? ship;
+	@ui.message =? "Dock the shuttle to Mir";
+
+	ship.targsys.target = @Mir;
+	@Orbiter = ship.structure.'$Orbiter';
+
+	@Orbiter.'$fuel cells'.active = true;
+--	wait for 30;
+--	@Orbiter.'$guidance system'.rcscaps = @Orbiter.'$RCS primary';
+--	@Orbiter.'$guidance system'.active = true;
+--	ship.attctrl.targort.pitch = 45 deg;
+--	ship.attctrl.targort.yaw = 45 deg;
+
+--	wait for 30;
+--	ship.maneuvsys.apoapsis = 1500;
+--	ship.maneuvsys.active = true;
+--	@foo = ship.maneuvsys.deltav;
+
+}
+

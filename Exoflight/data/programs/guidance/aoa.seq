@@ -1,0 +1,6 @@
+
+sequence "AoA guidance" {
+
+	ship.attctrl.guidance = new AngleOfAttackProgram;
+
+}

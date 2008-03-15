@@ -1,0 +1,28 @@
+
+sequence "STS-31 Launch" {
+
+	ship.name = "STS-31";
+	@Orbiter = ship.structure.'$Orbiter';
+
+	wait for 0.5;
+
+	ship.launchsys.incl = 28.65 deg;
+	ship.launchsys.burntime = 470;
+	ship.launchsys.timetolaunch = 60;
+	ship.launchsys.targalt = 115;
+	ship.launchsys.targapo = 270;
+	ship.launchsys.active = true;
+
+	@ui.message =? "Launch the shuttle and deploy the Hubble!";
+	@ui.ship =? ship;
+
+	-- set up crew
+
+	game.agency.'crew#101'.module = @Orbiter;
+	game.agency.'crew#109'.module = @Orbiter;
+	game.agency.'crew#87'.module = @Orbiter;
+	game.agency.'crew#48'.module = @Orbiter;
+	game.agency.'crew#103'.module = @Orbiter;
+	
+}
+

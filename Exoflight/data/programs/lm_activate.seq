@@ -1,0 +1,12 @@
+
+sequence "LM Activate" {
+
+	@lam = ship.structure.'$Apollo LAM';
+
+	@resset = new ResourceSet;
+	@resset.'#E' = 9999;
+
+	@lam.'$RCS'.armed = true;
+
+}
+

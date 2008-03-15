@@ -1,0 +1,22 @@
+
+sequence "X-15 Test" {
+
+	@ort = new Orientation;
+	@ort.eulerpyr = [1 deg,0 deg,0 deg];
+	ship.trajectory.planetrefort = @ort;
+
+	@f4 = ship.structure.'$F-4';
+
+	wait for 1;
+	@f4.'$left engine'.armed = true;
+	@f4.'$right engine'.armed = true;
+	@f4.'$control surfaces'.armed = true;
+
+	ship.attsys.rcsmanual = 1;
+	ship.attsys.rcsdirect = 1;
+	ship.attsys.throtmanual = 1;
+	ship.attsys.manthrottle = 1;
+
+
+}
+

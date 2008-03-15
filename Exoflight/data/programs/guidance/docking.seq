@@ -1,0 +1,6 @@
+
+sequence "Docking guidance" {
+
+	ship.attctrl.guidance = new DockingProgram;
+
+}

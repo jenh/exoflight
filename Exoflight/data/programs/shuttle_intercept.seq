@@ -1,0 +1,46 @@
+
+sequence "Shuttle Intercept" {
+
+	wait until -60;
+	@Orbiter = 'ship.structure.$Orbiter';
+
+"Wait for intercept time"
+	@guidance = new LambertProgram;
+	@guidance.destthing = @target;
+	@guidance.targtime = @targtime;
+	ship.attctrl.guidance = @guidance;
+
+	wait until -60;
+"Prepare for OMS burn"
+	@Orbiter.'$guidance system'.active = true;
+
+	wait until 0;
+
+omsloop:
+
+"Wait for attitude lock"
+	@Orbiter.'$guidance system'.active = true;
+	wait for condition (ship.attctrl.locked == true) interval 0.25;
+
+"OMS engine start"
+	@dir = @guidance.direction;
+	@Orbiter.'$OMS-1.active' = true;
+	@Orbiter.'$OMS-2.active' = true;
+	wait for 1;
+	wait for condition (@dir != @guidance.direction) interval 0.0625;
+--	wait for condition (@guidance.dvrem < 0.0005) interval 0.0625 timeout 900;
+
+"OMS engine shutdown"
+	@Orbiter.'$OMS-1.active' = false;
+	@Orbiter.'$OMS-2.active' = false;
+--	@Orbiter.'$guidance system'.active = false;
+	wait for 1;
+
+"Wait for TTI < 15 minutes"
+	@guidance.mintti = 900;
+	wait for condition (@guidance.timerem < 901) interval 1;
+"Wait for dv > 7 m/s"
+	wait for condition (@guidance.dvrem > 0.007) interval 1;
+	goto omsloop;
+
+}

@@ -1,0 +1,27 @@
+
+sequence "LM Reentry Test" {
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.001;
+	@orbelem.periapsis = 6390; -- must be after eccent set
+	@orbelem.incl = 31.383 deg;
+	@orbelem.raan = 301.847 deg;
+	@orbelem.argperi = 0 deg;
+	@orbelem.trueanom = 90 deg;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+	'ship.structure.$Donkey.$engine.armed' = true;
+	'ship.structure.$Donkey.$engine.throttle' = 1;
+	wait for 1;
+	'ship.structure.$Donkey.$engine.throttle' = 0;
+
+--	'ship.structure.$Apollo LDM.$descent engine.armed' = true;
+--	'ship.structure.$Apollo LDM.$descent engine.throttle' = 1;
+--	wait for 1;
+--	'ship.structure.$Apollo LDM.$descent engine.throttle' = 0;
+
+}

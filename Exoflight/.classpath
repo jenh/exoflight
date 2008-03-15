@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="/FLCore"/>
+	<classpathentry kind="lib" path="data"/>
+	<classpathentry kind="lib" path="/FLCore/bin"/>
+	<classpathentry kind="lib" path="/FLCore/lib/png.jar"/>
+	<classpathentry kind="lib" path="/FLCore/lib/junit.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/FLCore/lib/windows-i586/bsh.jar"/>
+	<classpathentry kind="lib" path="/FLCore/lib/windows-i586/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="/FLCore/lib/windows-i586/jdom.jar"/>
+	<classpathentry kind="lib" path="/FLCore/lib/windows-i586/jogl.jar"/>
+	<classpathentry kind="lib" path="/FLCore/lib/windows-i586/sdljava.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

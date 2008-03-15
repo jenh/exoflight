@@ -1,0 +1,35 @@
+
+sequence "Gemini Reentry" {
+
+	@reentry = ship.structure.'$Gemini Reentry';
+	@retro = ship.structure.'$Gemini Retrograde';
+
+	wait for 0.5;
+
+"Perform retro burn"
+	@retro.'$rocket 1'.throttle = 1;
+	wait for condition (@retro.'$rocket 1'.active == false) interval 0.25 timeout 10;
+	wait for 0.25;
+	@retro.'$rocket 2'.throttle = 1;
+	wait for condition (@retro.'$rocket 2'.active == false) interval 0.25 timeout 10;
+	wait for 0.25;
+	@retro.'$rocket 3'.throttle = 1;
+	wait for condition (@retro.'$rocket 3'.active == false) interval 0.25 timeout 10;
+	wait for 0.25;
+	@retro.'$rocket 4'.throttle = 1;
+	wait for condition (@retro.'$rocket 4'.active == false) interval 0.25 timeout 10;
+	wait for 2;
+
+"Wait for >0.05 G"
+	wait for condition (ship.telemetry.gaccel > 0.05) interval 4;
+
+"Roll reentry program"
+	ship.attsys.guidmode = "rollreentry";
+	ship.attctrl.guidance.yaw = 180 deg;
+	ship.guidancecap.active = true;
+	wait for 2;
+
+"Wait until alt < 10 km"
+	wait for condition (ship.telemetry.alt < 10) interval 2 timeout 1800;
+
+}

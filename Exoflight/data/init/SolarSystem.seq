@@ -1,0 +1,283 @@
+
+--
+-- Source for Orbital Elements: Vallado Appendix D or Meeus (1991, 202-204)
+-- Pole data from http://www.indwes.edu/Faculty/bcupp/solarsys/
+--
+
+sequence "Setup Solar System" {
+
+--
+-- Sol (Sun)
+--
+
+@traj = new StaticTrajectory;
+@traj.parent = game.universe;
+
+@p = new Star;
+@p.name = "Sun";
+@p.radius = 695000;
+@p.visradius = 1.5e6;
+@p.mass = 1.99e30;
+@p.traj = @traj; -- plop down at (0,0,0)
+@p.rotperiod = 24.59;
+@p.gaseous = true;
+
+--
+-- Mercury
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 1;
+@traj.parent = game.$Sun;
+
+@p = new Planet;
+@p.name = "Mercury";
+@p.mass = 3.303e23;
+@p.radius = 2439.7;
+@p.traj = @traj;
+@p.spinaxis = [281.01 deg, 61.45 deg];
+@p.rot0 = 149.684604 deg;
+@p.rotperiod = 58.6462;
+
+--
+-- Venus
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 2;
+@traj.parent = game.$Sun;
+
+@elev = new RasterLODElevationModel;
+@elev.fileprefix = "elevtexs/Venus/Venus-elev";
+@elev.maxprecision = 11;
+@elev.mindisplacement = -8;
+@elev.maxdisplacement = 8;
+
+@atmo = new DefaultAtmosphere;
+-- source: http://vespa.oma.be/spenvis/ecss/ecss07/ecss07.html (C. Sagan et al., 1971)
+@atmo.densityfunc = "PWEXP:0, 65, -15.9";
+@atmo.temprfunc = "PWL:-200,740 1000,740";
+-- tables actully stop at 1000 km
+@atmo.ceiling = 10000;
+
+@p = new Planet;
+@p.name = "Venus";
+@p.mass = 3.303e23;
+@p.radius = 2439.7;
+@p.traj = @traj;
+@p.spinaxis = [92.76 deg, -67.16 deg];
+@p.rot0 = 199.801111 deg;
+@p.rotperiod = 243.01848;
+@p.atmosphere = @atmo;
+@p.elevmodel = @elev;
+
+--
+-- Earth
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 3;
+@traj.parent = game.$Sun;
+
+@atmo = new DefaultAtmosphere;
+-- source: Vallado pg 510
+@atmo.densityfunc = <"atmo/Earth-density.txt">;
+-- source: http://vespa.oma.be/spenvis/ecss/ecss07/ecss07.html
+@atmo.temprfunc = <"atmo/Earth-tempr.txt">;
+-- tables actully stop at 1000 km
+@atmo.ceiling = 10000;
+
+@elev = new RasterLODElevationModel;
+@elev.fileprefix = "elevtexs/Earth/Earth-elev";
+--@elev.maxprecision = 12;
+@elev.maxprecision = 11;
+@elev.mindisplacement = 0;
+@elev.maxdisplacement = 8.850;
+
+@p = new Planet;
+@p.name = "Earth";
+@p.mass = 5.972e24;
+@p.radius = 6378.1363;
+@p.traj = @traj;
+@p.rot0 = 280.4606 deg;
+@p.rotperiod = 0.99727;
+-- note: doesn't account for precession, nuation
+-- this is value at J2000
+@p.spinaxis = [0 deg, 67.43929 deg];
+@p.elevmodel = @elev;
+@p.atmosphere = @atmo;
+@p.J2 = 1.0826269e-3;
+@p.turbulence_freq = 0.05;
+@p.turbulence_max = 0.001;
+
+--
+-- Luna
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 10;
+@traj.parent = game.$Earth;
+
+@elev = new RasterLODElevationModel;
+@elev.fileprefix = "elevtexs/Luna/Luna-elev";
+@elev.maxprecision = 11;
+@elev.mindisplacement = -8.722;
+@elev.maxdisplacement = 8.722;
+
+@p = new Planet;
+@p.name = "Luna";
+@p.mass = 7.349e22;
+@p.radius = 1737.53;
+@p.traj = @traj;
+@p.rot0 = 32 deg; -- approx. 221.19577 deg;
+@p.rotperiod = 27.456;
+-- 32166;
+@p.spinaxis = [270 deg, 66.539 deg];
+@p.elevmodel = @elev;
+@p.J2 = 202.7e-6;
+
+--
+-- Mars
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 4;
+@traj.parent = game.$Sun;
+
+@atmo = new DefaultAtmosphere;
+-- source: http://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+@atmo.densityfunc = "PWEXP:0 0.020 -11.1";
+@atmo.temprfunc = "PWL:-200,210 500,200";
+@atmo.ceiling = 500;
+
+@elev = new RasterLODElevationModel;
+@elev.fileprefix = "elevtexs/Mars/Mars-elev";
+@elev.maxprecision = 12;
+@elev.mindisplacement = -8.156;
+@elev.maxdisplacement = 21.191;
+
+@p = new Planet;
+@p.name = "Mars";
+@p.mass = 6.421e23;
+@p.radius = 3396.0;
+@p.traj = @traj;
+@p.rot0 = 357.164 deg;
+@p.rotperiod = 1.025957;
+@p.spinaxis = [317.64 deg, 52.86 deg];
+@p.elevmodel = @elev;
+@p.atmosphere = @atmo;
+@p.J2 = 1.964e-3;
+
+--
+-- Jupiter
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 5;
+@traj.parent = game.$Sun;
+
+@atmo = new DefaultAtmosphere;
+-- source: http://nssdc.gsfc.nasa.gov/planetary/factsheet/jupiterfact.html
+@atmo.densityfunc = "PWEXP:0 0.020 -11.1";
+-- guess
+@atmo.temprfunc = "PWL:-1000,500 0,165 1000,3";
+--@atmo.meanmolweight = 2.22;
+@atmo.ceiling = 1000;
+
+@p = new Planet;
+@p.name = "Jupiter";
+@p.mass = 1.8988e27;
+@p.radius = 71492; -- at 1 bar
+@p.traj = @traj;
+@p.rot0 = 247.758425 deg;
+@p.rotperiod = 0.41354;
+@p.spinaxis = [268.04 deg, 64.49 deg];
+@p.atmosphere = @atmo;
+@p.gaseous = true;
+@p.turbulence_freq = 0.10;
+@p.turbulence_max = 0.01;
+
+-- todo: atmosphere
+
+--
+-- Saturn
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 6;
+@traj.parent = game.$Sun;
+
+@p = new Planet;
+@p.name = "Saturn";
+@p.mass = 5.685e26;
+@p.radius = 60268; -- at 1 bar
+@p.visradius = 118000; -- rings!
+@p.traj = @traj;
+@p.rot0 = 408.533225 deg;
+@p.rotperiod = 0.4375;
+@p.spinaxis = [40.59 deg, 83.54 deg];
+--@p.atmosphere = @atmo;
+@p.gaseous = true;
+
+--
+-- Uranus
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 7;
+@traj.parent = game.$Sun;
+
+@p = new Planet;
+@p.name = "Uranus";
+@p.mass = 8.6625e25;
+@p.radius = 60268;
+@p.traj = @traj;
+@p.rot0 = 383.452137 deg;
+@p.rotperiod = -0.65;
+@p.spinaxis = [257.31 deg, -15.175 deg];
+--@p.atmosphere = @atmo;
+
+--
+-- Neptune
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 8;
+@traj.parent = game.$Sun;
+
+@p = new Planet;
+@p.name = "Neptune";
+@p.mass = 1.0278e26;
+@p.radius = 24764;
+@p.traj = @traj;
+@p.rot0 = 433 deg;
+@p.rotperiod = 0.768;
+@p.spinaxis = [299.36 deg, 43.46 deg];
+--@p.atmosphere = @atmo;
+
+--
+-- Pluto
+--
+
+@traj = new EphemerisTrajectory;
+@traj.bodyindex = 9;
+@traj.parent = game.$Sun;
+
+@p = new Planet;
+@p.name = "Pluto";
+@p.mass = 1.5e22;
+@p.radius = 1151;
+@p.traj = @traj;
+@p.rot0 = 416 deg;
+@p.rotperiod = -6.3867;
+@p.spinaxis = [313.02 deg, 9.09 deg];
+--@p.atmosphere = @atmo;
+
+--
+-- now here come the satellites
+--
+
+game.runsequence = "init/MartianSatellites.seq";
+game.runsequence = "init/GalileanSatellites.seq";
+
+}

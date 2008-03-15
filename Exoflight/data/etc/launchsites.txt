@@ -1,0 +1,138 @@
+
+[Cape Canaveral]
+owner=U.S.
+; long=80.604282 lat=28.608250
+ll=283630N 803615W
+desc=Cape Canaveral houses America's largest launch center, the Kennedy Space Center. It has launched all manned flights in the U.S. -- the Mercury, Gemini, and Apollo missions, and the space shuttle. It also is home to the 525-ft high Vehicle Assembly Building, which until recently was the highest point in Florida.
+modelname=Saturn-V LUT
+
+[Shuttle Landing Facility]
+ll=28.6149958 -80.6944953
+modelname=Shuttle Landing Facility
+
+[Vandenberg]
+owner=U.S.
+ll=344000N 1203000W
+
+[Wallops Island]
+owner=U.S.
+ll=375000N 752000W
+
+;
+
+[Baikonur]
+owner=Russia
+ll=474800N 655000E
+
+[Plesetsk]
+owner=Russia
+ll=624300N 401800E
+
+[Kapustin Yar]
+owner=Russia
+ll=482500N 563000E
+
+[Svobodny]
+owner=Russia
+ll=513000N 1383000E
+
+;
+
+[Kourou]
+owner=ESA
+ll=051400N 524600W
+
+;
+
+[Alcantara]
+owner=Brazil
+ll=021200S 441200W
+
+[Jiuquan]
+owner=China
+ll=412000N 1002000E
+
+[Xichang]
+owner=China
+ll=281200N 1020200E
+
+[Taiyuan]
+owner=China
+ll=370500N 1120600E
+
+[Sriharikota]
+owner=India
+ll=134700N 801500E
+
+[Palmachim]
+owner=Israel
+ll=344600N 315400E
+
+[San Marco]
+owner=Italy
+ll=025600S 401200E
+
+[Kagoshima]
+owner=Japan
+ll=311400N 1310400E
+
+[Tanegashima]
+owner=Japan
+ll=302300N 1305800E
+
+;
+
+[Tycho Base]
+owner=Lunico
+parent=Luna
+ll=432400S 110600W
+
+[Zero Luna]
+parent=Luna
+ll=000000N 000000E
+
+;; from CLLC Initiative
+;; http://www.xs4all.nl/~carlkop/stenneck.html
+
+[Apollo 11]
+parent=Luna
+ll=0.67266         23.47298
+
+[Apollo 12]
+parent=Luna
+ll=-3.01040        -23.42113
+
+[Apollo 14]
+parent=Luna
+ll=-3.64567        -17.47175
+
+[Apollo 15]
+parent=Luna
+ll=26.12836          3.63452
+
+[Apollo 16]
+parent=Luna
+ll=-8.98851         15.49410
+
+[Apollo 17]
+parent=Luna
+ll=20.18169         30.76453
+
+;
+
+[Mars B-3 East alpha]
+owner=Marsco
+parent=Mars
+ll=471200N 1361200W
+
+[Valles Marineris]
+owner=Marsco
+parent=Mars
+ll=-5.070 -34.747
+
+;
+
+;[Io Base]
+;owner=Jupco
+;parent=Io
+;ll=020000N 450000W

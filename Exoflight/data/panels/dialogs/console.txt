@@ -1,0 +1,21 @@
+;;;
+;;; the stdout console
+;;;
+
+[Console]
+type=window
+layout=true
+title= CONSOLE 
+
+[Console Box]
+parent=Console
+type=scrollbox
+vbar=true
+boxwidth=600
+boxheight=400
+
+[Stdout]
+parent=Console Box
+type=console
+stdout=true
+stderr=true

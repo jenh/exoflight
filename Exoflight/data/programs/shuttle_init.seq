@@ -1,0 +1,17 @@
+
+sequence "Shuttle Init" {
+	ship.structure.$Orbiter.'$engine 1'.addsource = 
+		ship.structure.'$External Tank'.$tank;
+	ship.structure.$Orbiter.'$engine 2'.addsource = 
+		ship.structure.'$External Tank'.$tank;
+	ship.structure.$Orbiter.'$engine 3'.addsource = 
+		ship.structure.'$External Tank'.$tank;
+
+	-- set atmosphere
+
+	@atmo = new ResourceSet;
+	@atmo.'#O2' = 32;
+	@atmo.'#N2' = 8;
+	ship.structure.$Orbiter.atmosphere = @atmo;
+
+}

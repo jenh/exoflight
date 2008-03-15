@@ -1,0 +1,14 @@
+
+sequence "CM Docking" {
+
+"Activate probe"
+	ship.structure.'$Apollo CM.$drogue'.active = true;
+	wait for 3;
+"Docking program"
+	ship.attsys.guidmode = "docking";
+	ship.structure.'$Apollo CM'.'$guidance system'.active = true;
+
+-- todo: wait until docked?
+
+}
+

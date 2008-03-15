@@ -1,0 +1,8 @@
+
+sequence "null guidance program" {
+
+	ship.attctrl.guidance = null;
+	ship.attsys.rcsmanual=1;
+	ship.attsys.rcsmanual=0;
+
+}

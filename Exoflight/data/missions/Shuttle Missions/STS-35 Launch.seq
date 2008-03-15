@@ -1,0 +1,20 @@
+
+sequence "STS-35 Launch" {
+
+	ship.name = "STS-35";
+
+	wait for 0.5;
+
+	ship.launchsys.incl = 28.65 deg;
+	ship.launchsys.burntime = 470;
+	ship.launchsys.timetolaunch = 60;
+	ship.launchsys.targalt = 115;
+	ship.launchsys.targapo = 270;
+	ship.launchsys.active = true;
+
+	@ui.message =? "Launch the shuttle!";
+	@ui.ship =? ship;
+
+	
+}
+

@@ -1,0 +1,95 @@
+
+sequence "Gemini 6 Docking" {
+
+	ship.name = "Gemini 6";
+
+	@reentry = ship.structure.'$Gemini Reentry';
+	@equip = ship.structure.'$Gemini Equipment';
+
+-- prepare target zone
+
+	@targzone = game.agency.newbase;
+	@targzone.name = "Recovery Ship";
+	@targzone.modelname = "Navy Destroyer";
+
+	@traj = new LandedTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.landpos = [-75.5 deg, 28 deg, 0];
+	@targzone.traj = @traj;
+
+-- prepare Gemini
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.00031;
+	@orbelem.periapsis = 6676;
+	@orbelem.incl = 28.8691 deg; -- ??
+	@orbelem.raan = 158.7132 deg;
+	@orbelem.argperi = -169.020 deg;
+	@orbelem.trueanom = 9 deg;
+	@orbelem.epochticks = -1100150968320;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	@ort = new Orientation;
+	@ort.yaw = 180 deg;
+	@traj.velrefort = @ort;
+	ship.traj = @traj;
+
+-- prepare Agena Target Vehicle
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.00031;
+	@orbelem.periapsis = 6676; -- must be after eccent set
+	@orbelem.incl = 28.869 deg; -- ??
+	@orbelem.raan = 158.713 deg;
+	@orbelem.argperi = -169.023 deg;
+	@orbelem.trueanom = 9 deg;
+	@orbelem.epochticks = -1100150968320;
+
+	@agena = game.agency.'preparevehicle$Agena Target Vehicle';
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+
+	@ort = new Orientation;
+	@traj.velrefort = @ort;
+	@agena.traj = @traj;
+
+	-- set atmosphere
+
+	@atmo = new ResourceSet;
+	@atmo.'#O2' = 1.1175;
+--	@atmo.'#O2' = 3.2879; -- this is 101.36 Kpa, sea level
+
+	@reentry.atmosphere = @atmo;
+
+	-- set up crew
+
+	game.agency.'crew#4'.module = @reentry;
+	game.agency.'crew#13'.module = @reentry;
+
+	@ui.ship =? ship;
+	@ui.message =? "You have rendezvoused with the Agena Target Vehicle and are preparing to dock.";
+
+	-- turn on life support
+	@reentry.'$main bus'.active = true;
+	wait for 2;
+	@reentry.'$ECS'.active = true;
+	@equip.'$OAMS'.armed = true;
+
+	ship.targsys.target = @agena;
+
+	wait for 5;
+
+	@ui.message =? "First, select the DOCKING panel on your MEDS.  This will display two screens, one top-down and one forward-facing, that will help you dock.";
+
+	wait for 10;
+
+	@ui.message =? "Now turn on your docking radar.  Find the PROBE switch on the Gemini Reentry module panel, and flip it up.";
+
+	wait for condition (@reentry.$probe.active == true) interval 3 timeout 600;
+
+}
+

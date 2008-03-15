@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+
+<project name="Exoflight" default="jar">
+
+<property file="build.properties" />
+
+<property name="project.name" value="Exoflight" />
+<property name="depend.dir" value="../FLCore" />
+<property name="shared.dir" value="../FLCore" />
+<property name="install.dir" value="dist" />
+<property name="models.dir" value="data/models" />
+
+<property name="platform" value="macosx" />
+
+<path id="libs.path">
+	<pathelement location="../FLCore/bin" />
+	<pathelement location="../FLCore/FLCore.jar" />
+	<pathelement location="../FLCore/lib/macosx/jogl.jar" />
+	<pathelement location="../FLCore/lib/png.jar" />
+	<pathelement location="../FLCore/lib/junit.jar" />
+	<pathelement location="./data" />
+	<pathelement location="./bin" />
+</path>
+
+<!-- clean -->
+
+<target name="clean">
+	<ant antfile="${shared.dir}/build.xml" target="clean" />
+	<delete dir="${models.dir}" includes="*.esm" />
+</target>
+
+<target name="clean-all" depends="clean">
+	<ant antfile="${depend.dir}/build.xml" target="clean-all" dir="${depend.dir}" inheritAll="no" />
+</target>
+
+<!-- compile -->
+
+<target name="all" depends="jar,compile-lwo">
+</target>
+
+<target name="compile">
+	<ant antfile="${depend.dir}/build.xml" dir="${depend.dir}" inheritAll="no" />
+	<ant antfile="${shared.dir}/build.xml" target="compile">
+		<reference refid="libs.path" />
+	</ant>
+</target>
+
+<!-- jar -->
+
+<target name="jar" depends="compile">
+	<ant antfile="${depend.dir}/build.xml" dir="${depend.dir}" inheritAll="no" />
+	<ant antfile="${shared.dir}/build.xml" target="jar" />
+</target>
+
+<!-- compile-lwo -->
+
+<target name="compile-lwo">
+<apply executable="${java.home}/bin/java" dest="${models.dir}" parallel="false">
+  <arg value="-cp"/>
+  <arg value="../FLCore/bin"/>
+  <arg value="com.fasterlight.model.LWOReader" />
+  <srcfile/>
+  <arg value="-o"/>
+  <targetfile/>
+  <fileset dir="${models.dir}" includes="*.lwo"/>
+  <mapper type="glob" from="*.lwo" to="*.esm"/>
+</apply>
+</target>
+
+<!-- test -->
+
+<target name="test" depends="compile">
+	<ant antfile="${shared.dir}/build.xml" target="test">
+		<reference refid="libs.path" />
+	</ant>
+</target>
+
+<target name="test-all" depends="test">
+	<ant antfile="${depend.dir}/build.xml" target="test-all" dir="${depend.dir}" inheritAll="no" />
+</target>
+
+<!-- run -->
+
+<target name="run-class">
+
+	<java classname="${run.class}" fork="yes">
+		<classpath refid="libs.path" />
+		<sysproperty key="java.library.path" value="../FLCore/lib/${platform}" />
+<!--
+		<jvmarg value="-verbose" />
+		<sysproperty key="exo.scrnwidth" value="1024" />
+		<sysproperty key="exo.scrnheight" value="768" />
+-->
+		<sysproperty key="exo.fullscreen" value="${fullscreen}" />
+		<sysproperty key="apple.laf.useScreenMenuBar" value="true" />
+		<sysproperty key="com.apple.mrj.application.apple.menu.about.name" value="Exoflight" />
+<!--
+		<arg value="-stdout" />
+		<arg value="stdout.log" />
+		<arg value="-stderr" />
+		<arg value="stderr.log" />
+-->
+<!--
+		<jvmarg value="-Xdock:icon=data/etc/Exoflight.icns" />
+-->
+		<arg value="${arg.1}" />
+	</java>
+
+</target>
+
+<target name="run">
+	<antcall target="run-class">
+		<param name="run.class" value="com.fasterlight.exo.main.Exoflight" />
+	</antcall>
+</target>
+
+<target name="run-roam">
+	<antcall target="run-class">
+		<param name="run.class" value="com.fasterlight.exo.newgui.roam.TestPlanet" />
+	</antcall>
+</target>
+
+<target name="run-test1">
+	<antcall target="run-class">
+		<param name="run.class" value="com.fasterlight.glout.Test1" />
+	</antcall>
+</target>
+
+<!-- install -->
+
+<target name="install">
+	<mkdir dir="${install.dir}" />
+	<mkdir dir="${install.dir}/lib" />
+	<mkdir dir="${install.dir}/data" />
+	<copy todir="${install.dir}/lib" file="Exoflight.jar" />
+	<copy todir="${install.dir}/lib" file="../FLCore/lib/gl4java2.8.2.0-classes.zip" />
+	<copy todir="${install.dir}/lib" file="../FLCore/lib/png.jar" />
+	<copy todir="${install.dir}/lib" file="../FLCore/FLCore.jar" />
+	<copy todir="${install.dir}/data">
+		<fileset dir="./data" />
+	</copy>
+	<copy todir="${install.dir}" file="exolauncher.exe" />
+	<copy todir="${install.dir}/lib">
+		<fileset dir="../FLCore/lib" includes="*.dll" />
+	</copy>
+</target>
+
+<!-- clover -->
+
+<target name="with.clover">
+	<ant antfile="${shared.dir}/build.xml" target="with.clover" />
+</target>
+
+<target name="clover.report">
+	<ant antfile="${shared.dir}/build.xml" target="clover.report" />
+</target>
+
+</project>
+

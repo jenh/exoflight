@@ -1,0 +1,40 @@
+
+sequence "LM Intercept" {
+
+	wait until -25;
+	@LAM = 'ship.structure.$Apollo LAM';
+
+"Wait for intercept time"
+	ship.attsys.guidmode = "lambert";
+	ship.attctrl.guidance.targtime = @targtime;
+
+	wait until -20;
+"Prepare for OMS burn"
+	@LAM.'$guidance system'.active = true;
+
+	wait until 0;
+
+omsloop:
+
+--"Wait for attitude lock"
+--	@LAM.'$guidance system'.active = true;
+--	wait for condition (ship.attctrl.locked == true) interval 0.25;
+
+"Engine start"
+	@dir = ship.attctrl.guidance.direction;
+	@LAM.'$ascent engine'.throttle = 1;
+	wait for 1;
+	wait for condition (@dir != ship.attctrl.guidance.direction) interval 0.0625;
+
+"Engine shutdown"
+	@LAM.'$ascent engine'.throttle = 0;
+	wait for 1;
+
+"Wait for TTI < 3 minutes"
+	ship.attctrl.guidance.mintti = 180;
+	wait for condition (ship.attctrl.guidance.timerem < 181) interval 1;
+"Wait for dv > 10 m/s"
+	wait for condition (ship.attctrl.guidance.dvrem > 0.01) interval 0.5;
+	goto omsloop;
+
+}

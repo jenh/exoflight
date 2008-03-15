@@ -1,0 +1,37 @@
+
+sequence "Gemini 6 Launch" {
+
+	ship.name = "Gemini 6";
+
+	@reentry = ship.structure.'$Gemini Reentry';
+
+	wait for 0.5;
+
+	-- todo!
+	ship.launchsys.incl = 28.87 deg;
+	ship.launchsys.burntime = 336;
+	ship.launchsys.ascending = false;
+	ship.launchsys.timetolaunch = 60;
+
+	ship.launchsys.targalt = 161;
+	ship.launchsys.targapo = 270;
+	ship.launchsys.active = true;
+
+	-- set up crew
+
+	game.agency.'crew#4'.module = @reentry;
+	game.agency.'crew#13'.module = @reentry;
+
+	@reentry.'$main bus'.active = true;
+
+	wait until -45;
+
+	-- turn on life support
+	@reentry.'$ECS'.active = true;
+
+	wait until 5;
+	ship.attsys.guidmode = "zerovert";
+	ship.guidancecap.active = true;
+	ship.launchsys.active = false;
+}
+

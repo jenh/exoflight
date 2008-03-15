@@ -1,0 +1,23 @@
+
+sequence "STS-61 Deorbit" {
+
+	ship.name = "STS-61";
+
+-- prepare Shuttle
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 6.0309e-4;
+	@orbelem.semilatus = 6961.19742; -- must be after eccent set
+	@orbelem.incl = 28.472099 deg;
+	@orbelem.raan = 352.2809143 deg;
+	@orbelem.argperi = 290.147094 deg;
+	@orbelem.trueanom = 332.0932922 deg;
+	@orbelem.epochticks = -195578266500;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+}
+

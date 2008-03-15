@@ -1,0 +1,23 @@
+
+sequence "Gemini Docking" {
+
+"Activate probe"
+	@probe = ship.structure.'$Gemini Reentry.$probe';
+	@probe.active = true;
+	wait for 2;
+
+"Docking program"
+	ship.attsys.guidmode = "docking";
+	ship.guidancecap.active = true;
+
+"Wait until docked"
+	wait for condition (@probe.active == false) interval 0.25;
+
+"--END DOCKING PROGRAM--"
+	ship.attsys.transx = 0; -- turn off translation
+	ship.attsys.transy = 0; -- turn off translation
+	ship.attsys.transz = 0; -- turn off translation
+	ship.guidancecap.active = false;
+
+}
+

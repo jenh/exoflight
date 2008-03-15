@@ -1,0 +1,169 @@
+;;;
+;;; CV (Choose Vehicle) Table
+;;;
+
+[CV Table]
+type=table
+width=600
+height=400
+rows=2
+cols=2
+rowpadding=8
+colpadding=8
+
+; upper-left
+
+[CV View Pane]
+parent=CV Table
+type=frame
+shader$frame=screenframe1
+
+;[CV Slideshow]
+;parent=CV View Pane
+;type=slideshow
+;width=256
+;height=256
+;inifile_prop=ui.$New Vehicle.vehicle_sshow
+
+[CV Diagram]
+parent=CV View Pane
+type=structureview
+width=256
+height=256
+struct_prop=ui.$New Vehicle.structure
+
+; upper-right
+
+[CV Description Table]
+parent=CV Table
+type=table
+rows=2
+cols=1
+rowpadding=16
+align=1
+
+[CV Vehicle Name]
+parent=CV Description Table
+type=label
+minchars=30
+text_prop=ui.$New Vehicle.vehicle_lm.selected.name
+shader$text=title
+align=1
+
+[CV Vehicle Description]
+parent=CV Description Table
+type=wraptext
+minxchars=32
+minrows=10
+rowpadding=4
+text_prop=ui.$New Vehicle.vehicle_lm.selected.description
+
+; lower-left
+
+[CV Info Table]
+parent=CV Table
+type=table
+rows=5
+cols=2
+rowpadding=4
+colpadding=8
+
+[CV emasslabel]
+parent=CV Info Table
+type=label
+text=Empty mass:
+
+[CV emasslabel2]
+parent=CV Info Table
+type=numlabel
+text_prop=ui.$New Vehicle.structure.emptymass
+units=kg
+
+[CV fmasslabel]
+parent=CV Info Table
+type=label
+text=Loaded mass:
+
+[CV fmasslabel2]
+parent=CV Info Table
+type=numlabel
+text_prop=ui.$New Vehicle.structure.mass
+units=kg
+
+[CV modulelabel]
+parent=CV Info Table
+type=label
+text=# modules:
+
+[CV modulelabel2]
+parent=CV Info Table
+type=label
+text_prop=ui.$New Vehicle.structure.modulecount
+
+[CV dvlabel]
+parent=CV Info Table
+type=label
+text=Max delta-V:
+
+[CV dvlabel2]
+parent=CV Info Table
+type=numlabel
+text_prop=ui.$New Vehicle.structure.totaldeltav
+units=km/s
+
+[CV btlabel]
+parent=CV Info Table
+type=label
+text=Burn time:
+
+[CV btlabel2]
+parent=CV Info Table
+type=numlabel
+text_prop=ui.$New Vehicle.structure.totalburntime
+units=s
+
+
+
+; lower-right
+
+[CV LR Table]
+parent=CV Table
+type=table
+rows=2
+rowpadding=8
+
+[CV List Frame]
+parent=CV LR Table
+type=frame
+shader$frame=screenframe1
+
+[CV List Box]
+parent=CV List Frame
+type=scrollbox
+vbar=true
+boxwidth=200
+boxheight=100
+
+[CV Vehicle List]
+parent=CV List Box
+type=stringlist
+model_prop=ui.$New Vehicle.vehicle_lm
+
+[CV LR Buttons]
+parent=CV LR Table
+type=table
+cols=2
+colpadding=16
+
+[CV Cancel]
+parent=CV LR Buttons
+type=button
+text=Cancel
+action=Cancel
+
+[CV Next]
+parent=CV LR Buttons
+type=button
+text=Next>>
+action=Next
+

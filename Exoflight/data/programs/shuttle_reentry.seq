@@ -1,0 +1,17 @@
+
+sequence "Shuttle Reentry" {
+
+	@orbiter = ship.structure.'$Orbiter';
+
+"Wait for >0.05 G"
+	wait for condition (ship.telemetry.gaccel > 0.05) interval 4;
+
+"Roll reentry program"
+	ship.attsys.guidmode = "rollreentry";
+	ship.guidancecap.active = true;
+	wait for 2;
+
+"Wait until alt < 10 km"
+	wait for condition (ship.telemetry.alt < 10) interval 2 timeout 1800;
+
+}

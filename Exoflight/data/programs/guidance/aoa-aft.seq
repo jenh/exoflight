@@ -1,0 +1,7 @@
+
+sequence "AoA-aft guidance" {
+
+	ship.attctrl.guidance = new AngleOfAttackProgram;
+	ship.attctrl.guidance.yaw = 180 deg;
+
+}

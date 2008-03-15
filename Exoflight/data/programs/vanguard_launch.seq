@@ -1,0 +1,58 @@
+
+sequence "Vanguard Launch" {
+
+	wait until -5;
+"Arm engines"
+	'ship.structure.$Vanguard-I.$X-405 engine.armed' = true;
+
+	wait until 0;
+"Engine start, liftoff"
+	'ship.structure.$Vanguard-I.$X-405 engine.throttle' = 1;
+	wait until 3;
+
+"Activate guidance system"
+	'ship.structure.$Vanguard-II.$guidance system.removeallrcs' = null;
+	'ship.structure.$Vanguard-II.$guidance system.addrcs' = 'ship.structure.$Vanguard-I.$gimbal system';
+	@guidance = new PYRProgram;
+	@guidance.pitch=85 deg;
+	@guidance.incl=@incl;
+	@guidance.roll=-90 deg;
+	ship.attctrl.guidance = @guidance;
+	ship.attctrl.maxangvel = 0.25;
+	'ship.structure.$Vanguard-II.$guidance system.active' = true;
+
+	wait for condition ('ship.telemetry.alt' > 5) interval 0.125;
+"Begin gravity turn"
+	'ship.attctrl.guidance' = new AngleOfAttackProgram;
+
+	wait for condition ('ship.structure.$Vanguard-I.$X-405 engine.active' == false) interval 0.25;
+
+"1st stage separation"
+	ship.structure.'$Vanguard-I'.jettison = true;
+	'ship.structure.$Vanguard-II.$guidance system.removeallrcs' = null;
+	'ship.structure.$Vanguard-II.$guidance system.addrcs' = 'ship.structure.$Vanguard-II.$gimbal system';
+	'ship.structure.$Vanguard-II.$AJ10-118 engine.armed' = true;
+	wait for 1;
+
+"2nd stage ignition"
+	'ship.structure.$Vanguard-II.$AJ10-118 engine.throttle' = 1;
+
+--	wait until 240;
+--"Zero vertical velocity mode"
+--	@guidance = game.classloader.'com/fasterlight/exo/ship/ZeroVerticalProgram';
+--	@guidance.incl = @incl;
+--	@guidance.roll = -90 deg;
+--	ship.attctrl.guidance = @guidance;
+
+	wait for condition ('ship.structure.$Vanguard-II.$AJ10-118 engine.active' == false) interval 0.25;
+
+"2nd stage separation"
+	ship.structure.'$Vanguard-II'.jettison = true;
+	wait for 85;
+
+"3rd stage ignition"
+	'ship.structure.$Vanguard-III.$motor.armed' = true;
+	'ship.structure.$Vanguard-III.$motor.throttle' = 1;
+
+}
+

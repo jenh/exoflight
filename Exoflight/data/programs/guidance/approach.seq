@@ -1,0 +1,6 @@
+
+sequence "Approach guidance" {
+
+	ship.attctrl.guidance = new ApproachProgram;
+
+}

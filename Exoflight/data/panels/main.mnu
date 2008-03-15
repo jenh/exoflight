@@ -1,0 +1,65 @@
+
+<menu>
+<item name="Game">
+	<item name="New Mission..." action="Dialog:New Mission"/>
+	<item name="Custom Mission..." action="Dialog:Custom Mission"/>
+	<separator/>
+	<item name="Restart Mission" action="Game:Reset"/>
+	<item name="Cancel Mission" action="Game:Stop Mission"/>
+	<separator/>
+	<item name="Add New Vehicle..." action="Dialog:New Vehicle"/>
+	<separator/>
+	<item name="Set Vehicle Location..." action="Dialog:Set Position"/>
+	<separator/>
+	<item name="Exit" action="Dialog:Exit"/>
+</item>
+<item name="Time">
+	<item name="Pause" action="Game:Pause"/>
+	<item name="Unpause" action="Game:Unpause"/>
+	<separator/>
+	<item name="Slower" action="Time:Slower"/>
+	<item name="Faster" action="Time:Faster"/>
+	<separator/>
+	<item name="Normal" action="Time:Minimum"/>
+	<item name="1 sec = 1 day" action="Time:Fastest"/>
+	<item name="1 sec = 1 year" action="Time:Super Fast"/>
+	<item name="Slow Motion" action="Time:Slow Motion"/>
+	<item name="Super-Slow Motion" action="Time:Slow Motion"/>
+</item>
+<item name="Options">
+	<item name="Graphics..." action="Dialog:Graphics Settings"/>
+	<item name="Sound..." action="Dialog:Sound Settings"/>
+	<item name="Joystick..." action="Dialog:Joystick Settings"/>
+	<item name="Realism..." action="Dialog:Realism Settings"/>
+	<item name="UI..." action="Dialog:UI Settings"/>
+</item>
+<item name="Window">
+	<item name="Groundtrack/Cockpit" action="Display:Groundtrack Mode"/>
+	<item name="Visual/Cockpit" action="Display:Half Visual Mode"/>
+	<item name="Tactical" action="Display:Tactical View"/>
+	<item name="Full Visual" action="Display:Full Visual View"/>
+	<item name="Structure View" action="Display:Structure View"/>
+	<separator/>
+	<item name="Toggle Messages" action="Display:Toggle Messages"/>
+	<item name="Toggle Console" action="Display:Toggle Console"/>
+</item>
+<item name="View">
+	<item name="External Camera" action="Visual:External Camera"/>
+	<item name="Next Camera" action="Visual:Next Camera"/>
+	<item name="Prev Camera" action="Visual:Prev Camera"/>
+	<item name="Toggle Night Vision" action="Visual:Toggle Night Vision"/>
+	<separator/>
+	<item name="Zoom In" action="Visual:Zoom In"/>
+	<item name="Zoom Out" action="Visual:Zoom Out"/>
+	<item name="Move Closer" action="Visual:Move In"/>
+	<item name="Move Away" action="Visual:Move Out"/>
+	<separator/>
+	<item name="Tactical Controls">
+		<item name="Zoom In" action="Tactical:Zoom In"/>
+		<item name="Zoom Out" action="Tactical:Zoom Out"/>
+	</item>
+</item>
+<item name="Help">
+	<item name="About..." action="Dialog:About"/>
+</item>
+</menu>

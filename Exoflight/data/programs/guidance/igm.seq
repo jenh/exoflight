@@ -1,0 +1,7 @@
+
+sequence "Iterative guidance mode" {
+
+	ship.attctrl.guidance = new IGMProgram;
+	ship.attctrl.guidance.targorbit =? ship.targsys.tranorbit;
+
+}

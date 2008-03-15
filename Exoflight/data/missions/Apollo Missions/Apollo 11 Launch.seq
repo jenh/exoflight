@@ -1,0 +1,28 @@
+
+sequence "Apollo 11 Launch" {
+
+	ship.launchsys.incl = 32.521 deg;
+	ship.launchsys.burntime = 698;
+	ship.launchsys.timetolaunch = 60;
+
+	ship.launchsys.targalt = 180;
+	ship.launchsys.targvel = 7.8;
+	ship.launchsys.targfpa = 0 deg;
+	ship.launchsys.active = true;
+
+	@cm = ship.structure.'$Apollo CM';
+
+	-- set up crew
+
+	game.agency.'crew#7'.module = @cm;
+	game.agency.'crew#16'.module = @cm;
+	game.agency.'crew#22'.module = @cm;
+
+	ship.name = "Apollo 11";
+
+	@ui.ship =? ship;
+	@ui.message =? "Let's launch";
+
+
+}
+

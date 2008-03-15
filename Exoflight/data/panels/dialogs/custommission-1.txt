@@ -1,0 +1,92 @@
+;;;
+;;; CT (Choose Time) Table
+;;;
+
+[CT Table]
+type=table
+width=600
+height=400
+rows=3
+cols=1
+rowpadding=32
+
+;;;
+
+[label0]
+parent=CT Table
+type=wraptext
+minxchars=60
+text=Create your own mission by filling in the blanks.  Specify the mission start date/time, what vehicle you wish to use, and which base you want to launch from.
+
+;;;
+
+[table1]
+parent=CT Table
+type=table
+rows=3
+cols=2
+rowpadding=16
+colpadding=32
+colflags#0=2
+colflags#1=1
+
+[label1.a]
+parent=table1
+type=label
+text=Mission Start Time
+shader$text=title
+
+[mission-start-edit]
+parent=table1
+type=label
+minchars=35
+editable=true
+text_prop=$$New Vehicle.mission_start_time_str
+
+[label3.a]
+parent=table1
+type=label
+text=Now?
+shader$text=title
+
+[mission-now]
+parent=table1
+type=checkbox
+bool_prop=$$New Vehicle.starts_now
+width=16
+height=16
+
+[label2.a]
+parent=table1
+type=label
+text=Mission Elapsed Time
+shader$text=title
+
+[mission-met]
+parent=table1
+type=label
+minchars=12
+editable=true
+text_prop=$$New Vehicle.mission_elapsed_time_str
+
+
+;;;
+
+[CT LR Buttons]
+parent=CT Table
+type=table
+cols=2
+colpadding=16
+
+[CT Cancel]
+parent=CT LR Buttons
+type=button
+text=Cancel
+action=Cancel
+
+[CT Next]
+parent=CT LR Buttons
+type=button
+text=Next>>
+action=Next
+

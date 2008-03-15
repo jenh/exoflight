@@ -1,0 +1,30 @@
+
+sequence "Tank Reentry Test" {
+
+	@orbelem = new KeplerianElements;
+--	@orbelem.eccent = 1.017;
+	@orbelem.eccent = 101.017;
+	@orbelem.periapsis = 6438; -- must be after eccent set
+	@orbelem.incl = 31.383 deg;
+	@orbelem.raan = 301.847 deg;
+	@orbelem.argperi = 0 deg;
+	@orbelem.trueanom = -90 deg;
+	@orbelem.epochticks = game.tick;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	@traj.angvel = [10 deg,0 deg,0 deg];
+	ship.traj = @traj;
+
+	wait for 20;
+	ship.structure.'$Gemini Reentry'.'$RCS'.armed = true;
+--	ship.structure.'$Gemini Reentry'.'$guidance system'.active = true;
+	wait for 1;
+--	ship.attsys.transz = 1;
+	ship.structure.'$Gemini Reentry'.'$RCS'.rcsflags = 34952; -- 0x8888;
+	wait for 1;
+	ship.structure.'$Gemini Reentry'.'$RCS'.rcsflags = 0;
+--	ship.attsys.transz = 0;
+--	ship.structure.'$Gemini Reentry'.'$guidance system'.active = false;
+}

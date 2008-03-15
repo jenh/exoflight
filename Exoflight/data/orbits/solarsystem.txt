@@ -1,0 +1,330 @@
+
+[Sun]
+; todo- don't hack this
+radius=695000
+mass=1.989e30
+radianttemp=6000
+rotper=24.59
+
+;[Mercury]
+;parent=Sun
+;a=0.38709893
+;e=0.20563069
+;i=7.00487
+;N=48.33167
+;;p=77.45645
+;;L=252.25084
+;w=29.1241
+;wd=1.01444E-5
+;ed=5.59E-10
+;M=168.6562
+;Md=4.0923344368
+;radius=2439.7
+;mass=3.303e23
+;albedo=0.10
+;rotper=58.6462
+
+;[Venus]
+;parent=Sun
+;N=76.6799
+;Nd=2.46590E-5
+;i=3.3946
+;id=2.75E-8
+;w=54.8910
+;wd=1.38374E-5
+;a=0.723330
+;e=0.006773
+;ed=-1.302E-9
+;M=48.0052
+;Md=1.6021302244
+;radius=6051.84
+;mass=4.869e24
+;albedo=0.65
+;rotper=-243.0187
+;elevmap=texs/Venus/Venus-elev;11;-8;8
+;
+;[Earth]
+;parent=Sun
+;N=0.0
+;i=0.0
+;w=282.9404
+;wd=4.70935e-5
+;a=1
+;e=0.016709
+;ed=-1.151e-9
+;M=176.0470
+;Md=0.9856002585
+;radius=6378.14
+;mass=5.972e24
+;albedo=0.37
+;absorb=0.26
+;rot0=280.4606
+;rotper=0.99727
+;tilt=23.45
+;atmosphere=101325;0.0065;288.16;11.0;1.7841e-5;500
+;polera=0.0
+;; 90 - 23.45 = dec
+;;poledec=66.55
+;;elevmap=texs/Earth/Earth-elev;11;0;8.850
+;elevmap=texs/Earth/Earth-elev;12;0;8.850
+
+;[Mars]
+;parent=Sun
+;N=49.5574
+;Nd=2.11081E-5
+;i=1.8497
+;id=-1.78E-8
+;w=286.5016
+;wd=2.92961E-5
+;a=1.523688
+;e=0.093405
+;ed=2.516E-9
+;M=18.6021
+;Md=0.5240207766
+;radius=3396.000
+;mass=6.421e23
+;albedo=0.15
+;rotper=1.025957
+;; todo: convert to helio
+;polera=317.681
+;poledec=52.886
+;;polera=317.681 -0.108
+;;poledec=52.886 -0.061
+;; todo: not right
+;atmosphere=699;0.00998;242.1;7.0;1.7841e-5;100
+;; todo?
+;elevmap=texs/Mars/Mars-elev;12;-8.156;21.191
+
+; todo: mass,etc
+
+;[Jupiter]
+;parent=Sun
+;N=100.4542
+;Nd=2.76854E-5
+;i=1.3030
+;id=-1.557E-7
+;w=273.8777
+;wd=1.64505E-5
+;a=5.20256
+;e=0.048498
+;ed=4.469E-9
+;M=19.8950
+;Md=0.0830853001
+;radius=71492
+;mass=1.9e27
+
+[Saturn]
+parent=Sun
+N=113.6634
+Nd=2.38980E-5
+i=2.4886
+id=-1.081E-7
+w=339.3939
+wd=2.97661E-5
+a=9.55475
+e=0.055546
+ed=-9.499E-9
+M=316.9670
+Md=0.0334442282
+radius=60268
+mass=5.688e26
+
+[Uranus]
+parent=Sun
+N=74.0005
+Nd=1.3978E-5
+i=0.7733
+id=1.9E-8
+w=96.6612
+wd=3.0565E-5
+a=19.18171
+e=0.047318
+ed=7.45E-9
+M=142.5905
+Md=0.011725806
+
+[Neptune]
+parent=Sun
+N=131.7806
+Nd=3.0173E-5
+i=1.7700
+id=-2.55E-7
+w=272.8461
+wd=-6.027E-6
+a=30.05826
+e=0.008606
+ed=2.15E-9
+M=260.2471
+Md=0.005995147
+
+[Pluto]
+parent=Sun
+a=5913520000 km
+radius=1160
+mass=1.29e22
+albedo=0.3
+i=17.148
+e=0.2482
+rotper=-6.3872
+tilt=122.52
+
+;;;
+
+;[Luna]
+;parent=Earth
+;N=125.1228
+;Nd=-0.0529538083
+;i=5.1454
+;w=318.0634
+;wd=0.1643573223
+;a=384400 km
+;e=0.054900
+;M=115.3654
+;Md=13.0649929509
+;radius=1737.53
+;mass=7.349e22f
+;rotper=27.456
+;rot0=32
+;elevmap=texs/Luna/Luna-elev;11;-8.722;8.722
+
+[Luna]
+parent=Earth
+N=13.10271
+i=5.079865
+w=297.98071
+a=386188 km
+e=0.0510488
+M=207.7747
+radius=1737.53
+mass=7.349e22f
+rotper=27.456
+rot0=32
+elevmap=texs/Luna/Luna-elev;11;-8.722;8.722
+epoch=07/16/1969 14:32:00 GMT
+
+;2440419.105555556 = A.D. 1969-Jul-16 14:32:00.0000 (TDB)
+; EC= 5.104882117090422E-02 QR= 3.664738161314856E+05 IN= 5.079865471666128E+00
+; OM= 3.530420856965123E+02 W = 2.979807182465217E+02 Tp= 2.440430723396984E+06
+; N = 1.310271404849611E+01 MA= 2.077747459082980E+02 TA=-1.548043924814096E+02
+; A = 3.861882721761040E+05 AD= 4.059027282207224E+05 PR= 2.747522373361415E+01
+
+;;;
+
+[Phobos]
+parent=Mars
+mass=1.08e16
+radius=14.043
+i=1.0
+e=0.01
+a=9380 km
+elevmap=texs/Phobos/Phobos-elev;7;-5.915;0
+
+[Deimos]
+parent=Mars
+radius=8.4068
+mass=1.8e15
+i=1.8
+e=0
+a=23460 km
+elevmap=texs/Deimos/Deimos-elev;7;-4.8246;0
+
+;;;
+
+[Io]
+parent=Jupiter
+radius=1815
+mass=8.94e22
+a=421600 km
+i=0.040
+e=0.003
+rotper=1.769138
+albedo=0.61
+
+[Europa]
+parent=Jupiter
+radius=1569
+mass=4.8e22
+a=670900 km
+i=0.470
+e=0.009
+
+[Ganymede]
+parent=Jupiter
+radius=2631
+mass=1.48e23
+a=1070000 km
+i=0.195
+e=0.002
+
+[Callisto]
+parent=Jupiter
+radius=2403
+mass=1.08e23
+a=1883000 km
+i=0.281
+e=0.007
+
+;;;
+
+[Titan]
+parent=Saturn
+radius=2575
+mass=1.35e23
+a=1481000 km
+i=0.33
+e=0.0292
+
+[Rhea]
+parent=Saturn
+radius=765
+mass=2.49e21
+a=527040 km
+i=0.35
+e=0.0010
+
+;;;
+
+[Charon]
+parent=Pluto
+radius=635
+mass=1.77e21
+albedo=0.5
+a=19640 km
+i=98.80
+rotper=6.38725
+
+;;;;
+
+[Voyager 2]
+parent=Sun
+a=-601124000 km
+e=6.284578
+i=78.810177
+N=100.934989
+w=130.043962
+M=342.970736
+epoch=1/1/1991 00:00:00 EST
+
+;[Jupiter-Saturn Voyager 2]
+;parent=Sun
+;a=-2220315000 km
+;e=1.338264
+;i=2.582320
+;N=119.196938
+;w=-9.170896
+;M=4.798319
+;epoch=9/15/1979 11:07:25 EST
+
+;;;
+
+[Eros]
+parent=Sun
+a=1.458
+e=0.223
+i=10.8
+rotper=0.220
+; todo!
+mass=5e15
+radius=17.408
+; http://www-geodyn.mit.edu/near/nlr.30day.html
+elevmap=texs/Eros/Eros-elev;7;-14.592;0.000

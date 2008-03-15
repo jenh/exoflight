@@ -1,0 +1,60 @@
+
+sequence "Rotation Test" {
+
+-- prepare LM
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.015;
+	@orbelem.periapsis = 1753; -- must be after eccent set
+	@orbelem.incl = 182.1 deg; -- ??
+	@orbelem.raan = 224 deg;
+	@orbelem.argperi = 180 deg;
+	@orbelem.trueanom = -6 deg;
+	@orbelem.epochticks = game.tick;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Luna;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+---
+
+	@ui.ship =? ship;
+
+	@lam = ship.structure.'$Apollo LAM';
+	@rcs = @lam.'$RCS';
+
+	wait for 5;
+	@rcs.throttle = 1;
+	@rcs.rcsflags = 8320;
+	wait for 3;
+	@rcs.rcsflags = 32800;
+	wait for 3;
+	@rcs.rcsflags = 2050;
+	wait for 3;
+	@rcs.rcsflags = 520;
+	wait for 3;
+	@rcs.rcsflags = 17476;
+	wait for 3;
+	@rcs.rcsflags = 4369;
+	wait for 3;
+	@rcs.rcsflags = 0;
+
+	wait for 5;
+	@rcs.throttle = 1;
+	@rcs.rcsflags = 16400;
+	wait for 3;
+	@rcs.rcsflags = 4160;
+	wait for 3;
+	@rcs.rcsflags = 260;
+	wait for 3;
+	@rcs.rcsflags = 1025;
+	wait for 3;
+	@rcs.rcsflags = 34952;
+	wait for 3;
+	@rcs.rcsflags = 8738;
+	wait for 3;
+	@rcs.throttle = 0;
+
+}
+

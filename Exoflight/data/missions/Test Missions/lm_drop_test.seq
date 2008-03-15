@@ -1,0 +1,21 @@
+
+sequence "LM Drop Test" {
+
+	@game = game;
+
+-- todo: how to handle date change?
+
+	@game.debug = true;
+	@game.date = "07/16/1969 16:22:13 GMT";
+	zerotime = @game.tick;
+	@game.start = true;
+
+	@ship = @game.agency.'preparevehicle$Apollo LM$Apollo 11';
+	ship = @ship;
+
+	wait until 0;
+	ship.structure.'$Apollo LDM.$descent engine'.throttle = 1;
+	wait for 5;
+	ship.structure.'$Apollo LDM.$descent engine'.throttle = 0;
+
+}

@@ -1,0 +1,6 @@
+
+sequence "Direct to Target" {
+
+	ship.attctrl.guidance = new DirectTargetProgram;
+
+}

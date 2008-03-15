@@ -1,0 +1,19 @@
+
+sequence "Phobos Escape" {
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 1.2;
+	@orbelem.perhilion = 16; -- must be after eccent set
+	@orbelem.incl = 28.87 deg;
+	@orbelem.longascnode = 134.6 deg;
+	@orbelem.argperi = -169.014 deg;
+	@orbelem.trueanom = -90 deg;
+
+	@traj = new DynamicOrbitTrajectory;
+	@traj.parent = game.$Phobos;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+	game.governor.timescale = 60;
+}
+

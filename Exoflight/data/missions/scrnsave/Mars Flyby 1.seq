@@ -1,0 +1,19 @@
+
+sequence "Mars Flyby 1" {
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 1.03;
+	@orbelem.perhilion = 3398; -- must be after eccent set
+	@orbelem.incl = 28.87 deg;
+	@orbelem.longascnode = 134.6 deg;
+	@orbelem.argperi = -169.014 deg;
+	@orbelem.trueanom = -70 deg;
+
+	@traj = new OrbitTrajectory;
+	@traj.parent = game.$Mars;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+	game.governor.timescale = 10;
+}
+

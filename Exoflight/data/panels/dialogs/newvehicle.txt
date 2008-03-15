@@ -1,0 +1,25 @@
+;;;
+;;; the "new vehicle" panel
+;;;
+
+[New Vehicle]
+type=com.fasterlight.exo.newgui.NewVehicleWindow
+x=192
+y=144
+;width=640
+;height=480
+title=New Vehicle
+;shader$frame=screwpanel1
+layout=true
+
+[NV Pager]
+parent=New Vehicle
+type=pagestack
+
+[CV Table]
+parent=NV Pager
+load=panels/dialogs/newvehicle-1.txt
+
+[CB Table]
+parent=NV Pager
+load=panels/dialogs/newvehicle-2.txt

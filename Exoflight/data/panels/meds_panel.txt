@@ -1,0 +1,140 @@
+
+[top]
+type=frame
+width=332
+height=200
+shader$frame=roundrect
+quadflags=1
+title= MEDS 
+shader$title=roundtext
+shader$text=computext
+shader$editable=computext-edit
+shader$editing=computext-edit
+
+[meds-frame]
+type=frame
+parent=top
+x=8
+y=16
+width=256
+height=184
+shader$frame=screenframe-small
+
+[MEDS Pager]
+type=pagestack
+parent=meds-frame
+pagenum=0
+shader$button-off-up=compubutton
+shader$button-off-down=compubutton-down
+shader$button-on-up=compubutton-down
+shader$button-on-down=compubutton
+
+[meds-nav]
+type=table
+parent=top
+rows=8
+cols=1
+x=268
+y=16
+layout=true
+shader$text=text-8pt
+shader$button-off-up=greenbutton
+shader$button-off-down=greenbutton-down
+shader$button-on-up=greenbutton-down
+shader$button-on-down=greenbutton
+
+; todo: inefficient
+
+[medsbtn0]
+type=button
+parent=meds-nav
+text=DISPLAY
+value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
+action=0
+
+[medsbtn1]
+type=button
+parent=meds-nav
+text=INTERCP
+value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
+action=1
+
+[medsbtn2]
+type=button
+parent=meds-nav
+text=DOCKING
+value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
+action=2
+
+[medsbtn3]
+type=button
+parent=meds-nav
+text= LAUNCH
+value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
+action=3
+
+[medsbtn4]
+type=button
+parent=meds-nav
+text=MANEUVR
+value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
+action=4
+
+[medsbtn5]
+type=button
+parent=meds-nav
+text=REENTRY
+value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
+action=5
+
+[medsbtn6]
+type=button
+parent=meds-nav
+text=GUIDANC
+value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
+action=6
+
+;;;
+
+[page0]
+parent=MEDS Pager
+x=8
+y=8
+load=panels/meds_page_display.txt
+
+[page1]
+parent=MEDS Pager
+x=8
+y=8
+load=panels/meds_page_intercept.txt
+
+[page2]
+parent=MEDS Pager
+x=8
+y=8
+load=panels/meds_page_docking.txt
+
+[page3]
+parent=MEDS Pager
+x=8
+y=8
+load=panels/meds_page_launch.txt
+
+[page4]
+parent=MEDS Pager
+x=8
+y=8
+load=panels/meds_page_maneuver.txt
+
+[page5]
+parent=MEDS Pager
+x=8
+y=8
+load=panels/meds_page_landing.txt
+
+[page6]
+parent=MEDS Pager
+x=8
+y=8
+load=panels/meds_page_guidance.txt
+

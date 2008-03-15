@@ -1,0 +1,158 @@
+sequence "Shuttle Launch" {
+
+	@gsound =? game.vars.gsound;
+	@Orbiter = 'ship.structure.$Orbiter';
+	@SRB1 = 'ship.structure.$Left SRB';
+	@SRB2 = 'ship.structure.$Right SRB';
+	ship.trajectory.locked = true;
+	ship.launchsys.glimit = 3.0;
+	ship.maneuvsys.updatelaunch = true;
+
+	wait until -60;
+"Activate internal power"
+	@gsound.say =? "[You are go for auto sequence start.]";
+	@Orbiter.'$fuel cells.active' = true;
+	@Orbiter.$ECS.active = true;
+
+	wait until -10;
+"Arm engines"
+	@Orbiter.'$engine 1'.armed = true;
+	@Orbiter.'$engine 2'.armed = true;
+	@Orbiter.'$engine 3'.armed = true;
+	@SRB1.'$engine.armed' = true;
+	@SRB2.'$engine.armed' = true;
+	@gsound.say =? "[We have a go for engine start.]";
+
+	wait until -6.6;
+"Activate main engines"
+	@Orbiter.'$engine 1'.throttle = 1.00;
+	wait until -6.48;
+	@Orbiter.'$engine 2'.throttle = 1.00;
+	wait until -6.36;
+	@Orbiter.'$engine 3'.throttle = 1.00;
+	-- use main engine gimbals, and SRV gimbals
+	@Orbiter.'$gimbal system'.armed = true;
+--	@Orbiter.'$control surfaces'.armed = true;
+	@SRB1.$gimbals.armed = true;
+	@SRB2.$gimbals.armed = true;
+
+	wait until 0;
+"Fire SRB's"
+	@SRB1.'$engine'.throttle = 1;
+	@SRB2.'$engine'.throttle = 1;
+	ship.attsys.guidmode = "null";
+	@Orbiter.'$guidance system.active' = true;
+	
+	wait until 0.5;
+"Liftoff"
+	ship.trajectory.locked = false;
+
+	wait until 3;
+	@gsound.say =? "[Houston now controlling.]";
+
+"Wait to clear launch tower"
+	wait for condition ('ship.telemetry.altagl' > 0.1) interval 0.1 timeout 6;
+
+"Pitch and roll maneuver"
+	ship.attsys.guidmode = "pyr";
+        ship.attctrl.guidance.pitch=87 deg;
+	ship.attctrl.guidance.doincl=true;
+	ship.attctrl.guidance.roll=180 deg;
+	@gsound.say =? "Roll program, Houston.";
+	wait for 2;
+	@gsound.say =? "[Roger, roll, Endeavor.]";
+
+	wait until 22;
+"Start gravity turn"
+	ship.attsys.guidmode = "aoa";
+	ship.attctrl.guidance.doincl = true;
+	ship.attctrl.guidance.roll = 180 deg;
+	ship.attctrl.guidance.pitch = 0.8 deg;
+
+	wait until 26;
+"Throttle down to 65%"
+	ship.attsys.throttle = 0.65;
+
+	wait until 56;
+	@gsound.say =? "[Endeavor, Houston, go with throttle up.]";
+
+	wait until 60;
+"Throttle up to 106%"
+	@gsound.say =? "Roger, go with throttle up.";
+	ship.attsys.throttle = 1.06;
+
+	wait for condition (@SRB1.$engine.active == false) interval 1 timeout 70;
+	wait for condition (@SRB2.$engine.active == false) interval 1 timeout 70;
+"SRB burnout"
+	@gsound.say =? "SRB burnout, ready for SRB sep.";
+
+	wait until 131;
+"Detach SRB's"
+	@SRB1.jettison = true;
+	@SRB2.jettison = true;
+	@SRB1.'$jettison motor'.fired = true;
+	@SRB2.'$jettison motor'.fired = true;
+
+	wait for 1;
+	@gsound.say =? "We have SRB sep.";
+	@gsound.says =? "Altitude is ";
+	@gsound.saynum =? 'ship.telemetry.alt';
+	@gsound.say =? " km.";
+	wait for 1;
+
+"Iterative Guidance Mode"
+	ship.attsys.guidmode = "igm";
+	ship.attctrl.guidance.roll = 180 deg;
+
+	wait until 260;
+"Negative return to landing site"
+	@gsound.say =? "Negative return.";
+
+	wait until 420;
+"Single engine press"
+	@gsound.say =? "Single engine press.";
+
+	wait for condition (ship.attctrl.guidance.tgo < 3) interval 1;
+"Zero vertical velocity"
+	ship.attctrl.guidance.rinhibit = true;
+	ship.attctrl.guidance.yinhibit = true;
+
+"Wait for end condition"
+	wait for condition (ship.telemetry.velocity > ship.launchsys.targvel) interval 0.0625 timeout 60;
+
+"MECO"
+	ship.attsys.throttle = 0;
+	ship.attsys.rcsmanual = 1;
+	@Orbiter.'$gimbal system'.armed = false;
+	@Orbiter.'$RCS primary'.armed = true;
+
+	wait for 0.25;
+	@gsound.say =? "Main engine cutoff.";
+	wait for 8;
+
+"Detach external tank"
+	@gsound.say =? "External tank sep.";
+	@ET_thing = ship.structure.'$External Tank'.get_jettison;
+	ship.attsys.transy = 1;
+	wait for 10;
+	ship.attsys.transy = 0;
+	@gsound.say =? "Minus Z translation complete.";
+
+	wait for 10;
+"Disperse ET propellants"
+	@tumble = @ET_thing.structure.'$External Tank'.'$tumble valve';
+	@tumble.armed = true;
+	@tumble.rcsflags = 1;
+	wait for 5;
+
+"Wait for altitude > 150 km"
+	ship.attsys.guidmode = "aoa";
+	ship.attsys.rcsmanual = 0;
+	wait for condition (ship.telemetry.alt > 150) interval 1;
+
+"Circularize orbit"
+	ship.maneuvsys.periapsis = ship.telemetry.apoapsis;
+	ship.maneuvsys.active = true;
+
+}
+

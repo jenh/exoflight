@@ -1,0 +1,13 @@
+
+sequence "Phobos Intercept" {
+
+--	ship.targsys.target = game.$Phobos;
+	ship.launchsys.incl = 10 deg;
+	ship.launchsys.timetolaunch = 60;
+	ship.launchsys.active = true;
+
+	wait for 120;
+	ship.attsys.guidmode = "igm";
+
+}
+

@@ -1,0 +1,21 @@
+;;;
+;;; the "new mission" panel
+;;;
+
+[New Mission]
+type=com.fasterlight.exo.newgui.NewMissionWindow
+x=192
+y=144
+title=New Mission
+layout=true
+
+[pages]
+parent=New Mission
+type=pagestack
+
+;;;
+
+[page1]
+parent=pages
+load=panels/dialogs/newmission-1.txt
+

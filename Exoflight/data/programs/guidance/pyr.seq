@@ -1,0 +1,11 @@
+
+sequence "PYR guidance" {
+
+	ship.attctrl.guidance = new PYRProgram;
+-- can't do this b/c it screws up some launch programs
+-- that expect these lines to be executed immediately
+--	ship.attctrl.guidance.pitch = ship.telemetry.ppitch;
+--	ship.attctrl.guidance.yaw = ship.telemetry.pyaw;
+--	ship.attctrl.guidance.roll = ship.telemetry.proll;
+
+}

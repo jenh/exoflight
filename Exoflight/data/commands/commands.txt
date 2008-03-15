@@ -1,0 +1,253 @@
+
+[Time:Faster]
+game.governor.addtimescaleidx=1
+
+[Time:Slower]
+game.governor.addtimescaleidx=-1
+
+[Time:Maximum]
+game.governor.timescaleidx=15
+
+[Time:Minimum]
+game.governor.timescaleidx=0
+
+[Time:Super Fast]
+game.governor.timescaleidx=99
+
+[Time:Slow Motion]
+game.governor.timescale=0.25
+
+[Time:Super-Slow Motion]
+game.governor.timescale=0.01666
+
+[Time:Pause]
+game.governor.paused=true
+
+[Time:Unpause]
+game.governor.paused=false
+
+[Time:Toggle Pause]
+game.governor.paused=<toggle>
+
+
+;--------
+
+;[Display:Launch Config]
+;ui.$$MSD Pager.pagenum=0
+
+;[Display:Landing Config]
+;ui.$$MSD Pager.pagenum=1
+
+[Display:Groundtrack Mode]
+ui.$$Pages.pagenum=0
+ui.$$Top Pager.pagenum=0
+
+[Display:Half Visual Mode]
+ui.$$Pages.pagenum=0
+ui.$$Top Pager.pagenum=1
+
+[Display:Half Tactical Mode]
+ui.$$Pages.pagenum=0
+ui.$$Top Pager.pagenum=2
+
+[Display:Tactical View]
+ui.$$Pages.pagenum=1
+
+[Display:Full Visual View]
+ui.$$Pages.pagenum=2
+
+[Display:Structure View]
+ui.$$Pages.pagenum=3
+
+[Display:Toggle Console]
+ui.$$Console Window.raised=<toggle>
+
+[Display:Toggle Messages]
+ui.$$Messages Window.raised=<toggle>
+
+
+;--------
+
+[Visual:Zoom In]
+ui.$$Visual.camera.zoom=1.33333
+
+[Visual:Zoom Out]
+ui.$$Visual.camera.zoom=0.75
+
+[Visual:Move In]
+ui.$$Visual.camera.closer=1.33333
+
+[Visual:Move Out]
+ui.$$Visual.camera.closer=0.75
+
+[Visual:Next Camera]
+ui.$$Visual.nextcamera=1
+
+[Visual:Prev Camera]
+ui.$$Visual.nextcamera=-1
+
+[Visual:Toggle Night Vision]
+ui.$$Visual.nightvision=<toggle>
+
+[Visual:Toggle Show Decals]
+ui.$$Visual.showlabels=<toggle>
+
+;--------
+
+[Tactical:Zoom In]
+ui.$$Tactical.zoom=1.33333
+
+[Tactical:Zoom Out]
+ui.$$Tactical.zoom=0.75
+
+[Tactical:Toggle Ecliptic]
+ui.$$Tactical.showecliptic=<toggle>
+
+;--------
+
+[Ground Track:Zoom In]
+ui.$$Ground Track.zoom=1.33333
+
+[Ground Track:Zoom Out]
+ui.$$Ground Track.zoom=0.75
+
+;--------
+
+[Select:Target]
+ship.targsys.target='selected'
+
+[Select:Clear Target]
+ship.targsys.target=null
+
+;--------
+
+[Control:Translate +X]
+ship.attsys.transx=1
+
+[Control:Translate -X]
+ship.attsys.transx=-1
+
+[Control:Translate X Null]
+ship.attsys.transx=0
+
+[Control:Translate +Y]
+ship.attsys.transy=1
+
+[Control:Translate -Y]
+ship.attsys.transy=-1
+
+[Control:Translate Y Null]
+ship.attsys.transy=0
+
+[Control:Translate +Z]
+ship.attsys.transz=1
+
+[Control:Translate -Z]
+ship.attsys.transz=-1
+
+[Control:Translate Z Null]
+ship.attsys.transz=0
+
+[Control:Slow Translate +X]
+ship.attsys.transx=0.2
+
+[Control:Slow Translate -X]
+ship.attsys.transx=-0.2
+
+[Control:Slow Translate +Y]
+ship.attsys.transy=0.2
+
+[Control:Slow Translate -Y]
+ship.attsys.transy=-0.2
+
+[Control:Slow Translate +Z]
+ship.attsys.transz=0.2
+
+[Control:Slow Translate -Z]
+ship.attsys.transz=-0.2
+
+[Control:Toggle Manual Throttle]
+ship.attsys.throtmanual=<toggle>
+
+[Control:Throttle Off]
+ship.attsys.manthrottle=0
+
+[Control:Throttle 50%]
+ship.attsys.manthrottle=0.5
+
+[Control:Throttle 100%]
+ship.attsys.manthrottle=1.0
+
+;-------
+
+[Sequencer:Abort]
+ship.sequencer.abort=1
+
+[Sequencer:Stop]
+ship.sequencer.started=false 
+
+[Sequencer:Start]
+ship.sequencer.started=true 
+
+
+;-------
+
+[Guidance:Set Active]
+ship.guidancecap.active=true
+
+[Guidance:Set Inactive]
+ship.guidancecap.active=false
+
+[Guidance:Set Band Hi]
+ship.guidancecap.settingidx=0
+
+[Guidance:Set Band Lo]
+ship.guidancecap.settingidx=1
+
+[Guidance:RCS Direct On]
+ship.attsys.rcsdirect=true
+
+[Guidance:RCS Direct Off]
+ship.attsys.rcsdirect=false
+
+[Guidance:Attitude Hold]
+ship.attsys.rcsmanual=1
+
+[Guidance:Attitude Auto]
+ship.attsys.rcsmanual=0
+
+;-------
+
+[Dialog:New Mission]
+ui.loaddialog=panels/dialogs/newmission.txt
+
+[Dialog:New Vehicle]
+ui.loaddialog=panels/dialogs/newvehicle.txt
+
+[Dialog:Set Position]
+ui.loaddialog=panels/dialogs/setposition.txt
+
+[Dialog:Custom Mission]
+ui.loaddialog=panels/dialogs/custommission.txt
+
+[Dialog:Exit]
+ui.loaddialog=panels/dialogs/exit.txt
+
+[Dialog:About]
+ui.loaddialog=panels/dialogs/about.txt
+
+[Dialog:Sound Settings]
+ui.loaddialog=panels/dialogs/settings-sound.txt
+
+[Dialog:Graphics Settings]
+ui.loaddialog=panels/dialogs/settings-graphics.txt
+
+[Dialog:Realism Settings]
+ui.loaddialog=panels/dialogs/settings-realism.txt
+
+[Dialog:UI Settings]
+ui.loaddialog=panels/dialogs/settings-ui.txt
+
+[Game:Stop Mission]
+game.mission.sequencer.started=false
+

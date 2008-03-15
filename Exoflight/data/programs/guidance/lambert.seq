@@ -1,0 +1,8 @@
+
+sequence "Lambert guidance" {
+
+	ship.attctrl.guidance = new LambertProgram;
+	ship.attctrl.guidance.targtime = game.tick;
+	ship.attctrl.guidance.timebias = 300;
+
+}

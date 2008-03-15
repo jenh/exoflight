@@ -1,0 +1,126 @@
+
+sequence "Titan 2 Launch" {
+
+	@gsound =? game.vars.gsound;
+	ship.trajectory.locked = true;
+	@Titan1 = ship.structure.'$Titan 2 Booster';
+	@Titan2 = ship.structure.'$Titan 2 Sustainer';
+	@guidcap = @Titan2.'$guidance system';
+	ship.maneuvsys.updatelaunch = true;
+
+	set abort "ABORT" goto Abort;
+
+	wait until -6;
+"Arm engines"
+	@Titan1.'$engine 1'.armed = true;
+	@Titan1.'$engine 2'.armed = true;
+	@Titan1.'$gimbal system'.armed = true;
+	@gsound.say =? "[We have a go for engine start.]";
+
+	wait until 0;
+"Activate main engines"
+	@Titan1.'$engine 1'.throttle = 1;
+	@Titan1.'$engine 2'.throttle = 1;
+
+	wait until 0;
+"Liftoff"
+	ship.trajectory.locked = false;
+	@gsound.calloutgroup =? "launch";
+
+	wait until 10;
+"Begin roll"
+	ship.attsys.guidmode = "pyr";
+	ship.attctrl.guidance.pitch = 87 deg;
+	ship.attctrl.guidance.doincl = true;
+	@guidcap.active = true;
+
+	wait until 25;
+"Begin gravity turn"
+	ship.attsys.guidmode = "aoa";
+	@guidance = ship.attctrl.guidance;
+	@guidance.pitch = -1 deg;
+	@guidance.doincl = true;
+
+	wait for condition (@Titan1.$tanks.percent < 2) interval 0.25;
+"Attitude hold"
+	ship.attsys.guidmode = null;
+	wait for condition (@Titan1.'$engine 1'.active == false) interval 0.25;
+	wait for condition (@Titan1.'$engine 2'.active == false) interval 0.25;
+"BECO"
+	-- turn guidance off to avoid warning
+	ship.guidancecap.active = false;
+
+	@Titan1.jettison = true;
+	@Titan2.'$gimbal system'.armed = true;
+	@Titan2.$engine.armed = true;
+	wait for 0.2;
+
+"Second stage ignition"
+	@Titan2.$engine.throttle = 1;
+	@gsound.say =? "Second stage ignition.";
+	-- turn guidance back on
+	ship.guidancecap.active = true;
+	
+	ship.maneuvsys.updatelaunch = true;
+	ship.attsys.guidmode = "igm";
+	ship.attsys.rcsmanual = 0;
+
+-- 270 x 161 km orbit
+
+	wait for 1;
+	wait for condition (ship.attctrl.guidance.tgo < 3) interval 1;
+
+--"Lateral, radial velocity inhibit"
+--	ship.attctrl.guidance.rinhibit = true;
+--	ship.attctrl.guidance.yinhibit = true;
+
+	wait for condition (ship.attctrl.guidance.tgo < 0.15) interval 0.125;
+	@Titan2.$engine.active = false;
+
+-- should be T=336 secs
+
+"SECO"
+	@gsound.say =? "Second stage engine stop.";
+	ship.guidancecap.active = false;
+	wait for 1;
+
+"Activate Gemini OAMS"
+	ship.attsys.guidmode = "aoa";
+	ship.structure.'$Gemini Equipment'.'$OAMS'.armed = true;
+	ship.structure.'$Gemini Reentry'.'$guidance system'.active = true;
+	wait for 1;
+
+"---END LAUNCH SEQUENCE---"
+	stop;
+
+---
+
+Abort:
+"ABORT"
+	@reentry = ship.structure.'$Gemini Reentry';
+	@reentry.'$ejection seat 1'.deployed = true;
+	@reentry.'$ejection seat 2'.deployed = true;
+	@seat1 = ship.structure.'$ejection seat 1';
+	@seat2 = ship.structure.'$ejection seat 2';
+	@reentry.'crew#1'.module = @seat2;
+	@reentry.'crew#0'.module = @seat1;
+
+	wait for 0.05;
+	@seat1.detach = true;
+	@seat2.detach = true;
+--	@ui.$$Visual.camera =? @seat1.$helmetcam;
+	wait for 0.01;
+	@seat1.structure.thing.trajectory.locked =? false;
+	@seat2.structure.thing.trajectory.locked =? false;
+
+	wait for 0.01;
+	@seat1.$rocket.fired = true;
+
+	wait for 0.01;
+	@seat2.$rocket.fired = true;
+
+	wait for 5;
+	@seat1.$parachute.deployed = true;
+	@seat2.$parachute.deployed = true;
+}
+

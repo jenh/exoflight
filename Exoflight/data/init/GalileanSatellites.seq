@@ -1,0 +1,127 @@
+
+--
+-- Source: http://nssdc.gsfc.nasa.gov/planetary/factsheet/
+-- And Meeus (1998)
+--
+
+sequence "Setup Galilean Satellites" {
+
+--
+-- Io
+--
+
+@traj = new OrbitTrajectory;
+@elem = new KeplerianElements;
+@elem.eccent	= 0.004;
+@elem.semimajor = 421600;
+@elem.incl	= 0.04 deg;
+@elem.raan      = 312.3346 deg;
+@elem.argperi   = 97.0881 deg;
+@elem.meananom  = 163.8069 deg;
+@traj.parent = game.$Jupiter;
+@traj.orbelemgeo = @elem;
+
+--@elev = new RasterLODElevationModel;
+--@elev.fileprefix = "elevtexs/Io/Io-elev";
+--@elev.maxprecision = 7;
+--@elev.mindisplacement = -5.915;
+--@elev.maxdisplacement = 0;
+
+@p = new Planet;
+@p.name = "Io";
+@p.mass = 8.94e22;
+@p.radius = 1821.3;
+@p.traj = @traj;
+@p.spinaxis = [268 deg, 64.5 deg];
+@p.rot0 = 0;
+@p.rotperiodsecs = @traj.conic.period;
+--@p.elevmodel = @elev;
+
+--
+-- Europa
+--
+
+@traj = new OrbitTrajectory;
+@elem = new KeplerianElements;
+@elem.eccent	= 0.009;
+@elem.semimajor = 670900;
+@elem.incl	= 0.47 deg;
+@elem.meananom  = 358.4140 deg;
+@traj.parent = game.$Jupiter;
+@traj.orbelemgeo = @elem;
+
+--@elev = new RasterLODElevationModel;
+--@elev.fileprefix = "elevtexs/Io/Io-elev";
+--@elev.maxprecision = 7;
+--@elev.mindisplacement = -5.915;
+--@elev.maxdisplacement = 0;
+
+@p = new Planet;
+@p.name = "Europa";
+@p.mass = 4.797e22;
+@p.radius = 1565;
+@p.traj = @traj;
+@p.spinaxis = [268 deg, 64.5 deg];
+@p.rot0 = 0;
+@p.rotperiodsecs = @traj.conic.period;
+--@p.elevmodel = @elev;
+
+--
+-- Ganymede
+--
+
+@traj = new OrbitTrajectory;
+@elem = new KeplerianElements;
+@elem.eccent	= 0.002;
+@elem.semimajor = 1070000;
+@elem.incl	= 0.21 deg;
+@elem.meananom  = 5.7176 deg;
+@traj.parent = game.$Jupiter;
+@traj.orbelemgeo = @elem;
+
+--@elev = new RasterLODElevationModel;
+--@elev.fileprefix = "elevtexs/Io/Io-elev";
+--@elev.maxprecision = 7;
+--@elev.mindisplacement = -5.915;
+--@elev.maxdisplacement = 0;
+
+@p = new Planet;
+@p.name = "Ganymede";
+@p.mass = 1.482e23;
+@p.radius = 2634;
+@p.traj = @traj;
+@p.spinaxis = [268 deg, 64.5 deg];
+@p.rot0 = 0;
+@p.rotperiodsecs = @traj.conic.period;
+--@p.elevmodel = @elev;
+
+--
+-- Callisto
+--
+
+@traj = new OrbitTrajectory;
+@elem = new KeplerianElements;
+@elem.eccent	= 0.007;
+@elem.semimajor = 1883000;
+@elem.incl	= 0.51 deg;
+@elem.meananom  = 224.8092 deg;
+@traj.parent = game.$Jupiter;
+@traj.orbelemgeo = @elem;
+
+--@elev = new RasterLODElevationModel;
+--@elev.fileprefix = "elevtexs/Io/Io-elev";
+--@elev.maxprecision = 7;
+--@elev.mindisplacement = -5.915;
+--@elev.maxdisplacement = 0;
+
+@p = new Planet;
+@p.name = "Callisto";
+@p.mass = 1.076e23;
+@p.radius = 2403;
+@p.traj = @traj;
+@p.spinaxis = [268 deg, 64.5 deg];
+@p.rot0 = 0;
+@p.rotperiodsecs = @traj.conic.period;
+--@p.elevmodel = @elev;
+
+}

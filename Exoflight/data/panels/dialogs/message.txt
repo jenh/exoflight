@@ -1,0 +1,20 @@
+;;;
+;;; the message console
+;;;
+
+[Messages Window]
+type=window
+layout=true
+title= MESSAGES 
+
+[Messages Box]
+parent=Messages Window
+type=scrollbox
+vbar=true
+boxwidth=512
+boxheight=300
+
+[Messages]
+parent=Messages Box
+type=console
+list_prop=game.messages

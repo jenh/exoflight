@@ -1,0 +1,32 @@
+
+sequence "RCS Orbit Raise/Lower" {
+
+	ship.attsys.guidmode = "aoa";
+	ship.attctrl.guidance.yaw = ship.maneuvsys.yaw;
+
+"Wait until T = -30 s"
+	wait until -30;
+
+"Activate guidance system"
+	ship.attctrl.guidance.yaw = ship.maneuvsys.yaw;
+	@dir = ship.maneuvsys.direction;
+	ship.attsys.rcsmanual = 0;
+	ship.guidancecap.active = true;
+
+"Verify attitude lock"
+	wait until -5;
+	wait for condition (ship.attctrl.locked == true) interval 0.25 timeout 15;
+
+"Wait until T = 0 s"
+	wait until 0;
+
+"Engine start"
+	ship.attsys.transz = 1;
+
+"Wait for target orbit"
+	wait for condition (ship.maneuvsys.done == true) interval 0.0625;
+
+"Engine shutdown"
+	ship.attsys.transz = 0;
+
+}

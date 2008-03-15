@@ -1,0 +1,35 @@
+
+[Exit Dialog]
+type=window
+layout=true
+
+[table0]
+parent=Exit Dialog
+type=table
+rows=2
+rowpadding=16
+
+[label1]
+parent=table0
+type=label
+text=Are you sure you want to exit?
+
+[buttons]
+parent=table0
+type=table
+rows=1
+cols=2
+colpadding=16
+
+[okbtn]
+parent=buttons
+type=button
+text=Yes, exit now
+action=Game:Exit
+
+[cancelbtn]
+parent=buttons
+type=button
+text=No, cancel that
+action=Close
+

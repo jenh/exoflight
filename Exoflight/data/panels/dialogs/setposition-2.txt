@@ -1,0 +1,127 @@
+
+[Set Position]
+type=com.fasterlight.exo.newgui.SetPositionWindow
+x=192
+y=144
+title=Set Vehicle Position
+layout=true
+
+
+;;
+;; Set Position at base
+;; dialog page
+;;
+
+[table0]
+parent=Set Position
+type=table
+cols=1
+rows=2
+rowpadding=16
+
+;;;
+
+[table1]
+parent=table0
+type=table
+rows=12
+cols=2
+rowpadding=8
+colpadding=16
+layout=true
+colflags#0=2
+
+[parent.a]
+parent=table1
+type=label
+text=Choose a Base:
+
+[parent.b]
+parent=table1
+type=combobox
+model.list_prop=ui.game.bases
+model.sel_prop=ui.$Set Position.base
+
+[planet.a]
+parent=table1
+type=label
+text=On planet:
+
+[planet.b]
+parent=table1
+type=label
+text_prop=ui.$Set Position.body
+minchars=30
+
+[spacer.a]
+parent=table1
+type=label
+
+[spacer.b]
+parent=table1
+type=label
+
+[lat.a]
+parent=table1
+type=label
+text=Latitude:
+
+[lat.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.lat
+units=rad
+minchars=12
+
+[lon.a]
+parent=table1
+type=label
+text=Longitude:
+
+[lon.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.long
+units=rad
+minchars=12
+
+[alt.a]
+parent=table1
+type=label
+text=Altitude:
+
+[alt.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.alt
+units=km
+minchars=12
+
+
+;;;
+
+[LR Buttons]
+parent=table0
+type=table
+cols=3
+colpadding=16
+
+[Back]
+parent=LR Buttons
+type=button
+text=<<Back
+value_prop=loaddialog
+action=panels/dialogs/setposition.txt
+
+[Cancel]
+parent=LR Buttons
+type=button
+text=Cancel
+action=Cancel
+
+[Done]
+parent=LR Buttons
+type=button
+text=Done
+action=Accept-ground
+

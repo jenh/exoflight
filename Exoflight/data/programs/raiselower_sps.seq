@@ -1,0 +1,30 @@
+
+sequence "SPS Orbit Raise/Lower" {
+
+"Wait until T = -30 s"
+	wait until -30;
+
+"Activate guidance system"
+	ship.attsys.guidmode = "aoa";
+	ship.attctrl.guidance.yaw = ship.maneuvsys.yaw;
+	@dir = ship.maneuvsys.direction;
+	ship.attsys.rcsmanual = 0;
+	ship.guidancecap.active = true;
+
+"Verify attitude lock"
+	wait until -5;
+	wait for condition (ship.attctrl.locked == true) interval 0.25 timeout 15;
+
+"Wait until T = 0 s"
+	wait until 0;
+
+"Engine start"
+	ship.attsys.throttle = 1;
+
+"Wait for target orbit"
+	wait for condition (ship.maneuvsys.direction != @dir) interval 0.025;
+
+"Engine shutdown"
+	ship.attsys.throttle = 0;
+
+}

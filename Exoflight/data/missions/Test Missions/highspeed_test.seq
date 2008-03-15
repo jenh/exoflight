@@ -1,0 +1,29 @@
+
+sequence "Gemini Chute Test" {
+
+	@reentry = ship.structure.'$Gemini Reentry';
+	@equip = ship.structure.'$Gemini Equipment';
+	@retro = ship.structure.'$Gemini Retrograde';
+
+-- prepare Gemini
+
+	@traj = new LandedTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.landpos = [-110 deg, 29 deg, 6388];
+	ship.traj = @traj;
+	@traj.free = true;
+
+-- eject
+
+	wait for 2;
+	@equip.detach = true;
+	wait for 1;
+	@retro.detach = true;
+
+	wait for 10;
+	game.governor.timescale =? 0.01666;
+	@reentry.'$main chute'.deployed = true;
+
+
+}
+

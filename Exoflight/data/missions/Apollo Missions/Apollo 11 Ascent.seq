@@ -1,0 +1,43 @@
+
+sequence "Apollo 11 Ascent" {
+
+-- prepare LM
+
+	@traj = new LandedTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.landpos = [23.47298 deg, 0.673 deg, 0];
+	ship.traj = @traj;
+
+	ship.guidancecap.settingidx = 1;
+
+-- prepare CSM
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.016;
+	@orbelem.periapsis = 1753; -- must be after eccent set
+	@orbelem.incl = 182.15 deg; -- ??
+	@orbelem.raan = 224 deg;
+	@orbelem.argperi = 180 deg;
+	@orbelem.trueanom = -8 deg;
+	@orbelem.epochticks = game.tick;
+
+	@CSM = game.agency.'preparevehicle$Apollo CSM';
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Luna;
+	@traj.orbelemintrl = @orbelem;
+	@CSM.traj = @traj;
+
+	@CSM.guidancecap.settingidx = 1;
+
+-- crew
+
+	game.agency.'crew#7'.module = ship.structure.'$Apollo LAM';
+	game.agency.'crew#16'.module = ship.structure.'$Apollo LAM';
+	game.agency.'crew#22'.module = @CSM.structure.'$Apollo CM';
+
+	@ui.ship =? ship;
+	@ui.message =? "You are in the Eagle, about to ascent to the waiting CSM above.";
+
+}
+

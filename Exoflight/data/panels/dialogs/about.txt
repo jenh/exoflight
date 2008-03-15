@@ -1,0 +1,41 @@
+
+[About Dialog]
+type=window
+layout=true
+
+[table0]
+parent=About Dialog
+type=table
+rows=5
+rowpadding=16
+
+[label-title]
+parent=table0
+type=label
+text=EXOFLIGHT
+shader$text=title
+
+[label-version]
+parent=table0
+type=label
+minchars=30
+text_prop=version
+align=1
+
+;[logo]
+;parent=table0
+;type=bitmap
+;texname=fl-logo-128.png
+;width=128
+;height=72
+
+[label-copyright]
+parent=table0
+type=label
+text=Copyright (c) 2001 Faster Light LLC
+
+[okbtn]
+parent=table0
+type=button
+text=Ok
+action=Close

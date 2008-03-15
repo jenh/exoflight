@@ -1,0 +1,104 @@
+;;;
+;;; the "Set Vehicle Position" dialog box
+;;;
+
+[Set Position]
+type=com.fasterlight.exo.newgui.SetPositionWindow
+x=192
+y=144
+title=Set Vehicle Position
+layout=true
+
+;;;
+
+[table0]
+parent=Set Position
+type=table
+cols=1
+rows=3
+rowpadding=32
+
+[label1]
+parent=table0
+type=wraptext
+minxchars=40
+text=Where do you want to place your ship?
+
+;;;
+
+[table1]
+parent=table0
+type=table
+rows=4
+cols=2
+rowpadding=8
+colpadding=16
+layout=true
+
+[choice1.a]
+parent=table1
+type=button
+text=At Base
+value_prop=loaddialog
+action=panels/dialogs/setposition-2.txt
+
+[choice1.b]
+parent=table1
+type=wraptext
+minxchars=45
+text=Deploy the vehicle at a designated space base.
+
+[choice2.a]
+parent=table1
+type=button
+text=Surface
+value_prop=loaddialog
+action=panels/dialogs/setposition-3.txt
+
+[choice2.b]
+parent=table1
+type=wraptext
+minxchars=45
+text=Place the vehicle at a lat/long location on a particular body.
+
+[choice3.a]
+parent=table1
+type=button
+text=Orbit
+value_prop=loaddialog
+action=panels/dialogs/setposition-1.txt
+
+[choice3.b]
+parent=table1
+type=wraptext
+minxchars=45
+text=Enter your own orbital elements to put the vehicle in orbit around a specific planet, moon, or the Sun.
+
+;[choice4.a]
+;parent=table1
+;type=button
+;text=Proximity
+;value_prop=dialog
+;action=panels/dialogs/setposition-3.txt
+
+;[choice4.b]
+;parent=table1
+;type=wraptext
+;minxchars=45
+;text=Go near another object -- just enter the distance offset in XYZ.
+
+
+;;;
+
+[LR Buttons]
+parent=table0
+type=table
+cols=1
+colpadding=16
+
+[Cancel]
+parent=LR Buttons
+type=button
+text=Cancel
+action=Cancel
+

@@ -1,0 +1,26 @@
+
+; todo: these drag curves suckkk
+
+[DragCurves]
+
+; fit from RASP
+sharp=PN:0.88,1.7 -3.56747,8.788017,-6.00974,1.320869
+blunt=PN:0.92,1.9 -11.528035,29.264278,-25.300841,9.475870,-1.299740
+
+; todo
+cylinder=PN:0,3 1.222,0.0662,0.838,-0.210
+; todo
+sphere=PN:0,3 1.222,0.0662,0.838,-0.210
+; todo
+disc=PN:0,3 1.222,0.0662,0.838,-0.210
+
+none=PN:0,0 0
+
+[LiftCurves]
+; these are not right - the real ones are in the module files
+orbiter=PWL:-0.25,0 -0.2,-1.1 0,5.5 0.6,15 0.7,0
+; todo
+gemini=PN:-1,1 -0.19
+
+x15=PWL:-0.25,0 -0.2,-10 0,50 0.6,150 0.7,0
+;x15=PWL:-0.6,0.6 50,10

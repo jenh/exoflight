@@ -1,0 +1,7 @@
+
+sequence "Roll Reentry guidance" {
+
+	ship.attctrl.guidance = new RollReentryProgram;
+	ship.attctrl.guidance.yaw = 180 deg;
+
+}

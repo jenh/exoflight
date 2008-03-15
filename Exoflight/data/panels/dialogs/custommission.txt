@@ -1,0 +1,26 @@
+;;;
+;;; the "custom mission" panel
+;;;
+
+[New Vehicle]
+type=com.fasterlight.exo.newgui.CustomMissionWindow
+x=192
+y=144
+title=Start Custom Mission
+layout=true
+
+[NV Pager]
+parent=New Vehicle
+type=pagestack
+
+[CT Table]
+parent=NV Pager
+load=panels/dialogs/custommission-1.txt
+
+[CV Table]
+parent=NV Pager
+load=panels/dialogs/newvehicle-1.txt
+
+[CB Table]
+parent=NV Pager
+load=panels/dialogs/newvehicle-2.txt

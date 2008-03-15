@@ -1,0 +1,20 @@
+
+sequence "Columbia Deorbit" {
+
+	ship.name = "Columbia";
+
+-- prepare Shuttle
+
+	@orbelem = new KeplerianElements;
+	@orbelem.tles = "1 27647U 03003A   03032.25000000  .00070100  74763-5  12018-3 0   634/2 27647  39.0164 124.9099 0008781 145.1170 207.2382 16.01765594  2491/398487074800000";
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+
+--	@traj.pos = (-4780.25947,-2132.25149,4074.42121);
+--	@traj.vel = (2.355392725,-7.312059108,-1.071068117);
+
+	ship.traj = @traj;
+
+}

@@ -1,0 +1,22 @@
+
+sequence "Mir Reentry" {
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.01051;
+	@orbelem.semimajor = 6514.60;
+	@orbelem.incl = 51.644 deg;
+	@orbelem.raan = 249.7498 deg;
+	@orbelem.argperi = 239.7414 deg;
+	@orbelem.meananom = 119.3179 deg;
+	@orbelem.epochdate = "03/23/2001 04:56:22 GMT";
+	@orbelem.periapsis = 6460;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Earth;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+	@ui.ship =? ship;
+
+}
+

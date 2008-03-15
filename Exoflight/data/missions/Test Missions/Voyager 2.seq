@@ -1,0 +1,25 @@
+
+sequence "Voyager 2 Flyby" {
+
+-- data from http://www.ae.utexas.edu/~lord/vger_els.html
+
+-- prepare
+
+	@orbelem = new KeplerianElements;
+	@orbelem.eccent = 0.724429;
+	@orbelem.semimajor = 5.4447e8; -- must be after eccent set
+	@orbelem.incl = 4.825717 deg;
+	@orbelem.raan = -32.940520 deg;
+	@orbelem.argperi = 11.702680 deg;
+	@orbelem.epochticks = game.tick; -- "08/23/1977 11:29:11 EST";
+	@orbelem.meananom = -0.888403 deg;
+
+	@traj = new CowellTrajectory;
+	@traj.parent = game.$Sun;
+	@traj.orbelemgeo = @orbelem;
+	ship.traj = @traj;
+
+	@ui.ship =? ship;
+
+}
+

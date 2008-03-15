@@ -1,0 +1,18 @@
+
+sequence "Apollo 11 Launch" {
+
+	-- todo!
+	ship.launchsys.incl = 29 deg;
+	ship.launchsys.raan = 340.8 deg;
+	ship.launchsys.burntime = 550;
+	ship.launchsys.active = true;
+
+	@ui.ship =? ship;
+	@ui.message =? "Let's launch";
+
+--	wait until 300;
+--	ship.attsys.rcsmanual = 1;
+
+
+}
+

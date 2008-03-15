@@ -1,0 +1,159 @@
+
+[Set Position]
+type=com.fasterlight.exo.newgui.SetPositionWindow
+x=192
+y=144
+title=Set Vehicle Position
+layout=true
+
+
+;;
+;; Set Position at lat-long
+;; dialog page
+;;
+
+[table0]
+parent=Set Position
+type=table
+cols=1
+rows=2
+rowpadding=16
+
+;;;
+
+[table1]
+parent=table0
+type=table
+rows=12
+cols=2
+rowpadding=8
+colpadding=16
+layout=true
+colflags#0=2
+
+[body.a]
+parent=table1
+type=label
+text=On Planet:
+
+[body.b]
+parent=table1
+type=combobox
+model.list_prop=ui.game.planets
+model.sel_prop=ui.$Set Position.body
+
+
+[lat.a]
+parent=table1
+type=label
+text=Latitude:
+
+[lat.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.lat
+editable=true
+units=rad
+minchars=12
+
+[lon.a]
+parent=table1
+type=label
+text=Longitude:
+
+[lon.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.long
+editable=true
+units=rad
+minchars=12
+
+[alt.a]
+parent=table1
+type=label
+text=Altitude:
+
+[alt.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.alt
+editable=true
+units=km
+minchars=12
+
+[spacer.a]
+parent=table1
+type=label
+
+[spacer.b]
+parent=table1
+type=label
+
+[truevel.a]
+parent=table1
+type=label
+text=True Velocity:
+
+[truevel.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.truevel
+editable=true
+units=km/s
+minchars=12
+
+[heading.a]
+parent=table1
+type=label
+text=Heading:
+
+[heading.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.heading
+editable=true
+units=rad\0176
+minchars=12
+
+[fpa.a]
+parent=table1
+type=label
+text=Flight Path Angle:
+
+[fpa.b]
+parent=table1
+type=numlabel
+text_prop=ui.$Set Position.fpa
+editable=true
+units=rad\0176
+minchars=12
+
+
+;;;
+
+[LR Buttons]
+parent=table0
+type=table
+cols=3
+colpadding=16
+
+[Back]
+parent=LR Buttons
+type=button
+text=<<Back
+value_prop=loaddialog
+action=panels/dialogs/setposition.txt
+
+[Cancel]
+parent=LR Buttons
+type=button
+text=Cancel
+action=Cancel
+
+[Done]
+parent=LR Buttons
+type=button
+text=Done
+action=Accept-ground
+

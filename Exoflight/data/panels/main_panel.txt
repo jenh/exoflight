@@ -1,0 +1,38 @@
+
+[Main Panel]
+type=container
+x=0
+y=0
+width=1024
+height=768
+
+[Top Panel]
+parent=Main Panel
+load=panels/top_panel.txt
+
+[Middle Panel]
+parent=Main Panel
+load=panels/mid_panel.txt
+
+;[Status Panel]
+;parent=Main Panel
+;load=panels/status_panel.txt
+
+;;;
+
+;[ticklabel]
+;parent=Main Panel
+;type=numlabel
+;x=900
+;y=730
+;text_prop=game.tick
+;shader$text=medlcd
+
+[fpslabel]
+parent=Main Panel
+type=numlabel
+x=960
+y=10
+text_prop=fps
+shader$text=medlcd
+

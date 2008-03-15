@@ -1,0 +1,54 @@
+
+[Resources]
+E=electricity
+heat=heat
+LH2=liquid hydrogen
+LO2=liquid oxygen
+LN2=liquid nitrogen
+LHe=liquid helium
+RP1=RP-1
+H2=hydrogen
+O2=oxygen
+N2=nitrogen
+He=helium
+water=water
+ice=ice
+steam=steam
+CO2=carbon dioxide
+Fus6=fusonal D6
+AM=antimatter
+plasma=plasma
+N2O4=nitrogen tetroxide
+UDMH=UDMH
+AERO50=Aerozine 50
+MMH=MMH
+alcohol=alcohol
+kerosene=kerosene
+ammonia=ammonia
+nitric acid=nitric acid
+GCRC=GCRC
+Hydene=Hydene
+T17-E2=T17-E2 solid fuel
+JPL-532A=JPL-532A solid fuel
+SOLID=solid fuel
+ballast=ballast
+food=food
+urine=urine
+
+[E]
+mass=0
+units=kWh
+
+[heat]
+mass=0
+units=J
+
+[O2]
+mol=32
+
+[CO2]
+mol=44
+
+[N2]
+mol=28
+
