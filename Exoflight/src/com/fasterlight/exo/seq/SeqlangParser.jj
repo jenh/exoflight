@@ -1,0 +1,800 @@
+
+options {
+  JAVA_UNICODE_ESCAPE = true;
+  STATIC = false;
+  DEBUG_PARSER = false;
+}
+
+PARSER_BEGIN(SeqlangParser)
+
+package com.fasterlight.exo.seq;
+
+import com.fasterlight.exo.orbit.Constants;
+import java.util.*;
+import javax.vecmath.*;
+import com.fasterlight.util.Vec3d;
+import com.fasterlight.util.StringUtil;
+import com.fasterlight.util.Util;
+
+public class SeqlangParser 
+implements Constants
+{
+	private Sequencer seq;
+	private String cur_desc = null;
+	private Map labels = new HashMap();
+	private Map branchnodes = new HashMap();
+	private boolean goteof;
+	private List imports = new ArrayList();
+	
+	public void addImport(String s)
+	{
+		if (s == null)
+			throw new IllegalArgumentException();
+		imports.add(s);
+	}
+	
+	private void addDefaultImports()
+	{
+		if (imports.size() == 0)
+		{
+			imports.add("com.fasterlight.exo.orbit.*");
+			imports.add("com.fasterlight.exo.orbit.traj.*");
+			imports.add("com.fasterlight.exo.game.*");
+			imports.add("com.fasterlight.exo.ship.*");
+			imports.add("com.fasterlight.exo.ship.progs.*");
+			imports.add("com.fasterlight.exo.crew.*");
+			imports.add("com.fasterlight.exo.strategy.*");
+			imports.add("com.fasterlight.math.*");
+			imports.add("com.fasterlight.game.*");
+		}
+	}
+	
+	public Class resolveClassFromImports(String s)
+	{
+		addDefaultImports();
+		
+		Iterator it = imports.iterator();
+		while (it.hasNext())
+		{
+			String cn = null;
+			String impdecl = (String)it.next();
+			if (impdecl.endsWith("*"))
+			{
+				cn = impdecl.substring(0, impdecl.length()-1) + s;
+			} else if (impdecl.endsWith(s))
+			{
+				cn = impdecl;
+			}
+			if (cn != null)
+			{
+				try {
+					cn = cn.replace('/','.');
+					return Class.forName(cn); // if class found, return
+				} catch (Exception e) {
+				}
+			}
+		}
+		return null; // class not found
+	}
+	
+	public boolean eof()
+	{
+		return goteof;
+	}
+	
+	public void setSequencer(Sequencer seq)
+	{
+		this.seq = seq;
+	}
+	
+	public Sequencer getSequencer()
+	{
+		return seq;
+	}
+	
+	void addNode(SequencerNode node)
+	{
+		node.setDescription(cur_desc);
+		seq.addNode(node);
+	}
+	
+	void addBranchNode(BranchNode bnode, String label)
+	{
+		branchnodes.put(bnode, label);
+		addNode(bnode);
+	}
+	
+	void addLabel(String labelid)
+	throws ParseException
+	{
+		if (labels.get(labelid) != null)
+			throw new ParseException("Label `" + labelid + "' is already defined");
+		labels.put(labelid, new Integer(seq.getNodeCount()));
+	}
+	
+	void resolveLabels()
+	throws ParseException
+	{
+		Iterator it = branchnodes.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Map.Entry entry = (Map.Entry)it.next();
+			BranchNode bnode = (BranchNode)entry.getKey();
+			String labelid = (String)entry.getValue();
+			if (labelid != null)
+			{
+				int nodenum = getLabel(labelid);
+				if (nodenum < 0)
+					throw new ParseException("Could not resolve label `" + labelid + "'");
+				bnode.setNodeIndex(nodenum);
+			}
+		}
+	}
+	
+	int getLabel(String labelid)
+	{
+		Integer i = (Integer)labels.get(labelid);
+		if (i == null)
+			return -1;
+		else
+			return i.intValue();
+	}
+	
+	public void parse()
+	throws ParseException
+	{
+		if (seq == null)
+			throw new IllegalArgumentException("Must setSequencer() first");
+		Sequence();
+		resolveLabels();
+	}
+	
+	class PropertyObj
+	{
+		String pn;
+		PropertyObj(String pn)
+		{
+			this.pn = pn;
+		}
+	}
+	
+	class NewObject
+	extends PropertyObj
+	{
+		NewObject(String cname)
+		throws ParseException
+		{
+			super(cname);
+			Class clazz = resolveClassFromImports(cname);
+			if (clazz == null)
+				throw new ParseException("Could not resolve class '" + cname + "'");
+			// todo: make an arg. of propertynode
+			this.pn = "game.classloader." + clazz.getName().replace('.','/');
+		}
+	}
+
+}
+
+PARSER_END(SeqlangParser)
+
+
+/* WHITE SPACE */
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+/* COMMENTS */
+
+MORE :
+{
+  "--" : IN_SINGLE_LINE_COMMENT
+| "//" : IN_SINGLE_LINE_COMMENT 
+}
+
+<IN_SINGLE_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "\n" | "\r" | "\r\n" > : DEFAULT
+}
+
+<IN_SINGLE_LINE_COMMENT,IN_FORMAL_COMMENT,IN_MULTI_LINE_COMMENT>
+MORE :
+{
+  < ~[] >
+}
+
+/* RESERVED WORDS AND LITERALS */
+
+TOKEN :
+{
+  < SEQUENCE: "sequence" >
+| < WAIT: "wait" >
+| < UNTIL: "until" >
+| < FOR: "for" >
+| < DURATION: "duration" >
+| < INTERVAL: "interval" >
+| < TIMEOUT: "timeout" >
+| < CONDITION: "condition" >
+| < TRUE: "true" >
+| < FALSE: "false" >
+| < OR: "or" >
+| < AND: "and" >
+| < NOT: "not" >
+| < DEG: "deg" >
+| < NULL: "null" >
+| < GOTO: "goto" >
+| < STOP: "stop" >
+| < SET: "set" >
+| < ABORT: "abort" >
+| < CANCEL: "cancel" >
+| < NEW: "new" >
+}
+
+/* LITERALS */
+
+TOKEN :
+{
+  < INTEGER_LITERAL:
+        <DECIMAL_LITERAL> (["l","L"])?
+      | <HEX_LITERAL> (["l","L"])?
+      | <OCTAL_LITERAL> (["l","L"])?
+  >
+|
+  < #DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])* >
+|
+  < #HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ >
+|
+  < #OCTAL_LITERAL: "0" (["0"-"7"])* >
+|
+  < FLOATING_POINT_LITERAL:
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+|
+  < IDENT_LITERAL:
+      "'"
+      (   (~["'","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "'"
+  >
+|
+  < QUOTED_LITERAL:
+      "\""
+      (   (~["\"","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+}
+
+/* IDENTIFIERS */
+
+TOKEN :
+{
+  < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>|"#")* >
+|
+  < #LETTER:
+      [
+       "\u0024",
+       "\u0041"-"\u005a",
+       "\u005f",
+       "\u0061"-"\u007a",
+       "\u00c0"-"\u00d6",
+       "\u00d8"-"\u00f6",
+       "\u00f8"-"\u00ff",
+       "\u0100"-"\u1fff",
+       "\u3040"-"\u318f",
+       "\u3300"-"\u337f",
+       "\u3400"-"\u3d2d",
+       "\u4e00"-"\u9fff",
+       "\uf900"-"\ufaff"
+      ]
+  >
+|
+  < #DIGIT:
+      [
+       "\u0030"-"\u0039",
+       "\u0660"-"\u0669",
+       "\u06f0"-"\u06f9",
+       "\u0966"-"\u096f",
+       "\u09e6"-"\u09ef",
+       "\u0a66"-"\u0a6f",
+       "\u0ae6"-"\u0aef",
+       "\u0b66"-"\u0b6f",
+       "\u0be7"-"\u0bef",
+       "\u0c66"-"\u0c6f",
+       "\u0ce6"-"\u0cef",
+       "\u0d66"-"\u0d6f",
+       "\u0e50"-"\u0e59",
+       "\u0ed0"-"\u0ed9",
+       "\u1040"-"\u1049"
+      ]
+  >
+}
+
+/* SEPARATORS */
+
+TOKEN :
+{
+  < LPAREN: "(" >
+| < RPAREN: ")" >
+| < LBRACE: "{" >
+| < RBRACE: "}" >
+| < LBRACKET: "[" >
+| < RBRACKET: "]" >
+| < SEMICOLON: ";" >
+| < COMMA: "," >
+| < DOT: "." >
+| < COLON: ":" >
+}
+
+/* OPERATORS */
+
+TOKEN :
+{
+  < ASSIGN: "=" >
+| < GT: ">" >
+| < LT: "<" >
+| < EQ: "==" >
+| < LE: "<=" >
+| < GE: ">=" >
+| < NE: "!=" >
+| < ATSIGN: "@" >
+| < ASSIGNOPT: "=?" >
+}
+
+
+/*****************************************
+ *****************************************/
+
+void Sequence() :
+{
+	String name;
+}
+{
+	<EOF> { goteof = true; }
+|
+	"sequence" 
+	name=QuoteStr() 
+		{
+			seq.setName(name);
+		}
+	"{" ( SequenceStatement() )* "}"
+}
+
+void SequenceStatement() :
+{}
+{
+	DescStmt()
+ | NotDescStmt()
+}
+
+void NotDescStmt() :
+{}
+{
+	(
+	 	LOOKAHEAD(2) SetStmt()
+	 |	LOOKAHEAD(3) WaitStmt()
+	 |	LOOKAHEAD(3) CondWaitStmt()
+	 | LOOKAHEAD(2) LabelStmt()
+	 | GotoStmt()
+	 | StopStmt()
+	 | SetAbortStmt()
+	)
+		{
+			cur_desc = null;
+		}
+}
+
+void DescStmt() :
+{
+	String s;
+}
+{
+	s=QuoteStr()
+		{
+			cur_desc = s;
+		}
+}
+
+void SetStmt() :
+{
+	PropertyObj lexpr;
+	Object rexpr;
+	boolean opt=false;
+}
+{
+	lexpr=Lexpr()
+	( "=" | "=?" { opt=true; } )
+	rexpr=Rexpr() ";"
+		{
+			if (rexpr instanceof PropertyObj)
+				addNode(new PropertySetNode(lexpr.pn, ((PropertyObj)rexpr).pn, null, true, opt));
+			else
+				addNode(new PropertySetNode(lexpr.pn, rexpr, null, false, opt));
+		}
+}
+
+void LabelStmt() :
+{
+	String labelid;
+}
+{
+	labelid = IdentStr() ":"
+	{
+		addLabel(labelid);
+	}
+}
+
+void GotoStmt() :
+{
+	String labelid;
+}
+{
+	"goto" labelid = IdentStr() ";"
+	{
+		addBranchNode(new BranchNode(), labelid);
+	}
+}
+
+void SetAbortStmt() :
+{
+	String abortid,labelid;
+}
+{
+	"set" "abort" abortid=QuoteStr() "goto" labelid=IdentStr() ";"
+	{
+		addBranchNode(new SetAbortNode(abortid), labelid);
+	}
+|
+	"cancel" "abort" abortid=QuoteStr() ";"
+	{
+		addBranchNode(new SetAbortNode(abortid), null);
+	}
+}
+
+void StopStmt() :
+{
+}
+{
+	"stop" ";"
+	{
+		addNode(new StopNode());
+	}
+}
+
+void WaitStmt() :
+{
+	long t;
+	boolean dur=false;
+}
+{
+	"wait" ( "until" | "for" {dur=true;} ) t=Duration() ";"
+		{
+			addNode(new TimeWaitNode(t, dur ? TimeWaitNode.DURATION : TimeWaitNode.RELATIVE));
+		}
+}
+
+void CondWaitStmt() :
+{
+	Condition cond;
+	long interval, timeout=0;
+}
+{
+	"wait" "for" "condition" "(" cond=Cond() ")"
+	"interval" interval=Duration() 
+	[ "timeout" timeout=Duration() ]
+	";"
+		{
+			addNode(new ConditionWaitNode(cond, interval, timeout));
+		}
+}
+
+Condition Cond() :
+{
+	Condition c,d;
+}
+{
+	c=Cond2() [ "or" d=Cond() { c=new OrCondition(c,d); } ]
+		{
+			return c;
+		}
+}
+
+Condition Cond2() :
+{
+	Condition c,d;
+}
+{
+	c=Cond3() [ "and" d=Cond2() { c=new AndCondition(c,d); } ]
+		{
+			return c;
+		}
+}
+
+Condition Cond3() :
+{
+	Condition c;
+}
+{
+	"not" c=Cond3()
+		{
+			return new NotCondition(c);
+		}
+|
+	c=Cond4()
+		{
+			return c;
+		}
+}
+
+Condition Cond4() :
+{
+	PropertyObj lexpr;
+	Object rexpr;
+	int op;
+	Condition c;
+}
+{
+	"(" c=Cond() ")"
+		{
+			return c;
+		}
+|
+	lexpr=Lexpr() op=RelOp() rexpr=Rexpr()
+		{
+			if (rexpr instanceof PropertyObj)
+				return new PropertyCondition(lexpr.pn, ((PropertyObj)rexpr).pn, op, true);
+			else
+				return new PropertyCondition(lexpr.pn, rexpr, op);
+		}
+}
+
+int RelOp() :
+{}
+{
+	(
+		"==" { return Condition.OP_EQ; }
+	 |	"!=" { return Condition.OP_NE; }
+	 |	"<"  { return Condition.OP_LT; }
+	 |	">"  { return Condition.OP_GT; }
+	 |	"<=" { return Condition.OP_LE; }
+	 |	">=" { return Condition.OP_GE; }
+	)
+}
+
+///
+
+long Duration() :
+{
+	Number n;
+	double x;
+}
+{
+	n=NumLiteral() 
+		{
+			x = n.doubleValue();
+			return (long)(x*TICKS_PER_SEC);
+		}
+}
+
+PropertyObj Lexpr() :
+{
+	PropertyObj o;
+}
+{
+	o=Property()
+		{
+			return o;
+		}
+}
+
+Object Rexpr() :
+{
+	Object o;
+}
+{
+	( o=Lexpr() | o=Literal() )
+		{
+			return o;
+		}
+}
+
+PropertyObj Property() :
+{
+	PropertyObj o1,o2;
+}
+{
+	o1=Property2() ( "." o2=Property2() 
+		{ o1 = new PropertyObj(o1.pn+'.'+o2.pn); } 
+	)*
+		{
+			return o1;
+		}
+}
+
+PropertyObj Property2() :
+{
+	String s;
+}
+{
+	s=IdentStr()
+		{
+			return new PropertyObj(s);
+		}
+|
+	"@" s=IdentStr()
+		{
+			// todo?
+			return new PropertyObj("vars." + s);
+		}
+}
+
+Number NumLiteral() :
+{
+	Number n;
+}
+{
+	n=NumLiteral2()
+	[ "deg"
+		{
+			n = new Double(Util.toRadians(n.doubleValue()));
+		}
+	]
+		{
+			return n;
+		}
+}
+
+Number NumLiteral2() :
+{
+	Token t;
+	int neg = 1;
+}
+{
+	[ "-" 
+		{ 
+			neg=-1; 
+		} 
+	]
+	(
+		t=<INTEGER_LITERAL>
+			{
+				return new Long( Long.parseLong(t.image) * neg );
+			}
+	 |	t=<FLOATING_POINT_LITERAL>
+			{
+				return new Double( Util.parseDouble(t.image) * neg );
+			}
+	)
+}
+
+Boolean BoolLiteral() :
+{}
+{
+	<FALSE>
+		{
+			return Boolean.FALSE;
+		}
+ |	<TRUE>
+		{
+			return Boolean.TRUE;
+		}
+}
+
+Object Literal() :
+{
+	Object o;
+}
+{
+	( 
+		o=NumLiteral() |
+		o=BoolLiteral() |
+		o=VectorLiteral() |
+		o=NewObject() |
+		o=QuoteStr() |
+		o=FileLiteral() |
+		"null" { o=null; }
+	)
+		{
+			return o;
+		}
+}
+
+Object NewObject() :
+{
+	String s;
+}
+{
+	"new" s=IdentStr()
+		{
+			return new NewObject(s);
+		}
+}
+
+Object VectorLiteral() :
+{
+	Number xl,yl,zl=null,wl=null;
+}
+{
+	"[" xl=NumLiteral() 
+		"," yl=NumLiteral() 
+		[ "," zl=NumLiteral()
+			[ "," wl=NumLiteral() ]
+		]
+	"]"
+		{
+			if (wl != null)
+				return new Vector4d(xl.doubleValue(), yl.doubleValue(), zl.doubleValue(), wl.doubleValue());
+			else if (zl != null)
+				return new Vec3d(xl.doubleValue(), yl.doubleValue(), zl.doubleValue());
+			else
+				return new Vector2d(xl.doubleValue(), yl.doubleValue());
+		}
+}
+
+String QuoteStr() :
+{
+	Token t;
+}
+{
+	t=<QUOTED_LITERAL>
+		{
+			String s = t.image;
+			return StringUtil.unescape(s.substring(1,s.length()-1));
+		}
+}
+
+String IdentStr() :
+{
+	Token t;
+}
+{
+	t=<IDENT_LITERAL>
+		{
+			String s = t.image;
+			return s.substring(1,s.length()-1);
+		}
+ |	t=<IDENTIFIER>
+ 		{
+ 			return t.image;
+ 		}
+}
+
+String FileLiteral() :
+{
+	Token t;
+}
+{
+	"<" t=<QUOTED_LITERAL> ">"
+		{
+			String path = t.image;
+			try {
+				path = path.substring(1,path.length()-1);
+				return com.fasterlight.io.IOUtil.readString(path);
+			} catch (java.io.IOException ioe) {
+				throw new ParseException("Could not include file \"" + path + "\"");
+			}
+		}
+}

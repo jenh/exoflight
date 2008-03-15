@@ -1,0 +1,16 @@
+
+HOW TO MAKE A PLANET MAP:
+
+* Reduce the source color map, bump map, and clouds (if any) to
+  a factor of 254 (508, 1016, 2032...).  The height should be 1/2
+  width.
+
+* Run reduce3.pl on the .tga source files.
+
+* Run quantall.pl.
+
+* Make a palette using PhotoShop or other pgm.
+
+* Run BuildWedgieBounds.
+
+* Done!

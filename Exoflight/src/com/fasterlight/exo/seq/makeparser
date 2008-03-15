@@ -1,0 +1,2 @@
+#!/bin/sh
+javacc Seqlang.jj && javac SeqlangParser.java
