@@ -93,6 +93,6 @@ public interface Constants
 
 	//
 
-	public static final String EXOFLIGHT_VERSION = "0.9 Alpha";
-	public static final String EXOFLIGHT_COPYRIGHT = "Copyright (c) 2001 Faster Light LLC";
+	public static final String EXOFLIGHT_VERSION = "0.1";
+	public static final String EXOFLIGHT_COPYRIGHT = "Copyright (c) 2000-2008 Steven E. Hugg";
 }
