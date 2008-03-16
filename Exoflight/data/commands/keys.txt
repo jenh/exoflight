@@ -16,8 +16,8 @@ X=Visual:Zoom Out
 Shift+Z=Visual:Move In
 Shift+X=Visual:Move Out
 
-Ctrl+Z=Tactical:Zoom In
-Ctrl+X=Tactical:Zoom Out
+Menu+Z=Tactical:Zoom In
+Menu+X=Tactical:Zoom Out
 
 Alt+Z=Ground Track:Zoom In
 Alt+X=Ground Track:Zoom Out
@@ -62,30 +62,29 @@ Shift+Up+0x21=Control:Translate Z Null
 Shift+0x24=Control:Slow Translate -Z
 Shift+Up+0x24=Control:Translate Z Null
 
-Ctrl+1=Control:Throttle Off
-Ctrl+5=Control:Throttle 50%
-Ctrl+0=Control:Throttle 100%
+Menu+1=Control:Throttle Off
+Menu+5=Control:Throttle 50%
+Menu+0=Control:Throttle 100%
 
-Menu+N=Visual:Toggle Night Vision
-Menu+D=Visual:Toggle Show Decals
-Menu+C=Visual:Next Camera
-Menu+Shift+C=Visual:Prev Camera
+N=Visual:Toggle Night Vision
+D=Visual:Toggle Show Decals
+C=Visual:Next Camera
+Shift+C=Visual:Prev Camera
 
 Menu+N=Dialog:New Mission
-Menu+Shift+V=Dialog:New Vehicle
 Menu+Shift+P=Dialog:Set Position
 
-Menu+/=Display:Toggle Messages
-Shift+Menu+/=Display:Toggle Console
+Menu+M=Display:Toggle Messages
+Menu+Shift+M=Display:Toggle Console
 
-Menu+Shift+T=Select:Clear Target
+Menu+T=Select:Clear Target
 
-Ctrl+G=Guidance:Set Active
-Shift+Ctrl+G=Guidance:Set Inactive
-Ctrl+B=Guidance:Set Band Hi
-Shift+Ctrl+B=Guidance:Set Band Lo
-Ctrl+D=Guidance:RCS Direct On
-Shift+Ctrl+D=Guidance:RCS Direct Off
-Ctrl+A=Guidance:Attitude Hold
-Shift+Ctrl+A=Guidance:Attitude Auto
+Menu+G=Guidance:Set Active
+Shift+Menu+G=Guidance:Set Inactive
+Menu+B=Guidance:Set Band Hi
+Shift+Menu+B=Guidance:Set Band Lo
+Menu+D=Guidance:RCS Direct On
+Shift+Menu+D=Guidance:RCS Direct Off
+Menu+O=Guidance:Attitude Hold
+Shift+Menu+O=Guidance:Attitude Auto
 
