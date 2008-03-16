@@ -8,10 +8,12 @@
 <property name="project.name" value="Exoflight" />
 <property name="depend.dir" value="../FLCore" />
 <property name="shared.dir" value="../FLCore" />
-<property name="install.dir" value="dist" />
-<property name="models.dir" value="data/models" />
 
 <property name="jogl.platform" value="windows-i586" />
+<property name="install.dir" value="dist/${jogl.platform}" />
+<property name="models.dir" value="data/models" />
+
+<property name="exoflight.version" value="0.1"/>
 
 <path id="libs.path">
 	<pathelement location="../FLCore/bin" />
@@ -58,6 +60,7 @@
 <!-- compile-lwo -->
 
 <target name="compile-lwo">
+<mkdir dir="${install.dir}/data/models" />
 <apply executable="${java.home}/bin/java" dest="${models.dir}" parallel="false">
   <arg value="-cp"/>
   <arg value="../FLCore/bin"/>
@@ -66,7 +69,7 @@
   <arg value="-o"/>
   <targetfile/>
   <fileset dir="${models.dir}" includes="*.lwo"/>
-  <mapper type="glob" from="*.lwo" to="*.esm"/>
+  <mapper type="glob" from="*.lwo" to="../../${install.dir}/data/models/*.esm"/>
 </apply>
 </target>
 
@@ -141,21 +144,44 @@
 
 <!-- install -->
 
-<target name="install">
+<target name="install" depends="jar">
+	<delete dir="${install.dir}" />
 	<mkdir dir="${install.dir}" />
+
 	<mkdir dir="${install.dir}/lib" />
-	<mkdir dir="${install.dir}/data" />
 	<copy todir="${install.dir}/lib" file="Exoflight.jar" />
-	<copy todir="${install.dir}/lib" file="../FLCore/lib/gl4java2.8.2.0-classes.zip" />
-	<copy todir="${install.dir}/lib" file="../FLCore/lib/png.jar" />
 	<copy todir="${install.dir}/lib" file="../FLCore/FLCore.jar" />
-	<copy todir="${install.dir}/data">
-		<fileset dir="./data" />
-	</copy>
-	<copy todir="${install.dir}" file="exolauncher.exe" />
 	<copy todir="${install.dir}/lib">
-		<fileset dir="../FLCore/lib" includes="*.dll" />
+		<fileset dir="../FLCore/lib/${jogl.platform}" includes="*.dll,*.jar" />
+		<fileset dir="../FLCore/lib" includes="png.jar" />
 	</copy>
+
+	<copy todir="${install.dir}">
+		<fileset dir="./data" excludes="elevtexs/**,texs/*/*.*,models/**"/>
+	</copy>
+	
+	<!-- these aren't ready yet -->
+	<delete dir="${install.dir}/missions/Apollo Missions" />
+	<delete dir="${install.dir}/missions/scrnsave" />
+	<delete dir="${install.dir}/missions/Shuttle Missions" />
+	<delete dir="${install.dir}/missions/Test Missions" />
+
+	<!-- these are optional -->
+	<delete dir="${install.dir}/eph" excludes="*-19*.ser,*-20*.ser" />
+
+	<!-- scripts -->
+	<copy todir="${install.dir}">
+		<fileset dir="./scripts" includes="*.bat" />
+	</copy>
+	
+	<!-- compile models -->
+	<antcall target="compile-lwo" />
+
+	<!-- build final dist archive -->
+	<zip level="9"
+		destfile="dist/Exoflight-${exoflight.version}-${jogl.platform}.zip"
+		basedir="${install.dir}" 
+		/>
 </target>
 
 <!-- clover -->

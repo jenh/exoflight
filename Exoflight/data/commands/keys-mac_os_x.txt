@@ -1,0 +1,91 @@
+
+[Keys]
+
+F=Time:Faster
+S=Time:Slower
+Shift+F=Time:Maximum
+Shift+Alt+F=Time:Super Fast
+Shift+S=Time:Minimum
+Shift+Alt+S=Time:Slow Motion
+Shift+Ctrl+Alt+S=Time:Super-Slow Motion
+P=Time:Pause
+Shift+P=Time:Unpause
+
+Z=Visual:Zoom In
+X=Visual:Zoom Out
+Shift+Z=Visual:Move In
+Shift+X=Visual:Move Out
+
+Ctrl+Z=Tactical:Zoom In
+Ctrl+X=Tactical:Zoom Out
+
+Alt+Z=Ground Track:Zoom In
+Alt+X=Ground Track:Zoom Out
+
+Shift+1=Display:Launch Config
+Shift+2=Display:Landing Config
+
+F1=Display:Groundtrack Mode
+F2=Display:Half Visual Mode
+F3=Display:Half Tactical Mode
+F4=Display:Tactical View
+F5=Display:Full Visual View
+F6=Display:Structure View
+
+Menu+A=Sequencer:Abort
+
+Menu+Q=Dialog:Exit
+
+0x26=Control:Translate +Y
+Up+0x26=Control:Translate Y Null
+0x28=Control:Translate -Y
+Up+0x28=Control:Translate Y Null
+0x25=Control:Translate +X
+Up+0x25=Control:Translate X Null
+0x27=Control:Translate -X
+Up+0x27=Control:Translate X Null
+0x21=Control:Translate +Z
+Up+0x21=Control:Translate Z Null
+0x24=Control:Translate -Z
+Up+0x24=Control:Translate Z Null
+
+Shift+0x26=Control:Slow Translate +Y
+Shift+Up+0x26=Control:Translate Y Null
+Shift+0x28=Control:Slow Translate -Y
+Shift+Up+0x28=Control:Translate Y Null
+Shift+0x25=Control:Slow Translate +X
+Shift+Up+0x25=Control:Translate X Null
+Shift+0x27=Control:Slow Translate -X
+Shift+Up+0x27=Control:Translate X Null
+Shift+0x21=Control:Slow Translate +Z
+Shift+Up+0x21=Control:Translate Z Null
+Shift+0x24=Control:Slow Translate -Z
+Shift+Up+0x24=Control:Translate Z Null
+
+Ctrl+1=Control:Throttle Off
+Ctrl+5=Control:Throttle 50%
+Ctrl+0=Control:Throttle 100%
+
+Menu+N=Visual:Toggle Night Vision
+Menu+D=Visual:Toggle Show Decals
+Menu+C=Visual:Next Camera
+Menu+Shift+C=Visual:Prev Camera
+
+Menu+N=Dialog:New Mission
+Menu+Shift+V=Dialog:New Vehicle
+Menu+Shift+P=Dialog:Set Position
+
+Menu+/=Display:Toggle Messages
+Shift+Menu+/=Display:Toggle Console
+
+Menu+Shift+T=Select:Clear Target
+
+Ctrl+G=Guidance:Set Active
+Shift+Ctrl+G=Guidance:Set Inactive
+Ctrl+B=Guidance:Set Band Hi
+Shift+Ctrl+B=Guidance:Set Band Lo
+Ctrl+D=Guidance:RCS Direct On
+Shift+Ctrl+D=Guidance:RCS Direct Off
+Ctrl+A=Guidance:Attitude Hold
+Shift+Ctrl+A=Guidance:Attitude Auto
+
