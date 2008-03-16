@@ -1,0 +1,63 @@
+
+# shuttle sounds
+
+shuttle/3main_throt_up.wav	three main engines now throttling back up
+shuttle/atlantis_throt_up.wav	atlantis, go with throttle up
+shuttle/copy_field_in_sight.wav	copy, field in sight
+shuttle/external_tank_sep.wav	external tank sep
+shuttle/fields_in_sight.wav	field is in sight
+shuttle/go_autoseqstart.wav	you are go for auto sequence start
+shuttle/go_enginestart.wav	we have a go for engine start
+shuttle/go_throttleup.wav	endeavor, houston, go with throttle up
+shuttle/go_throttleup2.wav	go with throttle up
+shuttle/great_job.wav		great job
+shuttle/houston_ctrl.wav	houston now controlling
+shuttle/meco.wav		main engine cutoff
+shuttle/minus_z_complete.wav	minus z translation complete
+shuttle/neg_return.wav		negative return
+shuttle/roger_atlantis_wheel_stop.wav	roger, atlantis, wheel stop
+shuttle/roger_gothrottleup.wav	roger, go with throttle up
+shuttle/roger_roll.wav		roger, roll, endeavor
+shuttle/roger_throttleup.wav	roger, go with throttle up
+shuttle/roll_program.wav	roll program, houston
+shuttle/single_eng_press.wav	single engine press
+shuttle/srb_burnout.wav		srb burnout, ready for srb sep
+shuttle/srb_sep.wav		we have srb sep
+shuttle/wheel_stop_houston.wav	wheel stop, houston
+
+# apollo sounds
+
+apollo/30_seconds.wav		30 seconds
+apollo/60_seconds.wav		60 seconds
+apollo/ascent_engine.wav	ascent engine
+apollo/descent_engine.wav	descent engine
+apollo/high_gate.wav		high gate
+apollo/low_gate.wav		low gate
+apollo/roger_twank.wav		roger tranquility base
+apollo/we_copy_you_down_eagle.wav	we copy you down eagle
+
+# misc
+
+generic/altitude_is.wav		altitude is
+generic/and.wav			and
+generic/and2.wav		and
+generic/armed.wav		armed
+generic/attitude_lock.wav	attitude lock
+generic/attitude_set.wav	attitude set
+generic/contact_light.wav	contact light
+generic/degrees.wav		degrees
+generic/disarmed.wav		disarmed
+generic/engine_stop.wav		engine stop
+generic/heading_is.wav		heading is
+generic/ignition.wav		ignition
+generic/km_s.wav		km/s
+generic/m_s.wav			m/s
+generic/km.wav			km
+generic/m.wav			m
+generic/mach.wav		mach
+generic/percent.wav		percent
+generic/pitch_is.wav		pitch is
+generic/point.wav		point
+generic/roll_is.wav		roll is
+generic/velocity_is.wav		velocity is
+

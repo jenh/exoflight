@@ -1,0 +1,17 @@
+# event/caution sounds
+
+alarms/sm_alert.wav		warning seqfail
+alarms/sm_alert.wav		warning guid
+alarms/sm_alert.wav		warning rcs
+alarms/klaxon.wav		warning life
+alarms/cw_tone.wav		warning stress
+alarms/sm_alert.wav		warning prop
+alarms/sm_alert.wav		warning nav
+alarms/sm_alert.wav		warning qty
+alarms/cw_tone.wav		warning elec
+alarms/cw_tone.wav		warning temp
+
+# docking
+
+effects/dock-attach.wav		docking attach
+effects/dock-separation.wav	docking separation

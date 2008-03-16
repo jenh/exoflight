@@ -1,0 +1,41 @@
+
+;;;;;;;;;;;;;;;;; GROUPS ;;;;;;;;;;;;;;;;;
+
+[SHIPSOUNDS]
+Wind Noise=sounds/wind2.wav;volume='telemetry.dynpres'*0.001
+
+[Engine Low Rumble]
+active=sounds/engine.wav;volume='pctthrust'*4;pitch=0.50
+
+[Engine Med Rumble]
+active=sounds/engine.wav;volume='pctthrust'*3;pitch=1.00
+
+[Engine High Rumble]
+active=sounds/engine.wav;volume='pctthrust'*2;pitch=1.50
+
+[Engine Smooth]
+active=sounds/engine2.wav;volume='pctthrust'*2
+
+[Engine Crunchy]
+active=sounds/engine3.wav;volume='pctthrust'*2
+
+[Engine Pitched]
+active=sounds/engine2.wav;volume='pctthrust'*2;pitch='pctthrust'+0.5
+
+[SRB Low]
+active=sounds/solids.wav;volume='pctthrust'*4;pitch=1.00
+
+[SRB High]
+active=sounds/solids.wav;volume='pctthrust'*2;pitch=2.00
+
+[Fuel Cells]
+active=sounds/hum.wav;volume='%E'*0.005;pan=-1
+
+[RCS]
+active=sounds/rcs.wav;volume='pctthrust'*0.125
+
+[Main Bus]
+active=sounds/hum.wav;volume='%E'*0.005;pan=1;pitch=1.77
+
+[ECS]
+active=sounds/fan1.wav;volume='active'*0.05;pan=1

@@ -1,0 +1,65 @@
+
+[AGL-lo]
+class=NumericCallout
+rangelo=0
+rangehi=10
+format=Altitude is {0,number,#} m.
+value_prop=telemetry.altagl
+value_step=0.1
+value_scale=1000
+factor=0.1
+
+[AGL-med]
+class=NumericCallout
+rangelo=1
+rangehi=1000
+factor=0.002
+format=Altitude is {0,number,#.#} km.
+value_prop=telemetry.alt
+value_step=10
+
+[AGL-hi]
+class=NumericCallout
+rangelo=1000
+factor=0.01
+format=Altitude is {0,number,#} km.
+value_prop=telemetry.alt
+value_step=100
+
+;
+
+[Velocity-lo]
+class=NumericCallout
+rangelo=0
+rangehi=1
+factor=0.01
+format=Velocity is {0,number,#} m/s.
+value_prop=telemetry.velocity
+value_scale=1000
+value_step=0.1
+
+[Velocity-hi]
+class=NumericCallout
+rangelo=1
+factor=0.01
+format=Velocity is {0,number,#.##} km/s.
+value_prop=telemetry.velocity
+value_step=0.1
+
+;
+
+[Mach]
+class=NumericCallout
+rangelo=0.5
+rangehi=100
+factor=0.2
+format=Mach {0,number,#}.
+value_prop=telemetry.adjmach
+value_step=1
+
+;;;
+
+[*launch]
+def0=Mach
+def1=AGL-med
+;def2=Velocity-hi
