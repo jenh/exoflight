@@ -1,0 +1,46 @@
+[Slideshow]
+frames=4
+
+[frame0]
+pic=illust/missions/Gemini Missions/10073838.png
+width=256
+height=322
+x1=0
+y1=0
+size1=256
+x2=0
+y2=64
+size2=256
+
+[frame1]
+pic=illust/missions/Gemini Missions/10074386.png
+width=154
+height=256
+x1=-45
+y1=-14
+size1=271
+x2=2
+y2=116
+size2=142
+
+[frame2]
+pic=illust/missions/Gemini Missions/gb.12.png
+width=337
+height=256
+x1=12
+y1=-1
+size1=256
+x2=70
+y2=0
+size2=256
+
+[frame3]
+pic=illust/missions/Gemini Missions/10074259.png
+width=341
+height=256
+x1=29
+y1=33
+size1=180
+x2=49
+y2=7
+size2=248

@@ -1,0 +1,35 @@
+[Slideshow]
+frames=3
+
+[frame0]
+pic=illust/missions/Gemini Missions/image18.png
+width=512
+height=449
+x1=5
+y1=2
+size1=256
+x2=127
+y2=86
+size2=256
+
+[frame1]
+pic=illust/missions/Gemini Missions/10074311.png
+width=334
+height=256
+x1=81
+y1=0
+size1=256
+x2=0
+y2=0
+size2=256
+
+[frame2]
+pic=illust/missions/Gemini Missions/10074438.png
+width=253
+height=256
+x1=55
+y1=98
+size1=147
+x2=0
+y2=0
+size2=256

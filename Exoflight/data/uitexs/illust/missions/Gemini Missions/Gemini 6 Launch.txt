@@ -1,0 +1,46 @@
+[Slideshow]
+frames=4
+
+[frame0]
+pic=illust/missions/Gemini Missions/gb.02.png
+width=360
+height=256
+x1=0
+y1=0
+size1=256
+x2=102
+y2=2
+size2=256
+
+[frame1]
+pic=illust/missions/Gemini Missions/gemprefl.png
+width=256
+height=311
+x1=0
+y1=54
+size1=256
+x2=23
+y2=19
+size2=215
+
+[frame2]
+pic=illust/missions/Gemini Missions/10074238.png
+width=512
+height=367
+x1=13
+y1=93
+size1=262
+x2=146
+y2=5
+size2=361
+
+[frame3]
+pic=illust/missions/Gemini Missions/g6launch.png
+width=256
+height=410
+x1=2
+y1=153
+size1=250
+x2=11
+y2=11
+size2=229
