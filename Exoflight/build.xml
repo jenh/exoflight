@@ -67,6 +67,16 @@
 </apply>
 </target>
 
+<!-- unzip resources -->
+
+<target name="unpack">
+	<unzip dest="./data">
+	    <fileset dir="resource">
+	        <include name="**/*.zip"/>
+	    </fileset>
+	</unzip>
+</target>
+	
 <!-- test -->
 
 <target name="test" depends="compile">
