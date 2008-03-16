@@ -3,6 +3,7 @@
 <project name="Exoflight" default="jar">
 
 <property file="build.properties" />
+<property file="../FLCore/build.properties" />
 
 <property name="project.name" value="Exoflight" />
 <property name="depend.dir" value="../FLCore" />
@@ -10,12 +11,14 @@
 <property name="install.dir" value="dist" />
 <property name="models.dir" value="data/models" />
 
-<property name="platform" value="macosx" />
+<property name="jogl.platform" value="windows-i586" />
 
 <path id="libs.path">
 	<pathelement location="../FLCore/bin" />
 	<pathelement location="../FLCore/FLCore.jar" />
-	<pathelement location="../FLCore/lib/macosx/jogl.jar" />
+	<pathelement location="../FLCore/lib/${jogl.platform}/jogl.jar" />
+	<pathelement location="../FLCore/lib/${jogl.platform}/gluegen-rt.jar" />
+	<pathelement location="../FLCore/lib/${jogl.platform}/sdljava.jar" />
 	<pathelement location="../FLCore/lib/png.jar" />
 	<pathelement location="../FLCore/lib/junit.jar" />
 	<pathelement location="./data" />
@@ -95,7 +98,7 @@
 
 	<java classname="${run.class}" fork="yes">
 		<classpath refid="libs.path" />
-		<sysproperty key="java.library.path" value="../FLCore/lib/${platform}" />
+		<sysproperty key="java.library.path" value="../FLCore/lib/${jogl.platform}" />
 <!--
 		<jvmarg value="-verbose" />
 		<sysproperty key="exo.scrnwidth" value="1024" />

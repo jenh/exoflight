@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="/FLCore"/>
-	<classpathentry kind="lib" path="data"/>
 	<classpathentry kind="lib" path="/FLCore/bin"/>
 	<classpathentry kind="lib" path="/FLCore/lib/png.jar"/>
 	<classpathentry kind="lib" path="/FLCore/lib/junit.jar"/>
