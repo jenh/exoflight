@@ -28,3 +28,9 @@ You need:
   	Gemini tutorial missions. Press "Done" and follow the instructions.
 
   * To quit, press Ctrl-Q (or Alt-F4 to quit immediately).
+
+--
+
+EXOFLIGHT is copyright (c) 2000-2008 Steven E. Hugg.
+All rights reserved.
+March 17, 2008
