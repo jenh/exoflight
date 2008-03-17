@@ -172,6 +172,7 @@
 	<!-- scripts -->
 	<copy todir="${install.dir}">
 		<fileset dir="./scripts" includes="*.bat" />
+		<fileset dir="./doc" includes="*.txt" />
 	</copy>
 	
 	<!-- compile models -->
