@@ -85,8 +85,8 @@ extends GLODialog
 	public String getMissionSlideshow()
 	{
 		Mission m = getCurrentMission();
-		// TODO: why do we need 'data'...
-		return (m != null) ? "data/uitexs/illust/missions/" + getSelectedCategory() +
+		// TODO: needs to be classpath-referenced
+		return (m != null) ? "uitexs/illust/missions/" + getSelectedCategory() +
 			"/" + m.getName() + ".txt" : null;
 	}
 

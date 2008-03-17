@@ -97,13 +97,13 @@ extends GLODialog
 	public String getVehicleSlideshow()
 	{
 		Vehicle v = getCurrentVehicle();
-		return (v != null) ? "data/uitexs/illust/vehicles/" + v.getName() + ".txt" : null;
+		return (v != null) ? "uitexs/illust/vehicles/" + v.getName() + ".txt" : null;
 	}
 
 	public String getBaseSlideshow()
 	{
 		SpaceBase b = getCurrentBase();
-		return (b != null) ? "data/uitexs/illust/bases/" + b.getName() + ".txt" : null;
+		return (b != null) ? "uitexs/illust/bases/" + b.getName() + ".txt" : null;
 	}
 
 	public void makeVehicle()

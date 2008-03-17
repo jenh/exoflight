@@ -20,7 +20,7 @@ package com.fasterlight.exo.main;
 
 import java.util.*;
 
-import sdljava.SDLException;
+import sdljava.*;
 import sdljava.joystick.SDLJoystick;
 
 import com.fasterlight.spif.*;
@@ -37,8 +37,9 @@ public class JoystickManager implements PropertyAware
 
 	//
 
-	public JoystickManager()
+	public JoystickManager() throws SDLException
 	{
+		SDLMain.init(SDLMain.SDL_INIT_JOYSTICK);
 	}
 
 	public void setPropertyTop(PropertyAware top)
@@ -54,7 +55,7 @@ public class JoystickManager implements PropertyAware
 	public void open() throws SDLException
 	{
 		close();
-
+			
 		int n = getNumJoysticks();
 		sticks = new SDLJoystick[n];
 		for (int i = 0; i < n; i++)
@@ -82,6 +83,11 @@ public class JoystickManager implements PropertyAware
 		SDLJoystick.joystickUpdate();
 	}
 
+	public float getAxis(int axis)
+	{
+		return sticks[0].joystickGetAxis(axis);
+	}
+	
 	/**
 	 * Runs through all mappings and sets properties to appropriate values.
 	 */
@@ -180,4 +186,5 @@ public class JoystickManager implements PropertyAware
 	{
 		throw new PropertyNotFoundException(key);
 	}
+
 }

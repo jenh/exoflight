@@ -25,9 +25,6 @@ import java.util.Date;
 
 import javax.media.opengl.*;
 
-import sdljava.SDLMain;
-import sdljava.joystick.SDLJoystick;
-
 import com.fasterlight.exo.game.*;
 import com.fasterlight.exo.newgui.*;
 import com.fasterlight.exo.orbit.*;
@@ -60,7 +57,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 
 	long starttime = -1;
 
-	SDLJoystick stick;
+	JoystickManager joy;
 
 	//   SDLSurface sdl_surf;
 
@@ -150,7 +147,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 	{
 		if (guictx == null)
 			return;
-		if (stick == null)
+		if (joy == null || joy.getNumJoysticks() == 0)
 			return;
 		{
 			SpaceShip ship = guictx.getCurrentShip();
@@ -159,11 +156,11 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 			if (ship.getShipAttitudeSystem().getRCSManual()
 				!= ShipAttitudeSystem.RCS_MANINHIBIT)
 			{
-				SDLJoystick.joystickUpdate();
+				joy.updateDevices();
 				float dz = 0.15f;
-				float x = stick.joystickGetAxis(3) / 32767f;
-				float y = stick.joystickGetAxis(1) / 32767f;
-				float z = stick.joystickGetAxis(0) / 32767f;
+				float x = joy.getAxis(3) / 32767f;
+				float y = joy.getAxis(1) / 32767f;
+				float z = joy.getAxis(0) / 32767f;
 				if (Math.abs(x) < dz)
 					x = 0;
 				else
@@ -183,7 +180,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 				if (ship.getShipAttitudeSystem().getThrottleManual()
 					== ShipAttitudeSystem.THROT_MANUAL)
 				{
-					float t = 0.5f - (stick.joystickGetAxis(2) / 65535f);
+					float t = 0.5f - (joy.getAxis(2) / 65535f);
 					if (t < 0.01f)
 						t = 0;
 					ship.getShipAttitudeSystem().setManualThrottle(t);
@@ -279,13 +276,6 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 			// show title
 			loadTitleScreen();
 			//sDisplay();
-
-			// load default game
-			startDefaultGame();
-
-			// start event queue going
-			startEngine();
-
 		}
 	}
 
@@ -493,8 +483,8 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		}
 		try
 		{
-			if (stick != null)
-				stick.joystickClose();
+			if (joy != null)
+				joy.close();
 			if (gsound != null)
 				gsound.close();
 			Thread.sleep(500);
@@ -672,8 +662,10 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		gsound = GameSound.getGameSound();
 		System.out.println("sound opened = " + gsound.isOpened());
 
+		// load default game
+		startDefaultGame();
+
 		// start event queue going
-		System.out.println("Starting event dispatch");
 		startEngine();
 	}
 
@@ -681,15 +673,13 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 	{
 		try
 		{
-			SDLMain.init(SDLMain.SDL_INIT_JOYSTICK);
-			if (SDLMain.wasInit(SDLMain.SDL_INIT_JOYSTICK) != 0)
-			{
-				stick = SDLJoystick.joystickOpen(0);
-				System.out.println("Stick created");
-			}
+			joy = new JoystickManager();
+			joy.open();
+			System.out.println("Found " + joy.getNumJoysticks() + " joysticks");
 		} catch (Throwable e)
 		{
 			System.out.println("Could not initialize joystick: " + e);
+			joy = null;
 		}
 	}
 

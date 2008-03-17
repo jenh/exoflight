@@ -60,7 +60,7 @@
 <!-- compile-lwo -->
 
 <target name="compile-lwo">
-<mkdir dir="${install.dir}/data/models" />
+<mkdir dir="${install.dir}/models" />
 <apply executable="${java.home}/bin/java" dest="${models.dir}" parallel="false">
   <arg value="-cp"/>
   <arg value="../FLCore/bin"/>
@@ -69,7 +69,7 @@
   <arg value="-o"/>
   <targetfile/>
   <fileset dir="${models.dir}" includes="*.lwo"/>
-  <mapper type="glob" from="*.lwo" to="../../${install.dir}/data/models/*.esm"/>
+  <mapper type="glob" from="*.lwo" to="../../${install.dir}/models/*.esm"/>
 </apply>
 </target>
 

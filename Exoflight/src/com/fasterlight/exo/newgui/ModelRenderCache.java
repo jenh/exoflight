@@ -50,7 +50,7 @@ public class ModelRenderCache
    protected Model3d loadModel(String name)
    {
    	try {
-   		Model3d model = (Model3d)IOUtil.readSerializedObject(name + ".esm", true);
+   		Model3d model = (Model3d)IOUtil.readSerializedObject("models/" + name + ".esm", true);
    		if (model != null)
    			return model;
    	} catch (Exception ioe) {
