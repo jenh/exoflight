@@ -178,11 +178,20 @@
 	<!-- compile models -->
 	<antcall target="compile-lwo" />
 
-	<!-- build final dist archive -->
+	<!-- build final dist archives -->
 	<zip level="9"
+		excludes="texs/**,uitexs/**,sounds/**,models/**,eph/**"
 		destfile="dist/Exoflight-${exoflight.version}-${jogl.platform}.zip"
-		basedir="${install.dir}" 
-		/>
+		basedir="${install.dir}" />
+	<zip level="9"
+		includes="texs/**,uitexs/**,sounds/**,models/**"
+		excludes="eph/**"
+		destfile="dist/Exoflight-${exoflight.version}-media.zip"
+		basedir="${install.dir}" />
+	<zip level="9"
+		includes="eph/**"
+		destfile="dist/Exoflight-${exoflight.version}-ephemeris.zip"
+		basedir="${install.dir}" />
 </target>
 
 <!-- clover -->

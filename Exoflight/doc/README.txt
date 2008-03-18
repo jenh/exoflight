@@ -10,13 +10,15 @@ You need:
     (http://www.java.com/en/download/manual.jsp)
     
   * A joystick is optional.
- 
-  * The base texture maps from:
 
+  * The following extra files:
+
+  		http://exoflight.googlecode.com/files/Exoflight-0.1-media.zip
+  		http://exoflight.googlecode.com/files/Exoflight-0.1-ephemeris.zip
   		http://exoflight.googlecode.com/files/basemaps-low.zip
 
-    Unzip them into the same directory as this README file
-    (the directory into which you unzipped the Exoflight zip).
+    Unzip all of these into the same directory as this README file
+    (the directory into which you unzipped the first Exoflight zip).
    
   * Optionally, download high-detail texture maps from here:
 
