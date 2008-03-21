@@ -78,7 +78,8 @@ implements PropertyAware
 	throws Exception
 	{
 		if (sserver == null)
-			sserver = new JMFSoundServer(new URL(BASE_URL));
+			sserver = new JOALSoundServer(new URL(BASE_URL));
+			//sserver = new JMFSoundServer(new URL(BASE_URL));
 
 		ttsr = new TextToSpeechRenderer();
 		ttsr.loadTransTable("sounds/transtbl.txt");
@@ -241,23 +242,22 @@ implements PropertyAware
 		vcrend.open();
 	}
 
-	public void playSound(String soundname, int playflags)
+	public void playSound(String soundname)
 	{
 		if (isOpened())
 		{
 			SoundClip clip = sserver.getClip(soundname, 0);
-			sserver.play(clip, playflags);
+			sserver.play(clip, 0);
 		}
-	}
-
-	public void playSound(String soundname)
-	{
-		playSound(soundname, 0);
 	}
 
 	public void queueSound(String soundname)
 	{
-		playSound(soundname, SoundServer.QUEUE);
+		if (isOpened())
+		{
+			SoundClip clip = sserver.getClip(soundname, 0);
+			sserver.queue(clip);
+		}
 	}
 
 	public void setNumberFormat(String fmt)

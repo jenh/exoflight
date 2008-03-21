@@ -36,7 +36,7 @@ public class JMFSoundTest
 	   	float rate = rnd.nextFloat()*44100;
 	   	chan.setSampleRate(rate);
 	   	System.out.println(chan + " " + rate);
-   		chan.play(clip);
+   		chan.play();
    		Thread.sleep(rnd.nextInt() & 511);
    	}
    }
