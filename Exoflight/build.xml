@@ -13,7 +13,7 @@
 <property name="install.dir" value="dist/${jogl.platform}" />
 <property name="models.dir" value="data/models" />
 
-<property name="exoflight.version" value="0.1"/>
+<property name="exoflight.version" value="0.1.1"/>
 
 <property name="exo.fullscreen" value="true"/>
 

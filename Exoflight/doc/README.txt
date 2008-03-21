@@ -9,6 +9,8 @@ You need:
   * Java Runtime Environment version 1.4 or greater -- download from:
     (http://www.java.com/en/download/manual.jsp)
     
+  * OpenAL 1.1 Installer (http://www.openal.org/downloads.html)
+    
   * A joystick is optional.
 
   * The following extra files:

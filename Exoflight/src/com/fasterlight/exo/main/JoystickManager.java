@@ -20,8 +20,7 @@ package com.fasterlight.exo.main;
 
 import java.util.*;
 
-import sdljava.*;
-import sdljava.joystick.SDLJoystick;
+import net.java.games.input.*;
 
 import com.fasterlight.spif.*;
 
@@ -31,47 +30,41 @@ import com.fasterlight.spif.*;
  */
 public class JoystickManager implements PropertyAware
 {
-	SDLJoystick[] sticks;
+	ArrayList sticks;
 	PropertyAware top;
 	Map mappings = new TreeMap();
+	
+	public static final int X_AXIS = 0;
+	public static final int Y_AXIS = 1;
+	public static final int Z_AXIS = 2;
+	public static final int MAX_AXIS = 3;
 
+	float axisValues[] = new float[MAX_AXIS];
+	                             
 	//
 
-	public JoystickManager() throws SDLException
+	public JoystickManager()
 	{
-		SDLMain.init(SDLMain.SDL_INIT_JOYSTICK);
+		sticks = new ArrayList();
+		Controller[] ctrls = ControllerEnvironment.getDefaultEnvironment().getControllers();
+		for (int i=0; i<ctrls.length; i++)
+		{
+			if (ctrls[i].getType() == Controller.Type.STICK)
+				sticks.add(ctrls[i]);
+		}
 	}
 
 	public void setPropertyTop(PropertyAware top)
 	{
 		this.top = top;
 	}
-
-	public int getNumJoysticks()
+	
+	public void open()
 	{
-		return SDLJoystick.numJoysticks();
 	}
-
-	public void open() throws SDLException
-	{
-		close();
-			
-		int n = getNumJoysticks();
-		sticks = new SDLJoystick[n];
-		for (int i = 0; i < n; i++)
-		{
-			sticks[i] = SDLJoystick.joystickOpen(i);
-		}
-	}
-
+	
 	public void close()
 	{
-		if (sticks != null)
-		{
-			for (int i = 0; i < sticks.length; i++)
-				sticks[i].joystickClose();
-			sticks = null;
-		}
 	}
 
 	/**
@@ -79,13 +72,27 @@ public class JoystickManager implements PropertyAware
 	 */
 	public void updateDevices()
 	{
-		// update all sticks input values
-		SDLJoystick.joystickUpdate();
+		Iterator it = sticks.iterator();
+		while (it.hasNext())
+		{
+			Controller stick = (Controller)it.next();
+			Component cmpts[] = stick.getComponents();
+			for (int j=0; j<cmpts.length; j++)
+			{
+				Component.Identifier type = cmpts[j].getIdentifier();
+				if (type == Component.Identifier.Axis.X)
+					axisValues[X_AXIS] = cmpts[j].getPollData();
+				else if (type == Component.Identifier.Axis.Y)
+					axisValues[Y_AXIS] = cmpts[j].getPollData();
+				else if (type == Component.Identifier.Axis.Z)
+					axisValues[Z_AXIS] = cmpts[j].getPollData();
+			}
+		}
 	}
 
 	public float getAxis(int axis)
 	{
-		return sticks[0].joystickGetAxis(axis);
+		return axisValues[axis];
 	}
 	
 	/**
@@ -135,8 +142,7 @@ public class JoystickManager implements PropertyAware
 		{
 			if (axis < 0)
 				throw new RuntimeException("Could not get axis: " + this);
-			int ival = sticks[stick].joystickGetAxis(axis);
-			float fv = ival / 32768.0f;
+			float fv = axisValues[axis];
 			if (fv < deadzone && fv > -deadzone)
 				return 0;
 			else if (fv > 0)
@@ -145,12 +151,14 @@ public class JoystickManager implements PropertyAware
 				return (deadzone - fv) / (1 - deadzone);
 		}
 
+		/*
 		public boolean getButtonValue()
 		{
 			if (button < 0)
 				throw new RuntimeException("Could not get button: " + this);
 			return sticks[stick].joystickGetButton(button);
 		}
+		*/
 
 		public int hashCode()
 		{
