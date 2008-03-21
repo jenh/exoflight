@@ -22,7 +22,8 @@
 	<pathelement location="../FLCore/FLCore.jar" />
 	<pathelement location="../FLCore/lib/${jogl.platform}/jogl.jar" />
 	<pathelement location="../FLCore/lib/${jogl.platform}/gluegen-rt.jar" />
-	<pathelement location="../FLCore/lib/${jogl.platform}/sdljava.jar" />
+	<pathelement location="../FLCore/lib/${jogl.platform}/joal.jar" />
+	<pathelement location="../FLCore/lib/${jogl.platform}/jinput.jar" />
 	<pathelement location="../FLCore/lib/png.jar" />
 	<pathelement location="../FLCore/lib/junit.jar" />
 	<pathelement location="./data" />
