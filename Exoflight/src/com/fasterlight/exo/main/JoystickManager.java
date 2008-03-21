@@ -53,6 +53,11 @@ public class JoystickManager implements PropertyAware
 				sticks.add(ctrls[i]);
 		}
 	}
+	
+	public int getNumSticks()
+	{
+		return sticks.size();
+	}
 
 	public void setPropertyTop(PropertyAware top)
 	{

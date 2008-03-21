@@ -147,7 +147,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 	{
 		if (guictx == null)
 			return;
-		if (joy == null)
+		if (joy == null || joy.getNumSticks() == 0)
 			return;
 		{
 			SpaceShip ship = guictx.getCurrentShip();
@@ -675,7 +675,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		{
 			joy = new JoystickManager();
 			joy.open();
-			System.out.println("Found " + joy.sticks.size() + " joysticks");
+			System.out.println("Found " + joy.getNumSticks() + " joysticks");
 		} catch (Throwable e)
 		{
 			System.out.println("Could not initialize joystick: " + e);
