@@ -37,7 +37,8 @@ public class JoystickManager implements PropertyAware
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
 	public static final int Z_AXIS = 2;
-	public static final int MAX_AXIS = 3;
+	public static final int THROT_AXIS = 3;
+	public static final int MAX_AXIS = 4;
 
 	float axisValues[] = new float[MAX_AXIS];
 	                             
@@ -81,6 +82,8 @@ public class JoystickManager implements PropertyAware
 		while (it.hasNext())
 		{
 			Controller stick = (Controller)it.next();
+			if (!stick.poll())
+				continue;
 			Component cmpts[] = stick.getComponents();
 			for (int j=0; j<cmpts.length; j++)
 			{
@@ -89,10 +92,15 @@ public class JoystickManager implements PropertyAware
 					axisValues[X_AXIS] = cmpts[j].getPollData();
 				else if (type == Component.Identifier.Axis.Y)
 					axisValues[Y_AXIS] = cmpts[j].getPollData();
-				else if (type == Component.Identifier.Axis.Z)
+				else if (type == Component.Identifier.Axis.RZ)
 					axisValues[Z_AXIS] = cmpts[j].getPollData();
+				else if (type == Component.Identifier.Axis.SLIDER)
+					axisValues[THROT_AXIS] = cmpts[j].getPollData();
 			}
 		}
+		for (int i=0; i<MAX_AXIS; i++)
+			System.out.print(" "+axisValues[i]);
+		System.out.println();
 	}
 
 	public float getAxis(int axis)

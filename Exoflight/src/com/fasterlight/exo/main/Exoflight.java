@@ -158,9 +158,9 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 			{
 				joy.updateDevices();
 				float dz = 0.15f;
-				float x = joy.getAxis(3) / 32767f;
-				float y = joy.getAxis(1) / 32767f;
-				float z = joy.getAxis(0) / 32767f;
+				float x = joy.getAxis(JoystickManager.Z_AXIS) / 32767f;
+				float y = joy.getAxis(JoystickManager.Y_AXIS) / 32767f;
+				float z = joy.getAxis(JoystickManager.X_AXIS) / 32767f;
 				if (Math.abs(x) < dz)
 					x = 0;
 				else
@@ -180,7 +180,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 				if (ship.getShipAttitudeSystem().getThrottleManual()
 					== ShipAttitudeSystem.THROT_MANUAL)
 				{
-					float t = 0.5f - (joy.getAxis(2) / 65535f);
+					float t = 0.5f - (joy.getAxis(JoystickManager.THROT_AXIS) / 65535f);
 					if (t < 0.01f)
 						t = 0;
 					ship.getShipAttitudeSystem().setManualThrottle(t);
