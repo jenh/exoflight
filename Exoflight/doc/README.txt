@@ -26,8 +26,9 @@ You need:
 
     	http://code.google.com/p/exoflight/downloads/list 
 
-  * To start Exoflight, run the "runwindow.bat" file.
-  
+  * To start Exoflight, start the "run.bat" file.
+    On the Mac, you will have to start the Console and "sh run.sh".
+     
   * When the main screen appears, press Ctrl-N to choose one of the four 
   	Gemini tutorial missions. Press "Done" and follow the instructions.
 

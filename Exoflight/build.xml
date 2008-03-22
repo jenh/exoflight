@@ -155,7 +155,7 @@
 	<copy todir="${install.dir}/lib" file="Exoflight.jar" />
 	<copy todir="${install.dir}/lib" file="../FLCore/FLCore.jar" />
 	<copy todir="${install.dir}/lib">
-		<fileset dir="../FLCore/lib/${jogl.platform}" includes="*.dll,*.jar" />
+		<fileset dir="../FLCore/lib/${jogl.platform}" includes="*.dll,*.jar,*.jnilib,*.so" />
 		<fileset dir="../FLCore/lib" includes="png.jar" />
 	</copy>
 
@@ -174,7 +174,7 @@
 
 	<!-- scripts -->
 	<copy todir="${install.dir}">
-		<fileset dir="./scripts" includes="*.bat" />
+		<fileset dir="./scripts" includes="*.bat,*.sh" />
 		<fileset dir="./doc" includes="*.txt" />
 	</copy>
 	
