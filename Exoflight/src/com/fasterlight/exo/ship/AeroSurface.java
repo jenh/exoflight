@@ -74,7 +74,6 @@ public class AeroSurface
      */
 	Vector3f control_surfaces_torque;
 	float last_control_bc; // last bc calculated for control surfaces
-	float last_control_bc2; // last bc2 calculated for control surfaces
 
 	//
 
@@ -117,7 +116,6 @@ public class AeroSurface
 			res.pf.T.x += bc2*control_surfaces_torque.x;
 			res.pf.T.y += bc2*control_surfaces_torque.y;
 			res.pf.T.z += bc2*control_surfaces_torque.z;
-			last_control_bc2 = (float)bc2;
 		}
 
 		// compute lift, and induced drag, if any
