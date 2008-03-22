@@ -98,8 +98,8 @@ public class JoystickManager implements PropertyAware
 					axisValues[THROT_AXIS] = cmpts[j].getPollData();
 			}
 		}
-		for (int i=0; i<MAX_AXIS; i++)
-			System.out.print(" "+axisValues[i]);
+		//for (int i=0; i<MAX_AXIS; i++)
+		//	System.out.print(" "+axisValues[i]);
 		System.out.println();
 	}
 

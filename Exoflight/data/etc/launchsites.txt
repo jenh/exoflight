@@ -80,6 +80,14 @@ ll=311400N 1310400E
 owner=Japan
 ll=302300N 1305800E
 
+[Mount Everest]
+owner=Secret
+ll=275917N 865531E 	
+
+[Kilimanjaro]
+owner=Secret
+ll=30433S 372112E
+
 ;
 
 [Tycho Base]

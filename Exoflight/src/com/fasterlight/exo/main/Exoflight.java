@@ -157,7 +157,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 				!= ShipAttitudeSystem.RCS_MANINHIBIT)
 			{
 				joy.updateDevices();
-				float dz = 0.2f;
+				float dz = 0.25f;
 				float x = joy.getAxis(JoystickManager.X_AXIS);
 				float y = joy.getAxis(JoystickManager.Y_AXIS);
 				float z = joy.getAxis(JoystickManager.Z_AXIS);

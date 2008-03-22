@@ -50,10 +50,12 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 
 	public RasterLODElevationModel()
 	{
+		ptp.setHasPalette(false);
 	}
 
 	public RasterLODElevationModel(String fn, int maxprec, float minrad, float maxrad)
 	{
+		ptp.setHasPalette(false);
 		setFilePrefix(fn);
 		setMaxPrecision(maxprec);
 		setMinDisplacement(minrad);
@@ -62,6 +64,7 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 
 	public RasterLODElevationModel(String spec)
 	{
+		ptp.setHasPalette(false);
 		StringTokenizer st = new StringTokenizer(spec, ";");
 		setFilePrefix(st.nextToken());
 		setMaxPrecision(Integer.parseInt(st.nextToken()));
@@ -73,6 +76,7 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 	{
 		ptp.setPathPrefix(fp);
 		ptp.setPixelConfabulator(new RandomNeighborPixelConfabulator());
+		//ptp.setPixelConfabulator(new AveragingPixelConfabulator());
 		ptp.setCacheAll(true);
 	}
 
@@ -148,7 +152,7 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 		return getTexQuad(xx, yy, level);
 	}
 
-	public int getAbsPixel(int x, int y, int prec)
+	int getAbsPixel(int x, int y, int prec)
 	{
 		int s = (prec - minprec);
 		int mx = (1 << s) - 1;
@@ -157,36 +161,38 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 		int qx = (x >> sc) & mx;
 		int qy = (y >> sc) & my;
 		TexQuad mq = getTexQuad(qx, qy, prec);
-		//		System.out.print(qx + "," + qy + " " + x + "," + y + "; ");
 		return getPixel(mq, x, y);
 	}
 
-	public final int getPixel(TexQuad tq, int x, int y)
+	final int getPixel(TexQuad tq, int x, int y)
 	{
 		return tq.getByteData()[(x & 0xff) + ((y & 0xff) << 8)] & 0xff;
 	}
 
-	public final int getPixel(TexQuad tq, double x, double y)
+	final int getPixel(TexQuad tq, double x, double y)
 	{
+		assert(x>=0 && x<1 && y>=0 && y<1);
+		int b = ptp.getBorder();
 		return getPixel(
 			tq,
-			(int) (x * (ptp.getWidth(tq) - 2)) + 1,
-			(int) (y * (ptp.getHeight(tq) - 2)) + 1);
+			(int) (x * (ptp.getWidth(tq) - b*2)) + b,
+			(int) (y * (ptp.getHeight(tq) - b*2)) + b);
 	}
 
-	public final int getPixelMinLevel(TexQuad tq, double x, double y)
+	final int getPixelMinLevel(TexQuad tq, double x, double y)
 	{
+		assert(x>=0 && x<1 && y>=0 && y<1);
 		return getPixel(tq, (int) (x * ptp.getWidth(tq)), (int) (y * ptp.getHeight(tq)));
 	}
 
-	public final float getPixelInterp(TexQuad tq, double x, double y)
+	final float getPixelInterp(TexQuad tq, double x, double y)
 	{
-		x = x * ptp.getUsableTexSize() + ptp.getUsableTexSize();
-		y = y * ptp.getUsableTexSize() + ptp.getUsableTexSize();
-		int xx = (int) Math.floor(x);
-		int yy = (int) Math.floor(y);
-		double fx = x - xx;
-		double fy = y - yy;
+		assert(x>=0 && x<1 && y>=0 && y<1);
+		int b = ptp.getBorder();
+		int xx = (int) (x * (ptp.getWidth(tq) - b*2)) + b;
+		int yy = (int) (y * (ptp.getHeight(tq) - b*2)) + b;
+		double fx = x - (int)x;
+		double fy = y - (int)y;
 		double fx1 = 1 - fx;
 		double fy1 = 1 - fy;
 		int i1 = getPixel(tq, xx, yy);
@@ -197,8 +203,9 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 		return (float) f1;
 	}
 
-	public final float getPixelInterpMinLevel(TexQuad tq, double x, double y)
+	final float getPixelInterpMinLevel(TexQuad tq, double x, double y)
 	{
+		assert(x>=0 && x<1 && y>=0 && y<1);
 		int w = ptp.getWidth(tq);
 		int h = ptp.getHeight(tq);
 		x = x * w;
@@ -241,7 +248,7 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 				double x = xx * (1 << (maxprec - minprec));
 				double y = yy * (1 << (maxprec - minprec)) / 2;
 				mq = getTexQuad((int) x, (int) y, maxprec);
-				i = getPixelInterp(mq, x - (int) Math.floor(x), y - (int) Math.floor(y));
+				i = getPixelInterp(mq, x - (int) x, y - (int) y);
 			}
 			else
 			{
@@ -254,7 +261,7 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 			double x = xx * (1 << (precision - minprec));
 			double y = yy * (1 << (precision - minprec)) / 2;
 			mq = getTexQuad((int) x, (int) y, precision);
-			i = getPixel(mq, x - (int) Math.floor(x), y - (int) Math.floor(y));
+			i = getPixel(mq, x - (int) x, y - (int) y);
 		}
 		return mq.byteToValue(i);
 	}
@@ -282,18 +289,24 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 
 	public static void main(String[] args) throws Exception
 	{
+		//RasterLODElevationModel bmconv =
+			//new RasterLODElevationModel("elevtexs/Earth/Earth-elev", 14, 0, 8.5f);
 		RasterLODElevationModel bmconv =
-			new RasterLODElevationModel("elevtexs/Earth/Earth-elev", 11, 0, 8.5f);
+			new RasterLODElevationModel("elevtexs/Luna/Luna-elev", 11, -8.722f, 8.722f);
 
-		double lat = Util.toRadians(49d);
-		double lon = Util.toRadians(-110d);
+		// mount everest, 8.848 km above sea level
+		double lon = Util.toRadians(86.925278);
+		double lat = Util.toRadians(27.988056);
+		lon = 0;
+		lat = 0;
 		Vector3d nml = new Vector3d();
 
 		for (int prec = bmconv.minprec; prec <= bmconv.maxprec + 1; prec++)
 		{
+			System.out.println("== Precision " + prec);
 			System.out.println(bmconv.getDisplacement(lat, lon, prec));
-			bmconv.getNormal(lat, lon, prec, nml);
-			System.out.println(nml);
+			//bmconv.getNormal(lat, lon, prec, nml);
+			//System.out.println(nml);
 		}
 	}
 
