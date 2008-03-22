@@ -73,7 +73,8 @@ public class AeroSurface
 	  * (note: actually this is torque/BC)
      */
 	Vector3f control_surfaces_torque;
-	float last_control_bc2; // last bc calculated for control surfaces
+	float last_control_bc; // last bc calculated for control surfaces
+	float last_control_bc2; // last bc2 calculated for control surfaces
 
 	//
 
@@ -106,6 +107,7 @@ public class AeroSurface
 
 		// todo: use "mort" to transform
 		float bc = (float)(drag_mach_curve.f(mach)*area);
+		last_control_bc = (float)bc;
 		res.BC += bc*bcdragscale;
 
 		// add control surface torque

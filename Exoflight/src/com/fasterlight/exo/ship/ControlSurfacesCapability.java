@@ -134,8 +134,8 @@ if (debug)
 			return; // moment is set to (0,0,0) in getTorque()
 
 		// by getting the last drag coeff, we can compute torque
-
-		float lastBC = getModule().getForeSurface().last_control_bc2;
+		// TODO: is this the right coefficient?
+		float lastBC = getModule().getForeSurface().last_control_bc;
 		double Q = ((SpaceShipTelemetry)getShip().getTelemetry()).getDYNPRES();
 		moment.scale((float)(lastBC*Q*scale_factor));
 if (debug)
