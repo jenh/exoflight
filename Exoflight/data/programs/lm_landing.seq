@@ -122,16 +122,22 @@ Abort_A:
 "Pitch up"
 	ship.attsys.guidmode = "pyr";
 	ship.attctrl.guidance.pitch = 90 deg;
-	wait for 3;
-"Target CSM"
 	ship.targsys.target = game.universe.'$Apollo CSM';
-	ship.launchsys.targalt = 17;
-	ship.launchsys.targapo = 83;
+	--ship.targsys.computing = true;
+	--wait for condition (ship.targsys.computing == false) interval 0.125;
+	wait for 5;
+"Target CSM"
 	ship.attsys.guidmode = "igm";
--- todo: end condition
---	wait for condition (ship.attctrl.guidance.tgo < 0.5) interval 0.125;
---"Engine shutdown"
---	@lam.'$ascent engine'.throttle = 0;
---	@ldm.'$descent engine'.throttle =? 0;
+	ship.launchsys.targeting = false;
+	ship.maneuvsys.elements.incl = ship.targsys.target.telemetry.incl;
+	ship.maneuvsys.elements.raan = ship.targsys.target.telemetry.raan;
+	ship.maneuvsys.periapsis = ship.targsys.target.telemetry.periapsis;
+	ship.maneuvsys.apoapsis = ship.targsys.target.telemetry.apoapsis;
+	ship.maneuvsys.updatelaunch = true;
+	wait for condition (ship.telemetry.apoapsis > ship.maneuvsys.apoapsis) interval 0.125;
+"Engine shutdown"
+	@lam.'$ascent engine'.throttle = 0;
+	@ldm.'$descent engine'.throttle =? 0;
+	ship.attsys.guidmode = "aoa";
 }
 

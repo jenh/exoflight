@@ -108,6 +108,7 @@ public class Sequencer implements PropertyAware
 		{
 			aborts.put(abortid, new Integer(nodeidx));
 			abortlist.add(abortid);
+			setAbortMode(abortid);
 		}
 		else
 		{

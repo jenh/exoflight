@@ -239,6 +239,7 @@ implements GuidanceProgram, Constants, PropertyAware
 //System.out.println(targ_plane_nml + " " + targ_rl + " " + targ_rdot + " " + targ_zdot);
 
 		targ_plane_nml.normalize();
+		// TODO :check for NaN error
 	}
 
 	public void compute(AttitudeController attctrl)
@@ -374,6 +375,8 @@ implements GuidanceProgram, Constants, PropertyAware
    		if (aTLk <= 0 || tgo < tlim) // accel limit will not be reached
    		{
    			double log = Math.log(1 - tgo/tau);
+   			if (!(log>0))
+   				log = 0;
    			a11 = -ve*log;
    			a12 = -ve*tau*log - ve*tgo;
    			a21 = ve*(tau-tgo)*log + ve*tgo;

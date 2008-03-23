@@ -259,6 +259,21 @@ implements PropertyAware
 		}
 	}
 
+	public void updateTargetOrbit(boolean b)
+	{
+		if (b)
+		{
+			ShipTargetingSystem sts = ship.getShipTargetingSystem();
+			double mu = ship.getParent().getMass()*Constants.GRAV_CONST_KM;
+			elements = new KeplerianElements(
+					ship.getTelemetry().getCenDistVec(),
+					ship.getTelemetry().getVelocityVec(),
+					mu);
+			// TODO: what if different parents for ship & target?
+			useargperi = false;
+		}
+	}
+	
 	public void updateLaunch(boolean b)
 	{
 		if (b)
@@ -299,6 +314,7 @@ implements PropertyAware
 		prophelp.registerSet("updatecurrent", "updateCurrent", boolean.class);
 		prophelp.registerSet("updateintercept", "updateIntercept", boolean.class);
 		prophelp.registerSet("updatelaunch", "updateLaunch", boolean.class);
+		prophelp.registerSet("updatetargetorbit", "updateTargetOrbit", boolean.class);
 		prophelp.registerGetSet("useargperi", "UseArgPeriapsis", boolean.class);
 	}
 
