@@ -46,6 +46,7 @@ extends StructureThing
 	protected ShipManeuverSystem maneuvsys;
 	protected ShipWarningSystem warnsys;
 	protected ShipReentrySystem reentrysys;
+	protected ShipLandingSystem landsys;
 	protected int flags;
 
 	static final int EXPLODED = 1;
@@ -115,6 +116,13 @@ extends StructureThing
 		if (reentrysys == null)
 			reentrysys = new ShipReentrySystem(this);
 		return reentrysys;
+	}
+
+	public ShipLandingSystem getShipLandingSystem()
+	{
+		if (landsys == null)
+			landsys = new ShipLandingSystem(this);
+		return landsys;
 	}
 
 	public GuidanceCapability getGuidanceCapability()
@@ -816,6 +824,7 @@ if (debug) {
 		prophelp.registerGet("maneuvsys", "getShipManeuverSystem");
 		prophelp.registerGet("warnsys", "getShipWarningSystem");
 		prophelp.registerGet("reentrysys", "getShipReentrySystem");
+		prophelp.registerGet("landingsys", "getShipLandingSystem");
 		prophelp.registerGetSet("sequencer", "Sequencer", Sequencer.class);
 		prophelp.registerGet("guidancecap", "getGuidanceCapability");
 		prophelp.registerSet("detach", "detach", Module.class);

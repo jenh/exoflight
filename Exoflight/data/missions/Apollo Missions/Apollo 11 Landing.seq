@@ -50,8 +50,7 @@ sequence "Apollo 11 Landing" {
 	@ui.message =? "You are in the Eagle, 110 km above the moon.  You are about to begin the powered descent to the lunar surface.";
 
 	ship.targsys.target = game.'$Apollo 11';
-	ship.targsys.progtype = "landing";
-	ship.targsys.active = true;
+	ship.landingsys.active = true;
 
 --	wait for 30;
 --	ship.sequencer.'abort' = true;

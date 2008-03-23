@@ -173,3 +173,13 @@ height=10
 align=1
 text=(20 m/s)
 
+[landingbtn]
+parent=top
+type=label
+x=120
+y=130
+type=button
+text=APPROACH
+bool_prop=ship.landingsys.active
+layout=true
+flags=2

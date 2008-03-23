@@ -32,11 +32,11 @@ game.governor.paused=<toggle>
 
 ;--------
 
-;[Display:Launch Config]
-;ui.$$MSD Pager.pagenum=0
+[Display:Launch Config]
+ui.$$MSD Pager.pagenum=0
 
-;[Display:Landing Config]
-;ui.$$MSD Pager.pagenum=1
+[Display:Landing Config]
+ui.$$MSD Pager.pagenum=1
 
 [Display:Groundtrack Mode]
 ui.$$Pages.pagenum=0
