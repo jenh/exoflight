@@ -306,7 +306,7 @@ extends Capability
 		if (len2 > jitterMax*jitterMax)
 			accelvec.scale((float)(jitterMax/Math.sqrt(len2)));
 */
-System.out.println("accelvec = " + accelvec);
+//System.out.println("accelvec = " + accelvec);
 		return accelvec;
 	}
 

@@ -10,14 +10,19 @@ sequence "Apollo Landing" {
 "Arm DPS"
 	@ldm.'$descent engine'.armed = true;
 	@gsound.say =? "Descent engine armed.";
+	ship.guidancecap.settingidx = 0;
 	wait until -50;
 
 "Set braking attitude"
-	ship.attsys.guidmode = "approach";
-	ship.attctrl.guidance.heightbias = 0.25;
-	ship.attctrl.guidance.timebias = 30;
+	ship.attsys.guidmode = "aoa-aft";
 	@lam.'$guidance system'.active = true;
 	@lam.$RCS.armed = true;
+	wait until -15;
+"Approch program enable"
+	ship.attsys.guidmode = "approach";
+	--ship.attctrl.guidance.heightbias = 0.25;
+	ship.attctrl.guidance.timebias = 60;
+	--ship.attctrl.guidance.timescale = 1.2;
 "Wait for attitude lock"
 	wait for condition (ship.attctrl.locked == true) interval 0.25 timeout 90;
 	@gsound.say =? "Attitude lock.";
@@ -50,7 +55,7 @@ sequence "Apollo Landing" {
 	wait for condition (ship.telemetry.altagl < 2.28) interval 0.5 timeout 1200;
 "High gate"
 	@gsound.say =? "High gate.";
-	ship.attctrl.guidance.heightbias = 0.0;
+	ship.attctrl.guidance.heightbias = 0;
 	ship.attctrl.guidance.noroll = true;
 
 	@gsound.says =? "Altitude is ";
@@ -60,11 +65,10 @@ sequence "Apollo Landing" {
 	@gsound.saynum =? 'ship.telemetry.velocity';
 	@gsound.say =? " km/s.";
 
-	wait for condition (ship.telemetry.altagl < 0.15) interval 0.5 timeout 1200;
+	wait for condition (ship.telemetry.altagl < 0.75) interval 0.5 timeout 1200;
 "Low gate"
 	@gsound.say =? "Low gate.";
-	ship.attctrl.guidance.heightbias = -0.06;
---	ship.attctrl.guidance.timebias = 30;
+	ship.attctrl.guidance.heightbias = -0.25;
 
 	@gsound.says =? "Altitude is ";
 	@gsound.saynum =? 'ship.telemetry.altagl';

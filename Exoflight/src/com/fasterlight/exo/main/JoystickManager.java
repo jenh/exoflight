@@ -100,7 +100,7 @@ public class JoystickManager implements PropertyAware
 		}
 		//for (int i=0; i<MAX_AXIS; i++)
 		//	System.out.print(" "+axisValues[i]);
-		System.out.println();
+		//System.out.println();
 	}
 
 	public float getAxis(int axis)
