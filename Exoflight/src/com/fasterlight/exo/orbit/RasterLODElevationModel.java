@@ -210,8 +210,8 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 		int h = ptp.getHeight(tq);
 		x = x * w;
 		y = y * h;
-		int xx = (int) Math.floor(x);
-		int yy = (int) Math.floor(y);
+		int xx = (int) x;
+		int yy = (int) x;
 		double fx = x - xx;
 		double fy = y - yy;
 		double fx1 = 1 - fx;
@@ -228,10 +228,11 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 
 	public float getDisplacement(double lat, double lon, int precision)
 	{
-		double yy = (Math.PI / 2 - lat) / (Math.PI + 1e-15);
+		double yy = (Math.PI * 3 / 2 - lat) / (Math.PI + 1e-15);
 		// **we add PI+1e-15 so that we can get -90 and +90 degrees
-		double xx = (lon + Math.PI) / (Math.PI * 2);
+		double xx = (lon + Math.PI * 3) / (Math.PI * 2);
 		// truncate to range 0 <= x < 1
+		assert(xx>=0&&yy>=0);
 		xx = xx - Math.floor(xx);
 		yy = yy - Math.floor(yy);
 		float i;

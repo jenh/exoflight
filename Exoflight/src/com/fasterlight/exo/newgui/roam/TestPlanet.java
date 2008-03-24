@@ -59,7 +59,7 @@ extends GLOAWTComponent
 	boolean doClouds = false;
 	boolean doBumpMap = false;
 	boolean showAxes = false;
-	boolean withSectors = true;
+	boolean withSectors = false;
 
 	Random rnd = new Random();
 
@@ -610,19 +610,22 @@ extends GLOAWTComponent
 //		System.setErr(ps);
 
 		TestPlanet test = new TestPlanet(1024,768);
-		GLCanvas canvas = test.createGLCanvas();
-		JFrame f = new JFrame();
-		f.getContentPane().setLayout(new BorderLayout());
-		f.getContentPane().add(canvas, BorderLayout.CENTER);
-		f.pack();
-		f.show();
-
+		/*
 		for (int i=0; i<args.length; i++)
 		{
 			test.planetname = args[i];
-		}
+		}*/
+
+		GLCanvas canvas = test.createGLCanvas();
+		JFrame f = new JFrame();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.getContentPane().setLayout(new BorderLayout());
+		f.getContentPane().add(canvas, BorderLayout.CENTER);
+		f.pack();
+		f.setVisible(true);
 
 		test.start(canvas, canvas);
+
 	}
 
 }

@@ -92,11 +92,11 @@ public class ROAMPlanet
 
 	static int MAX_LEVEL = 29;
 
-	int DEFAULT_TRIS = 9000;
+	int DEFAULT_TRIS = 20000;
 	TriNode[] trinodes;
 	TriNode freelist;
 
-	int MAX_TRIS = 9000;
+	int MAX_TRIS = 20000;
 
 	int nodecount, numseeds;
 	int numtris;
