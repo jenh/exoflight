@@ -1,14 +1,14 @@
 
 sequence "LM Intercept" {
 
-	wait until -25;
+	wait until -60;
 	@LAM = 'ship.structure.$Apollo LAM';
 
 "Wait for intercept time"
 	ship.attsys.guidmode = "lambert";
 	ship.attctrl.guidance.targtime = @targtime;
 
-	wait until -20;
+	wait until -55;
 "Prepare for OMS burn"
 	@LAM.'$guidance system'.active = true;
 
