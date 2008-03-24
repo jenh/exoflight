@@ -233,8 +233,8 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 		double xx = (lon + Math.PI * 3) / (Math.PI * 2);
 		// truncate to range 0 <= x < 1
 		assert(xx>=0&&yy>=0);
-		xx = xx - Math.floor(xx);
-		yy = yy - Math.floor(yy);
+		xx = xx - (int)xx;
+		yy = yy - (int)yy;
 		float i;
 		TexQuad mq;
 		if (precision <= minprec)
