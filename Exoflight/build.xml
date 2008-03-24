@@ -19,7 +19,6 @@
 
 <path id="libs.path">
 	<pathelement location="../FLCore/bin" />
-	<pathelement location="../FLCore/FLCore.jar" />
 	<pathelement location="../FLCore/lib/${jogl.platform}/jogl.jar" />
 	<pathelement location="../FLCore/lib/${jogl.platform}/gluegen-rt.jar" />
 	<pathelement location="../FLCore/lib/${jogl.platform}/joal.jar" />
@@ -105,6 +104,8 @@
 	<java classname="${run.class}" fork="yes">
 		<classpath refid="libs.path" />
 		<sysproperty key="java.library.path" value="../FLCore/lib/${jogl.platform}" />
+
+		<jvmarg value="-agentlib:hprof=cpu=samples,monitor=y" />
 <!--
 		<jvmarg value="-verbose" />
 		<sysproperty key="exo.scrnwidth" value="1024" />
@@ -164,10 +165,8 @@
 	</copy>
 	
 	<!-- these aren't ready yet -->
-	<delete dir="${install.dir}/missions/Apollo Missions" />
-	<delete dir="${install.dir}/missions/scrnsave" />
-	<delete dir="${install.dir}/missions/Shuttle Missions" />
-	<delete dir="${install.dir}/missions/Test Missions" />
+	<copy tofile="${install.dir}/missions/default.ini" 
+		file="${install.dir}/missions/shipping.ini" overwrite="true"/>
 
 	<!-- these are optional -->
 	<delete dir="${install.dir}/eph" excludes="*-19*.ser,*-20*.ser" />
