@@ -36,9 +36,6 @@ import com.fasterlight.util.*;
 public class Mission
 implements PropertyAware
 {
-	protected static Map allmissions = new HashMap();
-	protected static List missionlist = new ArrayList();
-
 	String name, desc, seqname, basename;
 	long curtime, starttime;
 	Vehicle vehicle;
