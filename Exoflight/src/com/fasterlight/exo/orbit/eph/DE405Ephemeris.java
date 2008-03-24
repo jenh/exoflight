@@ -344,10 +344,10 @@ implements Ephemeris, java.io.Serializable, Comparable
 		if ((jultime < start_time) || (jultime > end_time))
 			throw new IllegalArgumentException("jultime is outside bounds: " + jultime);
 
-		interval = (int)(Math.floor((jultime - start_time)/interval_duration) + 1);
+		interval = (int)(((jultime - start_time)/interval_duration) + 1);
 		interval_start_time = (interval - 1)*interval_duration + start_time;
 		subinterval_duration = interval_duration/number_of_coef_sets[i];
-		subinterval = (int)(Math.floor((jultime - interval_start_time)/subinterval_duration) + 1);
+		subinterval = (int)(((jultime - interval_start_time)/subinterval_duration) + 1);
 		numbers_to_skip = (interval - 1)*numbers_per_interval;
 
 		/*
