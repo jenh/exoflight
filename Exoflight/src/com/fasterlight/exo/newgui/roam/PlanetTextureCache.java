@@ -57,7 +57,7 @@ public class PlanetTextureCache implements Runnable
 	int destgltype;
 	int flags;
 
-	static final int NUM_TEXS = 256;
+	static final int NUM_TEXS = 512;
 	int[] texints = new int[NUM_TEXS];
 
 	Vector3d sunpos = new Vector3d(1, 0, 0);
@@ -436,6 +436,14 @@ public class PlanetTextureCache implements Runnable
 		TexQuad srcquad = getSourceQuad(x, y, level);
 		destbufbytes = BufferUtil.newByteBuffer(srcquad.data.length);
 		destbufbytes.put(srcquad.data);
+		// put the array data back into the quad to save memory
+		try {
+			byte[] arr = destbufbytes.array();
+			if (arr != null)
+				srcquad.setByteData(arr);
+		} catch (Exception e) {
+			// 
+		}
 		destbufpalette = getPaletteInts();
 
 		int ti;
