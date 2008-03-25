@@ -50,12 +50,18 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 
 	public RasterLODElevationModel()
 	{
+		init();
+	}
+	
+	void init()
+	{
 		ptp.setHasPalette(false);
+		ptp.setSquashLevel(8);
 	}
 
 	public RasterLODElevationModel(String fn, int maxprec, float minrad, float maxrad)
 	{
-		ptp.setHasPalette(false);
+		init();
 		setFilePrefix(fn);
 		setMaxPrecision(maxprec);
 		setMinDisplacement(minrad);
@@ -64,7 +70,7 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 
 	public RasterLODElevationModel(String spec)
 	{
-		ptp.setHasPalette(false);
+		init();
 		StringTokenizer st = new StringTokenizer(spec, ";");
 		setFilePrefix(st.nextToken());
 		setMaxPrecision(Integer.parseInt(st.nextToken()));
@@ -75,8 +81,8 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 	public void setFilePrefix(String fp)
 	{
 		ptp.setPathPrefix(fp);
-		ptp.setPixelConfabulator(new RandomNeighborPixelConfabulator());
-		//ptp.setPixelConfabulator(new AveragingPixelConfabulator());
+		//ptp.setPixelConfabulator(new RandomNeighborPixelConfabulator());
+		ptp.setPixelConfabulator(new AveragingPixelConfabulator());
 		ptp.setCacheAll(true);
 	}
 

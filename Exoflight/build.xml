@@ -167,6 +167,7 @@
 	<!-- these aren't ready yet -->
 	<copy tofile="${install.dir}/missions/default.ini" 
 		file="${install.dir}/missions/shipping.ini" overwrite="true"/>
+	<delete file="${install.dir}/missions/shipping.ini" />
 
 	<!-- these are optional -->
 	<delete dir="${install.dir}/eph" excludes="*-19*.ser,*-20*.ser" />
