@@ -1,0 +1,40 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>lib\Exoflight.jar</jar>
+  <outfile>C:\workarea\Exoflight\dist\windows-i586\Exoflight.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine>-stdout stdout.txt -stderr stderr.txt</cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://code.google.com/p/exoflight/wiki/Support</supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon></icon>
+  <singleInstance>
+    <mutexName>ExoflightMain</mutexName>
+    <windowTitle>Exoflight</windowTitle>
+  </singleInstance>
+  <classPath>
+    <mainClass>com.fasterlight.exo.main.Exoflight</mainClass>
+    <cp>./lib/FLCore.jar</cp>
+    <cp>./lib/jogl.jar</cp>
+    <cp>./lib/gluegen-rt.jar</cp>
+    <cp>./lib/joal.jar</cp>
+    <cp>./lib/jinput.jar</cp>
+    <cp>./lib/png.jar</cp>
+    <cp>./lib/junit.jar</cp>
+    <cp>.</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <minVersion>1.4.2</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <initialHeapPercent>50</initialHeapPercent>
+    <maxHeapPercent>50</maxHeapPercent>
+    <opt>-Djava.library.path=./lib</opt>
+  </jre>
+</launch4jConfig>
