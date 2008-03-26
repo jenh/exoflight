@@ -35,6 +35,6 @@
     <jdkPreference>preferJre</jdkPreference>
     <initialHeapPercent>50</initialHeapPercent>
     <maxHeapPercent>50</maxHeapPercent>
-    <opt>-Djava.library.path=./lib</opt>
+    <opt>-Djava.library.path=./lib -Dexo.fullscreen=true</opt>
   </jre>
 </launch4jConfig>
