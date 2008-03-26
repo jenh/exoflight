@@ -8,15 +8,17 @@
 <property name="project.name" value="Exoflight" />
 <property name="depend.dir" value="../FLCore" />
 <property name="shared.dir" value="../FLCore" />
+<property name="launch4j.dir" location="/Program Files/Launch4j" />
+<property name="jarbundler.dir" location="/jarbundler-1.9" />
 
 <property name="jogl.platform" value="windows-i586" />
-<property name="install.dir" value="dist/${jogl.platform}" />
 <property name="models.dir" value="data/models" />
 
 <property name="exoflight.version" value="0.1.1"/>
 
 <property name="exo.fullscreen" value="true"/>
 
+	
 <path id="libs.path">
 	<pathelement location="../FLCore/bin" />
 	<pathelement location="../FLCore/lib/${jogl.platform}/jogl.jar" />
@@ -148,7 +150,17 @@
 
 <!-- install -->
 
-<target name="install" depends="jar">
+<!-- win32 launcher builder -->
+<taskdef name="launch4j"
+    classname="net.sf.launch4j.ant.Launch4jTask"
+    classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
+	
+<!-- os x launcher builder -->
+<taskdef name="jarbundler" 
+    classname="net.sourceforge.jarbundler.JarBundler" 
+    classpath="${jarbundler.dir}/jarbundler-1.9.jar" />
+	
+<target name="install-common">
 	<delete dir="${install.dir}" />
 	<mkdir dir="${install.dir}" />
 
@@ -161,7 +173,7 @@
 	</copy>
 
 	<copy todir="${install.dir}">
-		<fileset dir="./data" excludes="elevtexs/**,texs/*/*.*,models/**"/>
+		<fileset dir="./data" excludes="elevtexs/**,texs/**,sounds/**,models/**,eph/**" />
 	</copy>
 	
 	<!-- these aren't ready yet -->
@@ -169,32 +181,71 @@
 		file="${install.dir}/missions/shipping.ini" overwrite="true"/>
 	<delete file="${install.dir}/missions/shipping.ini" />
 
-	<!-- these are optional -->
-	<delete dir="${install.dir}/eph" excludes="*-19*.ser,*-20*.ser" />
-
 	<!-- scripts -->
 	<copy todir="${install.dir}">
-		<fileset dir="./scripts" includes="*.bat,*.sh" />
+		<!-- <fileset dir="./scripts" includes="*.bat,*.sh" /> -->
 		<fileset dir="./doc" includes="*.txt" />
 	</copy>
 	
 	<!-- compile models -->
 	<antcall target="compile-lwo" />
 
+</target>
+
+<target name="install-win32" depends="jar">
+	<antcall target="install-common">
+		<param name="jogl.platform" value="windows-i586" />
+		<param name="install.dir" value="dist/windows-i586" />
+	</antcall>
+	<!-- win32 launcher -->
+	<launch4j configFile="./launch4j.xml" />	
 	<!-- build final dist archives -->
 	<zip level="9"
 		excludes="texs/**,uitexs/**,sounds/**,models/**,eph/**"
-		destfile="dist/Exoflight-${exoflight.version}-${jogl.platform}.zip"
-		basedir="${install.dir}" />
+		destfile="dist/Exoflight-${exoflight.version}-windows-i586.zip"
+		basedir="dist/windows-i586" />
+</target>
+	
+<target name="install-macosx" depends="jar">
+	<antcall target="install-common">
+		<param name="jogl.platform" value="macosx-universal" />
+		<param name="install.dir" value="dist/macosx-universal" />
+	</antcall>
+	<jarbundler dir="dist"
+		name="Exoflight"
+		mainclass="com.fasterlight.exo.main.Exoflight"
+		arguments="-stdout stdout.txt -stderr stderr.txt"
+		version="${exoflight.version}"
+		icon="data/etc/Exoflight.icns"
+		jvmversion="1.4+"
+	>
+		<jarfileset dir="dist/macosx-universal/lib" includes="**/*" />
+		<resourcefileset dir="dist/macosx-universal" excludes="lib/**" />
+		<javaproperty name="java.library.path" value="./lib" />
+		<javaproperty name="exo.fullscreen" value="true" />
+		<javaproperty name="apple.laf.useScreenMenuBar" value="true" />
+		<javaproperty name="com.apple.mrj.application.apple.menu.about.name" value="Exoflight" />
+	</jarbundler>
+
+	  <!-- Delete the JavaApplicationStub and replace it with a symbolic link -->
+	  <!--   which should work on older and future versions of OS X           -->
+	  <delete file="${release}/${name}.app/Contents/MacOS/JavaApplicationStub"/>
+	  <exec executable="ln">
+	    <arg line="-s /System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub"/>
+	    <arg value="${release}/${name}.app/Contents/MacOS/JavaApplicationStub"/>
+	  </exec>
+</target>
+
+<target name="install-zipfiles">
 	<zip level="9"
-		includes="texs/**,uitexs/**,sounds/**,models/**"
-		excludes="eph/**"
-		destfile="dist/Exoflight-${exoflight.version}-media.zip"
-		basedir="${install.dir}" />
+		includes="texs/*,uitexs/**,sounds/**,models/**"
+		excludes="texs/*/*.*"
+		destfile="./dist/Exoflight-${exoflight.version}-media.zip"
+		basedir="./data" />
 	<zip level="9"
-		includes="eph/**"
-		destfile="dist/Exoflight-${exoflight.version}-ephemeris.zip"
-		basedir="${install.dir}" />
+		includes="eph/de405-19*,eph/de405-20*"
+		destfile="./dist/Exoflight-${exoflight.version}-ephemeris.zip"
+		basedir="./data" />
 </target>
 
 <!-- clover -->
@@ -206,6 +257,6 @@
 <target name="clover.report">
 	<ant antfile="${shared.dir}/build.xml" target="clover.report" />
 </target>
-
+	
 </project>
 
