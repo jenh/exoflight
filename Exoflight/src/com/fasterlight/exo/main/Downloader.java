@@ -110,11 +110,17 @@ public class Downloader implements Runnable
 						throw new IllegalArgumentException(ze.getName());
 					if (!TEST)
 					{
-						FileOutputStream out = new FileOutputStream(f);
-						try {
-							out.write(data);
-						} finally {
-							out.close();
+						if (ze.isDirectory())
+						{
+							f.mkdirs();
+						} else {
+							f.getParentFile().mkdirs();
+							FileOutputStream out = new FileOutputStream(f);
+							try {
+								out.write(data);
+							} finally {
+								out.close();
+							}
 						}
 					}
 				} while (true);
@@ -144,10 +150,7 @@ public class Downloader implements Runnable
 			{
 				if (fs.url.isEmpty())
 				{
-					new ErrorDialog(
-							"Something's wrong -- I don't think we started with the right current directory, "
-									+ "since I can't find the main program.",
-							"Close");
+					System.out.println("Can't download, not sure current directory contains main program");
 					return;
 				}
 				try {

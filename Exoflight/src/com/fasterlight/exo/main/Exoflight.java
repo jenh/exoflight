@@ -743,6 +743,9 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 						out = new PrintStream(new FileOutputStream(fn));
 					}
 					System.setErr(out);
+				} else if (args[i].equals("-download"))
+				{
+					new Downloader().checkAll();
 				} else
 					System.err.println("Unrecognized argument: " + args[i]);
 			}
