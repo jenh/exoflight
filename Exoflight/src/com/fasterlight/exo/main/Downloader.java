@@ -9,7 +9,7 @@ public class Downloader {
 
 	static boolean TEST = false;
 	
-	static String baseurl = "http://exoflight.googlecode.com/files/";
+	static String BASEURL = "http://exoflight.googlecode.com/files/";
 	
 	class Fileset
 	{
@@ -72,9 +72,9 @@ public class Downloader {
 	Downloader()
 	{
 		filesets.add(new Fileset("", "lib/Exoflight.jar"));
-		filesets.add(new Fileset(baseurl + "Exoflight-0.1-media.zip", "texs/grid.png"));
-		filesets.add(new Fileset(baseurl + "Exoflight-0.1-ephemeris.zip", "eph/de405-2000.ser"));
-		filesets.add(new Fileset(baseurl + "basemaps-low.zip", "texs/Earth/options.txt"));
+		filesets.add(new Fileset(BASEURL + "Exoflight-0.1-media.zip", "texs/grid.png"));
+		filesets.add(new Fileset(BASEURL + "Exoflight-0.1-ephemeris.zip", "eph/de405-2000.ser"));
+		filesets.add(new Fileset(BASEURL + "basemaps-low.zip", "texs/Earth/options.txt"));
 	}
 	
 	void checkAll()
@@ -98,7 +98,7 @@ public class Downloader {
 	public static void main(String[] args)
 	{
 		Downloader.TEST = true;
-		Downloader.baseurl = "file:///s:/";
+		Downloader.BASEURL = "file:///s:/";
 		Downloader dl = new Downloader();
 		dl.checkAll();
 	}
