@@ -12,7 +12,7 @@
 <property name="jogl.platform" value="windows-i586" />
 <property name="models.dir" value="data/models" />
 
-<property name="exoflight.version" value="0.1.1"/>
+<property name="exoflight.version" value="0.1.2"/>
 
 <property name="exo.fullscreen" value="true"/>
 	
@@ -198,7 +198,7 @@
 		destfile="dist/Exoflight-${exoflight.version}-windows-i586.zip"
 		basedir="dist/windows-i586" />
 </target>
-	
+
 <target name="install-macosx" depends="jar">
 	<antcall target="install-common">
 		<param name="jogl.platform" value="macosx-universal" />

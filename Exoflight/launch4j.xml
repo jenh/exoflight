@@ -4,7 +4,7 @@
   <jar>lib\Exoflight.jar</jar>
   <outfile>C:\workarea\Exoflight\dist\windows-i586\Exoflight.exe</outfile>
   <errTitle></errTitle>
-  <cmdLine>-stdout stdout.txt -stderr stderr.txt</cmdLine>
+  <cmdLine>-stdout stdout.txt -stderr stderr.txt -download</cmdLine>
   <chdir>.</chdir>
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
@@ -12,7 +12,7 @@
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon></icon>
+  <icon>./scripts/Exoflight.ico</icon>
   <singleInstance>
     <mutexName>ExoflightMain</mutexName>
     <windowTitle>Exoflight</windowTitle>
@@ -35,6 +35,7 @@
     <jdkPreference>preferJre</jdkPreference>
     <initialHeapPercent>50</initialHeapPercent>
     <maxHeapPercent>50</maxHeapPercent>
-    <opt>-Djava.library.path=./lib -Dexo.fullscreen=true</opt>
+    <opt>-Djava.library.path=./lib</opt>
+    <opt>-Dexo.fullscreen=true</opt>
   </jre>
 </launch4jConfig>
