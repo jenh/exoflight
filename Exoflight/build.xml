@@ -8,8 +8,6 @@
 <property name="project.name" value="Exoflight" />
 <property name="depend.dir" value="../FLCore" />
 <property name="shared.dir" value="../FLCore" />
-<property name="launch4j.dir" location="/Program Files/Launch4j" />
-<property name="jarbundler.dir" location="/jarbundler-1.9" />
 
 <property name="jogl.platform" value="windows-i586" />
 <property name="models.dir" value="data/models" />
@@ -17,7 +15,6 @@
 <property name="exoflight.version" value="0.1.1"/>
 
 <property name="exo.fullscreen" value="true"/>
-
 	
 <path id="libs.path">
 	<pathelement location="../FLCore/bin" />
@@ -150,16 +147,6 @@
 
 <!-- install -->
 
-<!-- win32 launcher builder -->
-<taskdef name="launch4j"
-    classname="net.sf.launch4j.ant.Launch4jTask"
-    classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
-	
-<!-- os x launcher builder -->
-<taskdef name="jarbundler" 
-    classname="net.sourceforge.jarbundler.JarBundler" 
-    classpath="${jarbundler.dir}/jarbundler-1.9.jar" />
-	
 <target name="install-common">
 	<delete dir="${install.dir}" />
 	<mkdir dir="${install.dir}" />
@@ -193,6 +180,12 @@
 </target>
 
 <target name="install-win32" depends="jar">
+	<!-- win32 launcher builder -->
+	<!-- this task may have to be commented out on non-windows platforms -->
+	<taskdef name="launch4j"
+	    classname="net.sf.launch4j.ant.Launch4jTask"
+	    classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
+
 	<antcall target="install-common">
 		<param name="jogl.platform" value="windows-i586" />
 		<param name="install.dir" value="dist/windows-i586" />
@@ -211,6 +204,15 @@
 		<param name="jogl.platform" value="macosx-universal" />
 		<param name="install.dir" value="dist/macosx-universal" />
 	</antcall>
+	<!-- os x launcher builder -->
+	<!-- this task may have to be commented out on non-osx platforms -->
+	<taskdef name="jarbundler" 
+	    classname="net.sourceforge.jarbundler.JarBundler" 
+	    classpath="${jarbundler.dir}/jarbundler-1.9.jar" />		
+	<!--
+	if this fails with a NoClassDefFoundError
+	you should add 'xercesimpl.jar' and 'xml-apis.jar' in the ANT 'lib' directory.
+	-->
 	<jarbundler dir="dist"
 		name="Exoflight"
 		mainclass="com.fasterlight.exo.main.Exoflight"
@@ -229,10 +231,10 @@
 
 	  <!-- Delete the JavaApplicationStub and replace it with a symbolic link -->
 	  <!--   which should work on older and future versions of OS X           -->
-	  <delete file="${release}/${name}.app/Contents/MacOS/JavaApplicationStub"/>
+	  <delete file="dist/Exoflight.app/Contents/MacOS/JavaApplicationStub"/>
 	  <exec executable="ln">
 	    <arg line="-s /System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub"/>
-	    <arg value="${release}/${name}.app/Contents/MacOS/JavaApplicationStub"/>
+	    <arg value="dist/Exoflight.app/Contents/MacOS/JavaApplicationStub"/>
 	  </exec>
 </target>
 
