@@ -32,7 +32,7 @@ align=1
 [label-copyright]
 parent=table0
 type=label
-text=Copyright (c) 2001 Faster Light LLC
+text=Copyright (c) 2000-2008 Steven E. Hugg
 
 [okbtn]
 parent=table0

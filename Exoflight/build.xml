@@ -216,6 +216,7 @@
 		version="${exoflight.version}"
 		icon="data/etc/Exoflight.icns"
 	    workingdirectory="$APP_PACKAGE/Contents/Resources"
+	    extraclasspath="$APP_PACKAGE/Contents/Resources"
 		jvmversion="1.4+"
 	>
 		<jarfileset dir="dist/macosx-universal/lib" includes="**/**" />
