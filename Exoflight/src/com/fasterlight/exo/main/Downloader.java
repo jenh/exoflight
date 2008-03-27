@@ -9,7 +9,7 @@ import java.util.zip.*;
 
 public class Downloader implements Runnable
 {
-	static final String SENTINEL_PATH = "./lib/Exoflight.jar";
+	static final String SENTINEL_PATH = "./init/SolarSystem.seq";
 
 	static boolean TEST = false;
 	

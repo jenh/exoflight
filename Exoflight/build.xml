@@ -212,14 +212,15 @@
 	<jarbundler dir="dist"
 		name="Exoflight"
 		mainclass="com.fasterlight.exo.main.Exoflight"
-		arguments="-stdout stdout.txt -stderr stderr.txt"
+		arguments="-stdout stdout.txt -stderr stderr.txt -download"
 		version="${exoflight.version}"
 		icon="data/etc/Exoflight.icns"
+	    workingdirectory="$APP_PACKAGE/Contents/Resources"
 		jvmversion="1.4+"
 	>
-		<jarfileset dir="dist/macosx-universal/lib" includes="**/*" />
+		<jarfileset dir="dist/macosx-universal/lib" includes="**/**" />
 		<resourcefileset dir="dist/macosx-universal" excludes="lib/**" />
-		<javaproperty name="java.library.path" value="./lib" />
+	    <javaproperty name="java.library.path" value="$APP_PACKAGE/Contents/Resources/Java"/>
 		<javaproperty name="exo.fullscreen" value="true" />
 		<javaproperty name="apple.laf.useScreenMenuBar" value="true" />
 		<javaproperty name="com.apple.mrj.application.apple.menu.about.name" value="Exoflight" />
