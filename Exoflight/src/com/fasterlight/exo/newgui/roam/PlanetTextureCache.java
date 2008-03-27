@@ -436,7 +436,8 @@ public class PlanetTextureCache implements Runnable
 		TexQuad srcquad = getSourceQuad(x, y, level);
 		destbufbytes = BufferUtil.newByteBuffer(srcquad.data.length);
 		destbufbytes.put(srcquad.data);
-		// put the array data back into the quad to save memory
+		// TODO: put the array data back into the quad to save memory
+		/*
 		try {
 			byte[] arr = destbufbytes.array();
 			if (arr != null)
@@ -444,6 +445,7 @@ public class PlanetTextureCache implements Runnable
 		} catch (Exception e) {
 			// 
 		}
+		*/
 		destbufpalette = getPaletteInts();
 
 		int ti;
