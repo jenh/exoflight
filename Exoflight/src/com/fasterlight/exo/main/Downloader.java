@@ -1,6 +1,7 @@
 package com.fasterlight.exo.main;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -8,7 +9,11 @@ import java.util.zip.*;
 
 public class Downloader implements Runnable
 {
+	static final String SENTINEL_PATH = "./lib/Exoflight.jar";
+
 	static boolean TEST = false;
+	
+	static String ROOTDIR = ".";
 	
 	static String BASEURL = "http://exoflight.googlecode.com/files/";
 	
@@ -26,7 +31,7 @@ public class Downloader implements Runnable
 		    int screenWidth = screenSize.width;
 		    setLocation(screenWidth/2 - getWidth()/2, screenHeight/2 - getHeight()/2);
 		    setVisible(true);
-		}
+	    }
 	}
 
 	class ProgressDialog extends Frame
@@ -56,37 +61,46 @@ public class Downloader implements Runnable
 	
 	class Fileset
 	{
-		public Fileset(String string, String string2) {
-			this.url = string;
-			this.localfile = string2;
+		private String baseurl;
+		private String filename;
+		private String tagPath;
+
+		public Fileset(String baseurl, String filename) 
+		{
+			this.baseurl = baseurl;
+			this.filename = filename;
+			this.tagPath = ROOTDIR + File.separatorChar + '.' + filename + ".tag";
 		}
-		String url;
-		String localfile;
-		
+
 		public boolean exists()
 		{
 			if (TEST)
 				return false;
-			return new File(localfile).exists();
+			return new File(tagPath).exists();
 		}
 		
+		public void commit() throws IOException 
+		{
+			if (TEST)
+				return;
+			new File(tagPath).createNewFile();
+		}
+
 		public void rollback()
 		{
 			if (TEST)
 				return;
-			new File(localfile).delete();
+			new File(tagPath).delete();
 		}
 		
 		public void download() throws MalformedURLException, IOException
 		{
 			ProgressDialog dlg = new ProgressDialog(this);
 			try {
-				System.out.println("Downloading " + url);
-				dlg.zipfile.setText(url);
-				URL url2 = new URL(url);
+				System.out.println("Downloading " + filename);
+				URL url2 = new URL(new URL(baseurl), filename);
+				dlg.zipfile.setText(url2.toString());
 				URLConnection conn = url2.openConnection();
-				//int ziplen = conn.getContentLength();
-				//int zipofs = 0;
 				InputStream in = conn.getInputStream();
 				ZipInputStream zin = new ZipInputStream(in);
 				do {
@@ -128,16 +142,16 @@ public class Downloader implements Runnable
 				dlg.setVisible(false);
 			}
 		}
+
 	}
 	
 	ArrayList filesets = new ArrayList();
 	
 	Downloader()
 	{
-		filesets.add(new Fileset("", "lib/Exoflight.jar"));
-		filesets.add(new Fileset(BASEURL + "Exoflight-0.1-media.zip", "texs/grid.png"));
-		filesets.add(new Fileset(BASEURL + "Exoflight-0.1-ephemeris.zip", "eph/de405-2000.ser"));
-		filesets.add(new Fileset(BASEURL + "basemaps-low.zip", "texs/Earth/options.txt"));
+		filesets.add(new Fileset(BASEURL, "Exoflight-0.1-media.zip"));
+		filesets.add(new Fileset(BASEURL, "Exoflight-0.1-ephemeris.zip"));
+		filesets.add(new Fileset(BASEURL, "basemaps-low.zip"));
 	}
 	
 	void checkAll()
@@ -148,13 +162,14 @@ public class Downloader implements Runnable
 			Fileset fs = (Fileset)it.next();
 			if (!fs.exists())
 			{
-				if (fs.url.isEmpty())
+				if (!TEST && !new File(SENTINEL_PATH).exists())
 				{
 					System.out.println("Can't download, not sure current directory contains main program");
 					return;
 				}
 				try {
 					fs.download();
+					fs.commit();
 				} catch (Exception e) {
 					e.printStackTrace();
 					fs.rollback();

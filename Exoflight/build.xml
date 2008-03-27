@@ -160,7 +160,7 @@
 	</copy>
 
 	<copy todir="${install.dir}">
-		<fileset dir="./data" excludes="elevtexs/**,texs/**,sounds/**,models/**,eph/**" />
+		<fileset dir="./data" excludes="elevtexs/**,texs/**,sounds/**,models/**,eph/**,uitexs/**" />
 	</copy>
 	
 	<!-- these aren't ready yet -->
@@ -174,9 +174,6 @@
 		<fileset dir="./doc" includes="*.txt" />
 	</copy>
 	
-	<!-- compile models -->
-	<antcall target="compile-lwo" />
-
 </target>
 
 <target name="install-win32" depends="jar">
@@ -191,10 +188,9 @@
 		<param name="install.dir" value="dist/windows-i586" />
 	</antcall>
 	<!-- win32 launcher -->
-	<launch4j configFile="./launch4j.xml" />	
+	<launch4j configFile="./launch4j.xml" />
 	<!-- build final dist archives -->
 	<zip level="9"
-		excludes="texs/**,uitexs/**,sounds/**,models/**,eph/**"
 		destfile="dist/Exoflight-${exoflight.version}-windows-i586.zip"
 		basedir="dist/windows-i586" />
 </target>

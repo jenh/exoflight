@@ -10,8 +10,8 @@ Name Exoflight
 !define URL http://code.google.com/p/exoflight/
 
 # MUI defines
-!define MUI_ICON .\scripts\Exoflight.ico
-!define MUI_UNICON "C:\program files\nsis\Contrib\Graphics\Icons\classic-uninstall.ico"
+!define MUI_ICON "C:\program files\nsis\Contrib\Graphics\Icons\modern-install-blue.ico"
+!define MUI_UNICON "C:\program files\nsis\Contrib\Graphics\Icons\modern-install-blue.ico"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_SHOWREADME $INSTDIR\README.txt
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
@@ -91,7 +91,7 @@ done${UNSECTION_ID}:
 
 # Uninstaller sections
 Section /o -un.Main UNSEC0000
-    RmDir /r /REBOOTOK $INSTDIR\windows-i586
+    RmDir /r /REBOOTOK $INSTDIR
     DeleteRegValue HKLM "${REGKEY}\Components" Main
 SectionEnd
 
