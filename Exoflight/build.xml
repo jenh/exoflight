@@ -234,6 +234,12 @@
 	    <arg line="-s /System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub"/>
 	    <arg value="dist/Exoflight.app/Contents/MacOS/JavaApplicationStub"/>
 	  </exec>
+	<!-- build final dist archives -->
+	<exec executable="tar" dir="dist">
+		<arg value="czf" />
+		<arg value="./Exoflight-${exoflight.version}-macosx-universal.tar.gz" />
+		<arg value="./Exoflight.app" />
+	</exec>
 </target>
 
 <target name="install-zipfiles">
