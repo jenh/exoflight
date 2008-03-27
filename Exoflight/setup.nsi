@@ -35,7 +35,7 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile Exoflight-setup.exe
+OutFile dist\Exoflight-${VERSION}-windows-i586.exe
 InstallDir $PROGRAMFILES\Exoflight
 CRCCheck on
 XPStyle on
@@ -57,7 +57,7 @@ Section -Main SEC0000
     SetOverwrite on
     File /r .\dist\windows-i586\*
     WriteRegStr HKLM "${REGKEY}\Components" Main 1
-    CreateShortCut "$SMPROGRAMS\$StartMenuGroup\Exoflight.lnk" "$INSTDIR\Exoflight.exe"
+    CreateShortCut "$SMPROGRAMS\$StartMenuGroup\Exoflight.lnk" $INSTDIR\Exoflight.exe
 SectionEnd
 
 Section -post SEC0001
