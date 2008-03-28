@@ -1,6 +1,7 @@
 
 [top]
 type=container
+anchor=rb
 
 [Tactical Portal]
 parent=top
@@ -12,6 +13,7 @@ height=768
 group=Tactical
 maximize=true
 active=true
+anchor=rb
 
 [Tactical]
 parent=Tactical Portal
@@ -22,6 +24,7 @@ width=1024
 height=768
 disporbit_prop=ship.maneuvsys.conic
 ;disporbit_prop=ship.launchsys.targorbit
+anchor=rb
 
 ;;;
 
@@ -78,6 +81,7 @@ layout=true
 ;shader$button-off-down=greenbutton-down
 ;shader$button-on-up=greenbutton-down
 ;shader$button-on-down=greenbutton
+anchor=lb
 
 [btntable]
 type=table

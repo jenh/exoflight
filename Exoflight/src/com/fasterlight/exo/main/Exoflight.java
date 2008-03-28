@@ -228,6 +228,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		{
 			topstack = (GLOPageStack) loader.load("panels/pages.txt");
 			topstack.setSize(guictx.getSize());
+			topstack.align();
 			guictx.add(topstack);
 
 			loader.setTopComponent(guictx);
@@ -256,6 +257,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		public MainAWTComponent(int w, int h)
 		{
 			super(w, h);
+			resizeViewSize = false;
 		}
 		protected GLOContext makeContext()
 		{
@@ -266,6 +268,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		{
 			super.makeComponents();
 			guictx = (MainGUIContext) getContext();
+			guictx.setMinimumSize(WORLD_WIDTH, WORLD_HEIGHT);
 			guictx.setSize(WORLD_WIDTH, WORLD_HEIGHT);
 			guictx.setViewSize(SCRN_WIDTH, SCRN_HEIGHT);
 		}

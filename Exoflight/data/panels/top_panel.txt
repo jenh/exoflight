@@ -7,6 +7,7 @@
 type=container
 width=1024
 height=372
+anchor=r
 
 [Top Pager]
 parent=top
@@ -14,6 +15,7 @@ type=pagestack
 width=1024
 height=372
 pagenum=0
+anchor=r
 
 ;;;
 
@@ -25,6 +27,7 @@ y=0
 width=1024
 height=372
 shader$frame=screwpanel-small
+anchor=r
 
 [Ground Track Pane]
 parent=topframe
@@ -51,6 +54,7 @@ y=0
 width=352
 height=352
 shader$frame=screenframe1
+anchor=r
 
 [Visual Portal]
 parent=Visual Pane
@@ -62,6 +66,7 @@ height=328
 group=Visual
 maximize=true
 active=true
+anchor=r
 
 [Visual]
 parent=Visual Portal
@@ -70,6 +75,7 @@ x=0
 y=0
 width=328
 height=328
+anchor=r
 
 ;;;
 
@@ -133,6 +139,7 @@ width=1024
 height=372
 group=Visual
 maximize=true
+anchor=r
 
 ;;;
 
@@ -145,3 +152,4 @@ width=1024
 height=372
 group=Tactical
 maximize=true
+anchor=r

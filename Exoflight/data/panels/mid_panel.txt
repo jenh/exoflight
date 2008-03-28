@@ -6,6 +6,7 @@ y=352
 width=1024
 height=416
 shader$frame=screwpanel1
+anchor=r
 
 ;;;
 
@@ -72,6 +73,7 @@ title= MODULES
 shader$title=roundtext
 quadflags=7
 layout=true
+anchor=r
 
 [modulepanel]
 parent=moduleframe
@@ -82,4 +84,5 @@ width=308
 height=308
 ship_prop=ship
 draggable=true
+anchor=r
 

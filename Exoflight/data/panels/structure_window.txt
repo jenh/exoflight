@@ -5,25 +5,28 @@ shader$button-off-up=greenbutton
 shader$button-off-down=greenbutton-down
 shader$button-on-up=greenbutton-down
 shader$button-on-down=greenbutton
+anchor=rb
 
 [structwnd helper]
 parent=top
 type=structureviewhelper
 ship_prop=ship
 
+;; we've swapped left/right here...
 [left panel]
 parent=top
 type=frame
-x=0
+x=512
 y=0
 width=512
 height=768
 shader$frame=screwpanel1
+anchor=r
 
 [right panel]
 parent=top
 type=frame
-x=512
+x=0
 y=0
 width=512
 height=768
@@ -40,6 +43,7 @@ y=16
 width=480
 height=604
 shader$frame=screenframe1
+anchor=r
 
 [structure view]
 parent=structure view frame
@@ -50,6 +54,7 @@ width=472
 height=588
 struct_prop=ship.structure
 helper_prop=ui.$$structwnd helper
+anchor=r
 
 ;;;
 

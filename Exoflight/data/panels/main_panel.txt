@@ -5,6 +5,7 @@ x=0
 y=0
 width=1024
 height=768
+anchor=rb
 
 [Top Panel]
 parent=Main Panel
@@ -33,6 +34,8 @@ parent=Main Panel
 type=numlabel
 x=960
 y=10
+width=64
+height=32
 text_prop=fps
 shader$text=medlcd
-
+anchor=l
