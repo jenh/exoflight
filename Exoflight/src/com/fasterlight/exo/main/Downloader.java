@@ -1,11 +1,12 @@
 package com.fasterlight.exo.main;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.zip.*;
+
+import javax.swing.JOptionPane;
 
 public class Downloader implements Runnable
 {
@@ -93,7 +94,7 @@ public class Downloader implements Runnable
 			new File(tagPath).delete();
 		}
 		
-		public void download() throws MalformedURLException, IOException
+		public boolean download() throws MalformedURLException, IOException
 		{
 			ProgressDialog dlg = new ProgressDialog(this);
 			try {
@@ -141,8 +142,8 @@ public class Downloader implements Runnable
 			} finally {
 				dlg.setVisible(false);
 			}
+			return true;
 		}
-
 	}
 	
 	ArrayList filesets = new ArrayList();
@@ -164,20 +165,28 @@ public class Downloader implements Runnable
 			{
 				if (!TEST && !new File(SENTINEL_PATH).exists())
 				{
-					System.out.println("Can't download, not sure current directory contains main program");
+					error("Can't download, not sure current directory contains main program");
 					return;
 				}
 				try {
-					fs.download();
+					if (!fs.download())
+						return; // we cancelled
 					fs.commit();
 				} catch (Exception e) {
+					error("Couldn't download \"" + fs.filename + "\"\n" + e);
 					e.printStackTrace();
 					fs.rollback();
+					return;
 				}
 			}
 		}
 	}
 	
+	private void error(String string) 
+	{
+		JOptionPane.showMessageDialog(null, string, null, JOptionPane.ERROR_MESSAGE);
+	}
+
 	public void run() 
 	{
 		checkAll();
