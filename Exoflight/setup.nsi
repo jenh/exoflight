@@ -14,6 +14,7 @@ Name Exoflight
 !define MUI_UNICON "C:\program files\nsis\Contrib\Graphics\Icons\modern-install-blue.ico"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_SHOWREADME $INSTDIR\README.txt
+!define MUI_FINISHPAGE_RUN $INSTDIR\Exoflight.exe
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 
 # Included files
