@@ -140,7 +140,7 @@ public class Downloader implements Runnable
 					}
 				} while (true);
 			} finally {
-				dlg.setVisible(false);
+				dlg.dispose();
 			}
 			return true;
 		}

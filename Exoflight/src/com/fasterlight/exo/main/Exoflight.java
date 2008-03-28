@@ -637,6 +637,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 			awtadapter.addListeners(glcanvas);
 			System.out.println("Added listeners");
 		}
+		glcanvas.requestFocusInWindow();
 	}
 
 	void loadTitleScreen()
@@ -751,7 +752,6 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 			}
 
 			Exoflight mainprog = new Exoflight();
-			// todo: args
 			mainprog.start();
 		} catch (Throwable e)
 		{
