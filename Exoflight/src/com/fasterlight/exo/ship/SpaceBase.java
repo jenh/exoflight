@@ -31,6 +31,7 @@ public class SpaceBase
 extends DefaultUniverseThing
 {
 	String modelname = "tower1";
+	String description = "";
 
 	//
 
@@ -58,13 +59,14 @@ extends DefaultUniverseThing
 	{
 		this.modelname = s;
 	}
-
+	
 	// PROPERTIES
 
 	private static PropertyHelper prophelp = new PropertyHelper(SpaceBase.class);
 
 	static {
 		prophelp.registerGetSet("modelname", "ModelName", String.class);
+		prophelp.registerGetSet("description", "Description", String.class);
 	}
 
 	public Object getProp(String key)
@@ -82,6 +84,14 @@ extends DefaultUniverseThing
 		} catch (PropertyRejectedException e) {
 			super.setProp(key, value);
 		}
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 }

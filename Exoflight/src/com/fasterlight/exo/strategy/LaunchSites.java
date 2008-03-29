@@ -64,6 +64,7 @@ public class LaunchSites
 		llr.z = planet.getRadius() + elev + 0.005; // 5 m (todo: const)
 		SpaceBase base = new SpaceBase(game, planet, llr);
 		base.setName(name);
+		base.setDescription(props.getProperty("desc"));
 
 		tmp = props.getProperty("modelname");
 		if (tmp != null)

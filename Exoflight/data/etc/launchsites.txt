@@ -26,7 +26,7 @@ desc=Wallops Flight Facility (WFF), located on the Eastern Shore of Virginia, is
 [Baikonur]
 owner=Russia
 ll=474800N 655000E
-desc=The Baikonur Cosmodrome, also called Tjuratam, is the world's oldest and largest operational space launch facility. The original Baikonur is a mining town a few hundred kilometres northeast -- the launch site was given this name to cause confusion and keep the location secret. This town was specifically chosen because the flight path of the rockets that launched many Soviet satellites, including the first Sputnik, passed over its vicinity.
+desc=The Baikonur Cosmodrome is the world's oldest and largest operational space launch facility. The original Baikonur is a mining town a few hundred kilometres northeast -- the launch site was given this name to cause confusion and keep the location secret.
 
 [Plesetsk]
 owner=Russia
