@@ -20,4 +20,4 @@ x=508
 y=380
 text=+
 shader$text=computext
-
+anchor=hv

@@ -585,6 +585,7 @@ public class VisualView
 
 					gl.glColor4f(0, 0, 0, lightlevel);
 					renderSpaceShipShadow((SpaceShip) ut);
+					// todo: render smoke shadow
 					gl.glPopMatrix();
 					gl.glPopAttrib();
 				}

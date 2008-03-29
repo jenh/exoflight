@@ -11,6 +11,7 @@ shader$text=computext
 align=2
 text_prop=game.lastmessage
 sustaintime=5000
+anchor=r
 
 ;[Console Window]
 ;load=panels/dialogs/console.txt
