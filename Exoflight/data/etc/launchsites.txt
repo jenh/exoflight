@@ -9,84 +9,103 @@ modelname=Saturn-V LUT
 [Shuttle Landing Facility]
 ll=28.6149958 -80.6944953
 modelname=Shuttle Landing Facility
+desc=The NASA Shuttle Landing Facility is an airport located on Merritt Island in Brevard County, Florida, USA. It is a part of the John F. Kennedy Space Center (KSC), and is used by the NASA Space Shuttle for landing, as well as takeoffs and landings for the NASA training jets, and civilian aircraft, such as the Shuttle Carrier Aircraft.
 
 [Vandenberg]
 owner=U.S.
 ll=344000N 1203000W
+desc=Vandenberg's location on the coast of northern California makes it possible to easily launch satellites into polar orbit, unlike the Kennedy Space Center. This, along with its location relative to the jet stream, makes Vandenberg a good site to launch reconnaissance satellites. Its nickname is "VandyLand".
 
 [Wallops Island]
 owner=U.S.
 ll=375000N 752000W
+desc=Wallops Flight Facility (WFF), located on the Eastern Shore of Virginia, is operated by Goddard Space Flight Center primarily as a rocket launch site to support science and exploration missions for NASA and other federal agencies.
 
 ;
 
 [Baikonur]
 owner=Russia
 ll=474800N 655000E
+desc=The Baikonur Cosmodrome, also called Tjuratam, is the world's oldest and largest operational space launch facility. The original Baikonur is a mining town a few hundred kilometres northeast -- the launch site was given this name to cause confusion and keep the location secret. This town was specifically chosen because the flight path of the rockets that launched many Soviet satellites, including the first Sputnik, passed over its vicinity.
 
 [Plesetsk]
 owner=Russia
 ll=624300N 401800E
+desc=The Plesetsk Cosmodrome was originally developed by the Soviet Union as a launch site for ICBMs. Originally kept a secret, it was discovered in 1966 by a British physics teacher by analyzing the orbit of the Cosmos 112 satellite.
 
 [Kapustin Yar]
 owner=Russia
 ll=482500N 563000E
+desc=Kapustin Yar is a Russian rocket launch and development site established in 1946, and in the beginning used captured technology from Germany including the A-4 rocket. It is also the site of numerous Soviet-era UFO sightings and has been called "Russia's Roswell".
 
 [Svobodny]
 owner=Russia
 ll=513000N 1383000E
+desc=Svobodny is a Russian rocket launch site located on the border with China. Originally constructed as a launch site for ICBMs, it was planned as a replacement for Baikonur Cosmodrome, which became a foreign territory after the collapse of the Soviet Union, but the development was not finished because of financial difficulties.
 
 ;
 
 [Kourou]
 owner=ESA
 ll=051400N 524600W
+desc=Kourou is the location of the Centre Spatial Guyanais which is France and the ESA's main spaceport. It is particularly suitable as a location for a spaceport due to its proximity to the equator, and the fact that launches in the favorable direction are over water.
 
 ;
 
 [Alcantara]
 owner=Brazil
 ll=021200S 441200W
+desc=The Alcântara Launch Center is located on Brazil's northern Atlantic coast, close to the equator. As of 2008 only sounding rockets and VLS rockets have been launched from this site, but there are plans to launch international rockets.
 
 [Jiuquan]
 owner=China
 ll=412000N 1002000E
+desc=Jiuquan Satellite Launch Center, in the Gobi desert, is China's first spaceport. It is usually used to launch vehicles into lower and medium orbits with large orbital inclination angles. The center covers 2800 square kilometers and can house 20,000 people.
 
 [Xichang]
 owner=China
 ll=281200N 1020200E
+desc=The Xichang Satellite Launch Center became operational in 1984 and is primarily used to launch powerful thrust rockets and geostationary communications and weather satellites.
 
 [Taiyuan]
 owner=China
 ll=370500N 1120600E
+desc=The Taiyuan Satellite Launch Center became operational in 1968 and is primarily used to launch meteorological satellites, earth resource satellites and scientific satellites on Long March launch vehicles into sun-synchronous orbits.
 
 [Sriharikota]
 owner=India
 ll=134700N 801500E
+desc=Sriharikota is a barrier island off the coast of the southern state of Andhra Pradesh in India. It houses India's only satellite launch centre in the Satish Dhawan Space Centre and is used to launch satellites using multi-stage rockets.
 
 [Palmachim]
 owner=Israel
 ll=344600N 315400E
+desc=Israel's Palmachim Air Force Base is used to launch the Shavit space launch vehicle into retrograde orbit by launching over the Mediterranean, acting as Israel's primary spaceport.
 
 [San Marco]
 owner=Italy
 ll=025600S 401200E
+desc=The San Marco Platform (1964-1988) is a former oil platform, located to the north of Cape Ras Ngomeni on the coastal sublittoral of Kenya close to the equator. Launches were controlled from Santa Rita, a second platform located to the southeast.
 
 [Kagoshima]
 owner=Japan
 ll=311400N 1310400E
+desc=Established in February 1962, the Kagoshima Space Center (KSC) was constructed on the Pacific coast of Kagoshima Prefecture at Uchinoura for the purpose of launching large rockets with probe payloads.
 
 [Tanegashima]
 owner=Japan
 ll=302300N 1305800E
+desc=The Tanegashima Space Center is one of Japan's space development facilities. It is located on Tanegashima Island, 115 km south of Kyushu. It was established in 1969 when the National Space Development Agency of Japan (NASDA) was formed.
 
 [Mount Everest]
 owner=Secret
-ll=275917N 865531E 	
+ll=275917N 865531E
+desc=Mount Everest is the highest mountain on Earth, as measured by the height of its summit above sea level, which is 8.848 kilometers.
 
 [Kilimanjaro]
 owner=Secret
 ll=30433S 372112E
+desc=Kilimanjaro is an inactive stratovolcano in north-eastern Tanzania near the equator.
 
 ;
 
