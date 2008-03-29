@@ -78,12 +78,18 @@ sequence "Gemini 6 Docking" {
 	wait for 2;
 	@reentry.'$ECS'.active = true;
 	@equip.'$OAMS'.armed = true;
+    ship.attsys.guidmode = "aoa-aft";
+    @reentry.'$guidance system'.active = true;
 
 	ship.targsys.target = @agena;
 
 	wait for 5;
 
-	@ui.message =? "First, select the DOCKING panel on your MEDS.  This will display two screens, one top-down and one forward-facing, that will help you dock.";
+    @ui.message =? "If you press 'C' to change to the Gemini cockpit camera, you'll see a little white speck in the distance. That is the Agena Target Vehicle to which you will dock.";
+
+    wait for 10;
+    
+	@ui.message =? "Select the DOCKING panel on your MEDS.  This will display two crosshairs that will help you navigate.  Also press the 100 KM button on the MEDS panel.";
 
 	wait for 10;
 
@@ -91,5 +97,32 @@ sequence "Gemini 6 Docking" {
 
 	wait for condition (@reentry.$probe.active == true) interval 3 timeout 600;
 
+    @ui.message =? "Note the blue line on the left crosshair. This shows the position of the target relative to your spacecraft. It should be pointing straight down, which means the target is dead ahead.";
+    
+    wait for 10;
+
+    @ui.message =? "The yellow line indicates velocity. Your goal is to move the yellow line so that it is directly opposite the blue line, until the blue line disappears.";
+
+    wait for 10;
+
+    @ui.message =? "Briefly press the PgUp key. This will begin moving your spacecraft towards the target.";
+
+    wait for 10;
+
+    @ui.message =? "Note that the yellow line on the left is now pointing up. This indicates you are moving toward the target.";
+
+    wait for 10;
+
+    @ui.message =? "At the bottom of the MEDS, the Z value shows the distance to the target (in the forward direction) and the \0129Z value shows the rate of closure (negative means you are approaching the target). Hold down the PgUp key until \0129Z reaches -5 m/s.";
+    
+    wait for 10;
+
+    @ui.message =? "When the Z value gets around 50 meters, hold down the Home key until \0129Z gets close to zero.";
+    
+    wait for 10;
+
+    @ui.message =? "While the crosshairs on the left show a top-down view of your spacecraft, those on the right show a forward-facing view. Now use the up, down, left, and right keys on the keypad to move the yellow line on the right crosshair opposite the blue line.";
+    
+    wait for 10;
 }
 
