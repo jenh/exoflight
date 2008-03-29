@@ -89,13 +89,13 @@ sequence "Gemini 6 Docking" {
 
     wait for 10;
     
-	@ui.message =? "Select the DOCKING panel on your MEDS.  This will display two crosshairs that will help you navigate.  Also press the 100 KM button on the MEDS panel.";
+	@ui.message =? "Select the DOCKING panel on your MEDS.  This will display two crosshairs that will help you navigate.  Also press the '100 m' button on the MEDS panel.";
 
 	wait for 10;
 
 	@ui.message =? "Now turn on your docking radar.  Find the PROBE switch on the Gemini Reentry module panel, and flip it up.";
 
-	wait for condition (@reentry.$probe.active == true) interval 3 timeout 600;
+	wait for condition (@reentry.$probe.active == true) interval 1 timeout 60;
 
     @ui.message =? "Note the blue line on the left crosshair. This shows the position of the target relative to your spacecraft. It should be pointing straight down, which means the target is dead ahead.";
     
@@ -107,7 +107,7 @@ sequence "Gemini 6 Docking" {
 
     @ui.message =? "Briefly press the PgUp key. This will begin moving your spacecraft towards the target.";
 
-    wait for 10;
+    wait for condition (ship.targsys.velvec.z < -0.0001) interval 1 timeout 60;
 
     @ui.message =? "Note that the yellow line on the left is now pointing up. This indicates you are moving toward the target.";
 
@@ -115,13 +115,21 @@ sequence "Gemini 6 Docking" {
 
     @ui.message =? "At the bottom of the MEDS, the Z value shows the distance to the target (in the forward direction) and the \0129Z value shows the rate of closure (negative means you are approaching the target). Hold down the PgUp key until \0129Z reaches -5 m/s.";
     
-    wait for 10;
+    wait for condition (ship.targsys.velvec.z < -0.005) interval 1 timeout 60;
 
-    @ui.message =? "When the Z value gets around 50 meters, hold down the Home key until \0129Z gets close to zero.";
-    
+    @ui.message =? "Good. You are slowly approaching the target vehicle.";
+
     wait for 10;
 
     @ui.message =? "While the crosshairs on the left show a top-down view of your spacecraft, those on the right show a forward-facing view. Now use the up, down, left, and right keys on the keypad to move the yellow line on the right crosshair opposite the blue line.";
+
+    wait for condition (ship.targsys.dockvec.z < 0.050) interval 1 timeout 60;
+
+    @ui.message =? "You are now less than 50 meters from the target. Switch to close-range radar by pressing the '20 m' button on the MEDS, and start slowing down by holding down the Home key (reverse thrust) until \0129Z gets less than 1 m/s.";
+    
+    wait for condition (ship.targsys.velvec.z < -0.001) interval 1 timeout 60;
+
+    @ui.message =? "If the blue line on the left crosshair is still facing down and the blue line on the right crosshair is centered, you should have the target in view. Continue to approach slowly and you will automatically dock when you touch the target vehicle.";
     
     wait for 10;
 }
