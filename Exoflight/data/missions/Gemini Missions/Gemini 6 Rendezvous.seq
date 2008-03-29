@@ -72,7 +72,6 @@ sequence "Gemini 6 Rendezvous" {
 
 	ship.attsys.guidmode = "aoa";
 	ship.guidancecap.active = true;
-	ship.
 
 -- setup UI
 
