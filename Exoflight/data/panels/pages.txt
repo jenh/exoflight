@@ -16,7 +16,6 @@ x=0
 y=0
 width=1024
 height=768
-anchor=r
 
 ;;;
 
@@ -27,7 +26,7 @@ x=0
 y=0
 width=1024
 height=768
-anchor=r
+anchor=rb
 
 ;;;
 
@@ -38,7 +37,7 @@ x=0
 y=0
 width=1024
 height=768
-anchor=r
+anchor=rb
 
 ;;;
 
@@ -49,5 +48,5 @@ x=0
 y=0
 width=1024
 height=768
-anchor=r
+anchor=rb
 

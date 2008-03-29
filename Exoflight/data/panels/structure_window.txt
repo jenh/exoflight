@@ -20,7 +20,7 @@ y=0
 width=512
 height=768
 shader$frame=screwpanel1
-anchor=r
+anchor=rb
 
 [right panel]
 parent=top
@@ -31,7 +31,7 @@ width=512
 height=768
 ; todo
 shader$frame=screenframe1
-anchor=l
+anchor=lb
 
 ;;;
 
@@ -43,7 +43,7 @@ y=16
 width=480
 height=604
 shader$frame=screenframe1
-anchor=r
+anchor=rb
 
 [structure view]
 parent=structure view frame
@@ -54,7 +54,7 @@ width=472
 height=588
 struct_prop=ship.structure
 helper_prop=ui.$$structwnd helper
-anchor=r
+anchor=rb
 
 ;;;
 
@@ -66,6 +66,7 @@ layout=true
 y=624
 x=16
 shader$frame=roundrect
+anchor=t
 
 [crew vbox]
 parent=crew frame
@@ -96,6 +97,7 @@ y=724
 x=16
 colpadding=8
 layout=true
+anchor=t
 
 [crew.1]
 parent=crew htab
@@ -288,6 +290,7 @@ parent=right table
 type=frame
 title= CAPABILITIES 
 layout=true
+anchor=b
 
 [caps vbox]
 parent=caps frame
@@ -310,6 +313,7 @@ rows=1
 cols=2
 rowpadding=4
 colpadding=8
+anchor=t
 
 [armedbtn]
 parent=capinfo table

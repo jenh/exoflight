@@ -46,6 +46,7 @@ shader$frame=screenframe-small
 x=0
 y=640
 layout=true
+anchor=t
 
 [compupane]
 parent=compuframe
@@ -81,7 +82,7 @@ layout=true
 ;shader$button-off-down=greenbutton-down
 ;shader$button-on-up=greenbutton-down
 ;shader$button-on-down=greenbutton
-anchor=lb
+anchor=lt
 
 [btntable]
 type=table
