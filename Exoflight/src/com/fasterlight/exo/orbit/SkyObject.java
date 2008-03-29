@@ -96,6 +96,7 @@ implements Constants
 				SkyObject skyobj = new SkyObject(line, 1);
 				v.add(skyobj);
 			} catch (Exception e) {
+				System.err.println(line + " - " + e);
 			}
 		}
 		return v;

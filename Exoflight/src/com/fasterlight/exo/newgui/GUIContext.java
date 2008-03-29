@@ -353,6 +353,8 @@ public class GUIContext extends GLOContext
 		barr[2] = (byte) 0xff;
 		barr[3] = (byte) 0xff;
 		ByteBuffer buf = BufferUtil.newByteBuffer(4);
+		buf.put(barr);
+		buf.rewind();
 		gl.glBindTexture(GL.GL_TEXTURE_2D, tex_ints[0]);
 		gl.glTexImage2D(
 			GL.GL_TEXTURE_2D,
