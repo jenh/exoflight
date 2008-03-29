@@ -227,9 +227,10 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		try
 		{
 			topstack = (GLOPageStack) loader.load("panels/pages.txt");
-			topstack.setSize(guictx.getSize());
-			topstack.align();
+			System.out.println("loading topstack @ " + awtadapter.getSize());
 			guictx.add(topstack);
+			guictx.setSize(topstack.getSize());
+			guictx.resize(awtadapter.getWidth(), awtadapter.getHeight());
 
 			loader.setTopComponent(guictx);
 			// todo: WHY does this thing have to have a parent to layout?
@@ -257,7 +258,6 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		public MainAWTComponent(int w, int h)
 		{
 			super(w, h);
-			resizeViewSize = false;
 		}
 		protected GLOContext makeContext()
 		{
@@ -300,6 +300,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		public MainGUIContext(SpaceGame game)
 		{
 			super(game);
+			resizeViewSize = false;
 			cmdmgr = new GLOCommandManager(this);
 		}
 		public void setGame(SpaceGame game)

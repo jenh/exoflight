@@ -12,11 +12,10 @@ parent=top
 type=structureviewhelper
 ship_prop=ship
 
-;; we've swapped left/right here...
 [left panel]
 parent=top
 type=frame
-x=512
+x=0
 y=0
 width=512
 height=768
@@ -26,12 +25,13 @@ anchor=r
 [right panel]
 parent=top
 type=frame
-x=0
+x=512
 y=0
 width=512
 height=768
 ; todo
 shader$frame=screenframe1
+anchor=l
 
 ;;;
 
