@@ -115,7 +115,7 @@ sequence "Gemini 6 Docking" {
 
     @ui.message =? "At the bottom of the MEDS, the Z value shows the distance to the target (in the forward direction) and the \0129Z value shows the rate of closure (negative means you are approaching the target). Hold down the PgUp key until \0129Z reaches -5 m/s.";
     
-    wait for condition (ship.targsys.velvec.z < -0.005) interval 1 timeout 60;
+    wait for condition (ship.targsys.velvec.z < -0.005) interval 1 timeout 300;
 
     @ui.message =? "Good. You are slowly approaching the target vehicle.";
 
@@ -123,14 +123,20 @@ sequence "Gemini 6 Docking" {
 
     @ui.message =? "While the crosshairs on the left show a top-down view of your spacecraft, those on the right show a forward-facing view. Now use the up, down, left, and right keys on the keypad to move the yellow line on the right crosshair opposite the blue line.";
 
-    wait for condition (ship.targsys.dockvec.z < 0.050) interval 1 timeout 60;
+    wait for condition (ship.targsys.dockvec.z < 0.060) interval 1 timeout 300;
 
-    @ui.message =? "You are now less than 50 meters from the target. Switch to close-range radar by pressing the '20 m' button on the MEDS, and start slowing down by holding down the Home key (reverse thrust) until \0129Z gets less than 1 m/s.";
+    @ui.message =? "You are now about 50 meters from the target. Switch to close-range radar by pressing the '20 m' button on the MEDS.";
+    
+    wait for 10;
+    
+    @ui.message =? "Start slowing down by holding down the Home key (reverse thrust) until \0129Z gets less than 1 m/s.";
     
     wait for condition (ship.targsys.velvec.z < -0.001) interval 1 timeout 60;
 
     @ui.message =? "If the blue line on the left crosshair is still facing down and the blue line on the right crosshair is centered, you should have the target in view. Continue to approach slowly and you will automatically dock when you touch the target vehicle.";
     
-    wait for 10;
+    wait for condition (@agena.ship == ship) interval 1 timeout 600;
+    
+    @ui.message =? "Good job! In the future, you can automate the docking process by pressing the 'Activate' button on the MEDS."; 
 }
 

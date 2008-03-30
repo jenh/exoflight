@@ -34,6 +34,7 @@ public class StarRenderer2 implements Constants
 
 	int starsList;
 	float alpha_fudge = 1.075f;
+	boolean smoothPoints = false;
 
 	// nextver: use quadtree for star db
 	List stars;
@@ -72,6 +73,8 @@ public class StarRenderer2 implements Constants
 		//gl.glDisable(GL.GL_TEXTURE_2D);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glDisable(GL.GL_DEPTH_TEST);
+		if (smoothPoints)
+			gl.glEnable(GL.GL_POINT_SMOOTH);
 		for (int i = 0; i < NUM_DLISTS; i++)
 		{
 			if (alpha_scale < MIN_ALPHA_SCALE)

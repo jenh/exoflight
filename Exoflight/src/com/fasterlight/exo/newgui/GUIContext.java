@@ -59,6 +59,8 @@ public class GUIContext extends GLOContext
 
 	static final float MIN_STAR_ALPHA = 1 / 64f;
 	static final int SPHERE_DIVISIONS = 48;
+	
+	static boolean smoothStars = false;
 
 	GLODemonstrator democmpt;
 
@@ -247,6 +249,7 @@ public class GUIContext extends GLOContext
 
 	public void renderStars(float alpha)
 	{
+		starr.smoothPoints = smoothStars;
 		starr.render(this, alpha);
 	}
 
@@ -666,6 +669,7 @@ public class GUIContext extends GLOContext
 						inertialLateralScale = getFloat("InertialLateralScale", 0.01f);
 						inertialAxialScale = getFloat("InertialAxialScale", 0.01f);
 						inertialDecayRate = getFloat("InertialDecayRate", 0.2f); */
+			smoothStars = getBoolean("SmoothStars", false); 
 		}
 	};
 }

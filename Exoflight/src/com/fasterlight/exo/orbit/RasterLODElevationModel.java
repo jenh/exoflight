@@ -195,12 +195,17 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 	{
 		assert(x>=0 && x<1 && y>=0 && y<1);
 		int b = ptp.getBorder();
-		int xx = (int) (x * (ptp.getWidth(tq) - b*2)) + b;
-		int yy = (int) (y * (ptp.getHeight(tq) - b*2)) + b;
+		// convert to texel coordinates
+		x = x * (ptp.getWidth(tq) - b*2) + b;
+		y = y * (ptp.getHeight(tq) - b*2) + b;
+		// compute fracational components of texel coordinates
+		int xx = (int)x;
+		int yy = (int)y;
 		double fx = x - (int)x;
 		double fy = y - (int)y;
 		double fx1 = 1 - fx;
 		double fy1 = 1 - fy;
+		// interpolate points
 		int i1 = getPixel(tq, xx, yy);
 		int i2 = getPixel(tq, xx + 1, yy);
 		int i3 = getPixel(tq, xx, yy + 1);
