@@ -71,7 +71,7 @@ public class VisualView
 	static final int DEBUG_PLANETLIGHTING = 256;
 	static final int DEBUG_FRUSTUM = 512;
 
-	static int debugflags = DEBUG_FRUSTUM;
+	static int debugflags = 0;
 
 	//
 
