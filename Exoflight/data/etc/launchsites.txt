@@ -112,7 +112,7 @@ desc=Kilimanjaro is an inactive stratovolcano in north-eastern Tanzania near the
 [Tycho Base]
 owner=Lunico
 parent=Luna
-ll=432400S 110600W
+ll=433000S 110600W
 
 [Zero Luna]
 parent=Luna

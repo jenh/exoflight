@@ -604,6 +604,9 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		System.out.println("showing mainframe");
 
 		awtadapter = new MainAWTComponent(SCRN_WIDTH, SCRN_HEIGHT);
+		GLCapabilities glcaps = new GLCapabilities();
+		glcaps.setHardwareAccelerated(true);
+		glcaps.setDepthBits(32);
 		glcanvas = awtadapter.createGLCanvas();
 		mainwindow.setLayout(new BorderLayout());
 		mainwindow.add(glcanvas, BorderLayout.CENTER);
