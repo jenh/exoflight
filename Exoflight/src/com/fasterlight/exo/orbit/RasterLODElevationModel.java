@@ -216,7 +216,7 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 
 	final float getPixelInterpMinLevel(TexQuad tq, double x, double y)
 	{
-		assert(x>=0 && x<1 && y>=0 && y<1);
+		assert(x>=0 && x<1 && y>=0 && y<1 && tq.level >= 8);
 		int w = ptp.getWidth(tq);
 		int h = ptp.getHeight(tq);
 		x = x * w;

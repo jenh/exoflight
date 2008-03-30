@@ -588,6 +588,8 @@ public class PlanetTextureCache implements Runnable
 							nightptp.getRGBData(srcquad, destbuf);
 							break;
 						default :
+							// TODO: shouldn't work anymore
+							assert(false);
 							if (elevmodel != null)
 							{
 								((RasterLODElevationModel) elevmodel)

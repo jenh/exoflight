@@ -49,7 +49,7 @@ sequence "Setup Solar System" {
 
 @elev = new RasterLODElevationModel;
 @elev.fileprefix = "elevtexs/Venus/Venus-elev";
-@elev.maxprecision = 11;
+@elev.maxprecision = 14;
 @elev.mindisplacement = -8;
 @elev.maxdisplacement = 8;
 

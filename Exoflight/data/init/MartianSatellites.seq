@@ -19,7 +19,7 @@ sequence "Setup Martian Satellites" {
 
 @elev = new RasterLODElevationModel;
 @elev.fileprefix = "elevtexs/Phobos/Phobos-elev";
-@elev.maxprecision = 7;
+@elev.maxprecision = 9;
 @elev.mindisplacement = -5.915;
 @elev.maxdisplacement = 0;
 
@@ -47,7 +47,7 @@ sequence "Setup Martian Satellites" {
 
 @elev = new RasterLODElevationModel;
 @elev.fileprefix = "elevtexs/Deimos/Deimos-elev";
-@elev.maxprecision = 7;
+@elev.maxprecision = 9;
 @elev.mindisplacement = -4.8246;
 @elev.maxdisplacement = 0;
 
