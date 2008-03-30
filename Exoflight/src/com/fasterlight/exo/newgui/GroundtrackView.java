@@ -25,10 +25,12 @@ import javax.media.opengl.GL;
 
 import Acme.LruHashtable;
 
+import com.fasterlight.exo.newgui.roam.*;
 import com.fasterlight.exo.orbit.*;
 import com.fasterlight.exo.ship.*;
 import com.fasterlight.game.Game;
 import com.fasterlight.glout.*;
+import com.fasterlight.proctex.*;
 import com.fasterlight.spif.*;
 import com.fasterlight.vecmath.*;
 
@@ -64,6 +66,11 @@ implements ThingSelectable, Constants
 	protected float zoom = 1;
 	protected float cenlon,cenlat;
 	protected float x1,y1,xw,yh;
+	protected int drawMode = 0;
+	protected boolean drawGrid = true;
+	
+	public static final int MODE_MAP = 0;
+	public static final int MODE_COLOR = 1;
 
 	// ORBIT CACHE to speed up groundtrack
 
@@ -170,63 +177,76 @@ implements ThingSelectable, Constants
 		Planet p = refthing;
 		picklist.clear();
 
-		// draw map
-		setPlanetTexture(p);
-		Point o = origin;
-		int w = getWidth();
-		int h = getHeight();
+		switch (drawMode)
+		{
+			case MODE_MAP:
+				drawMap(ctx, p);
+				break;
+			case MODE_COLOR:
+				drawTexturedSurface(p);
+				break;
+		}
 
- 		x1 = o.x + w*0.5f*(1-zoom);
-		y1 = o.y + h*0.5f*(1-zoom);
-		xw = w*zoom;
-		yh = h*zoom;
-		// offset the view
-		x1 -= cenlon*xw/(Math.PI*2);
-		y1 += cenlat*yh/Math.PI;
-
-		gl.glColor3f(0, 0.25f, 0);
-		drawTexturedBox(ctx, x1, y1, xw, yh);
-
-		// draw grid
-		gl.glPushAttrib(GL.GL_ENABLE_BIT);
-
-		gl.glEnable(GL.GL_BLEND);
-		gl.glBlendFunc(GL.GL_ONE, GL.GL_ONE);
-		gl.glMatrixMode(GL.GL_TEXTURE);
-		gl.glLoadIdentity();
-		gl.glScalef(36, 18, 1);
-		guictx.texcache.setTexture("grid.png");
-		drawTexturedBox(ctx, x1, y1, xw, yh);
-		gl.glLoadIdentity();
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		drawGrid();
 
 		// draw sun umbra mask
 		if (!(p instanceof Star))
 		{
-			// todo: make work for other Stars (besides Sun)
-			Vector3d sunpos = p.getPosition(null, game.time());
-			sunpos.scale(-1);
-			p.xyz2ijk(sunpos);
-			p.ijk2llr(sunpos, game.time()*(1d/TICKS_PER_SEC));
-
-			double theta = sunpos.x;
-			double phi = sunpos.y;
-
-			float tranx = (float)(theta/(Math.PI*2));
-			int lmap = (int)Math.round(Math.abs(phi)*NUM_LMAPS/Math.PI);
-
-			gl.glMatrixMode(GL.GL_TEXTURE);
-			gl.glLoadIdentity();
-			gl.glTranslatef(-tranx, 0, 0);
-			if (phi < 0)
-				gl.glScalef(1, -1, 1);
-			guictx.texcache.setTexture("gtlmap/lmap-" + lmap + ".tga");
-			gl.glColor3f(0.2f, 0.1f, 0.1f);
-			drawTexturedBox(ctx, x1, y1, xw, yh);
-			gl.glLoadIdentity();
-			gl.glMatrixMode(GL.GL_MODELVIEW);
+			drawUmbra(p);
 		}
 
+		drawThings(p);
+
+		if (hintrend.size() > 0)
+		{
+			gl.glPushMatrix();
+//			gl.glTranslatef(o.x, o.y, 0);
+			hintrend.renderHints(ctx, picklist);
+			gl.glPopMatrix();
+		}
+	}
+
+	// TODO
+	private void drawTexturedSurface(Planet p)
+	{
+		Point o = origin;
+
+		PlanetRenderer prend = guictx.getPlanetRenderer(p);
+		PlanetTextureCache ptc = prend.getTextureCacheColor();
+		float t = GUIContext.BORDER*1.0f/GUIContext.TEX_SIZE;
+		
+		int level = 8;
+		int ll = 1<<(level-8);
+		GL gl = ctx.getGL();
+		gl.glBegin(GL.GL_QUADS);
+		gl.glColor3f(0.25f,0.25f,1);
+		for (int yy = 0; yy < level; yy++)
+		{
+			for (int xx = 0; xx < level*2; xx++)
+			{
+				ptc.setTexture(xx, yy, level);
+		 		float x = o.x + w1*0.5f*(1-zoom);
+				float y = o.y + h1*0.5f*(1-zoom);
+				float w = w1*zoom;
+				float h = h1*zoom;
+				// offset the view
+				x -= cenlon*xw/(Math.PI*2);
+				y += cenlat*yh/Math.PI;
+				gl.glTexCoord2f(t, 1-t);
+				gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1-t, 1-t);
+				gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1-t, t);
+				gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(t, t);
+				gl.glVertex2f(x, y + h);
+			}
+		}
+		gl.glEnd();
+	}
+
+	private void drawThings(Planet p)
+	{
 		// draw satellites
 		long t = game.time();
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
@@ -258,14 +278,68 @@ implements ThingSelectable, Constants
 		}
 
 		gl.glPopAttrib();
+	}
 
-		if (hintrend.size() > 0)
-		{
-			gl.glPushMatrix();
-//			gl.glTranslatef(o.x, o.y, 0);
-			hintrend.renderHints(ctx, picklist);
-			gl.glPopMatrix();
-		}
+	private void drawUmbra(Planet p)
+	{
+		// todo: make work for other Stars (besides Sun)
+		Vector3d sunpos = p.getPosition(null, game.time());
+		sunpos.scale(-1);
+		p.xyz2ijk(sunpos);
+		p.ijk2llr(sunpos, game.time()*(1d/TICKS_PER_SEC));
+
+		double theta = sunpos.x;
+		double phi = sunpos.y;
+
+		float tranx = (float)(theta/(Math.PI*2));
+		int lmap = (int)Math.round(Math.abs(phi)*NUM_LMAPS/Math.PI);
+
+		gl.glMatrixMode(GL.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(-tranx, 0, 0);
+		if (phi < 0)
+			gl.glScalef(1, -1, 1);
+		guictx.texcache.setTexture("gtlmap/lmap-" + lmap + ".tga");
+		gl.glColor3f(0.2f, 0.1f, 0.1f);
+		drawTexturedBox(ctx, x1, y1, xw, yh);
+		gl.glLoadIdentity();
+		gl.glMatrixMode(GL.GL_MODELVIEW);
+	}
+
+	private void drawGrid()
+	{
+		// draw grid
+		gl.glPushAttrib(GL.GL_ENABLE_BIT);
+
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_ONE, GL.GL_ONE);
+		gl.glMatrixMode(GL.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glScalef(36, 18, 1);
+		guictx.texcache.setTexture("grid.png");
+		drawTexturedBox(ctx, x1, y1, xw, yh);
+		gl.glLoadIdentity();
+		gl.glMatrixMode(GL.GL_MODELVIEW);
+	}
+
+	private void drawMap(GLOContext ctx, Planet p)
+	{
+		// draw map
+		setPlanetTexture(p);
+		Point o = origin;
+		int w = getWidth();
+		int h = getHeight();
+
+ 		x1 = o.x + w*0.5f*(1-zoom);
+		y1 = o.y + h*0.5f*(1-zoom);
+		xw = w*zoom;
+		yh = h*zoom;
+		// offset the view
+		x1 -= cenlon*xw/(Math.PI*2);
+		y1 += cenlat*yh/Math.PI;
+
+		gl.glColor3f(0, 0.25f, 0);
+		drawTexturedBox(ctx, x1, y1, xw, yh);
 	}
 
 	void renderConic(Planet p, Conic conic)

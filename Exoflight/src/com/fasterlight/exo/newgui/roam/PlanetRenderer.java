@@ -210,7 +210,11 @@ public class PlanetRenderer implements Constants
 			ioe.printStackTrace();
 			throw new RuntimeException(ioe.toString());
 		}
-
+	}
+	
+	public PlanetTextureCache getTextureCacheColor()
+	{
+		return ptc;
 	}
 
 	public boolean getFrozen()

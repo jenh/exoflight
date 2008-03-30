@@ -458,16 +458,11 @@ public class VisualView
 
 	PlanetRenderer getPlanetRenderer(Planet planet)
 	{
-		Object key = planet;
-		PlanetRenderer prend = (PlanetRenderer) guictx.plantexcaches.get(key);
-		if (prend == null)
-		{
-			prend = new PlanetRenderer(guictx, planet);
-			guictx.plantexcaches.put(key, prend);
-		}
+		PlanetRenderer prend = guictx.getPlanetRenderer(planet);
 		prend.nightVision = nightVision;
 		return prend;
 	}
+
 
 	//
 	//

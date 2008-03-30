@@ -1,13 +1,19 @@
 
 sequence "Lunar Hop" {
 
+    // set half-visual view
+    //@ui.'$$Pages'.pagenum=0;
+    //@ui.'$$Top Pager'.pagenum=1;
+
+    // turn on ship systems
     @module = ship.structure.'$Hopper';
 
     @module.'$main engine'.armed = true;
     @module.'$RCS'.armed = true;
     @module.'$control surfaces'.armed = true;
-
     ship.guidancecap.active = true;
+
+    // manual throttle
     ship.attsys.throtmanual = 1;
 }
 

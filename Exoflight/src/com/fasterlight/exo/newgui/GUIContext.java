@@ -26,7 +26,7 @@ import javax.media.opengl.GL;
 
 import com.fasterlight.exo.game.SpaceGame;
 import com.fasterlight.exo.newgui.roam.PlanetRenderer;
-import com.fasterlight.exo.orbit.Constants;
+import com.fasterlight.exo.orbit.*;
 import com.fasterlight.exo.ship.SpaceShip;
 import com.fasterlight.exo.strategy.Mission;
 import com.fasterlight.game.SettingsGroup;
@@ -66,7 +66,7 @@ public class GUIContext extends GLOContext
 
 	// caches for VisualView
 
-	Map plantexcaches = new HashMap();
+	Map planetRenderCache = new HashMap();
 	WeakHashMap partsyss = new WeakHashMap();
 
 	// for inertial modification
@@ -118,19 +118,19 @@ public class GUIContext extends GLOContext
 
 		// each ShipParticleSystem holds a reference to a VisualView,
 		// so we must clear them here
-		plantexcaches.clear();
+		planetRenderCache.clear();
 		vars.clear();
 	}
 
 	// clear all plantexcaches, etc
 	public void clearCaches()
 	{
-		Iterator it = plantexcaches.values().iterator();
+		Iterator it = planetRenderCache.values().iterator();
 		while (it.hasNext())
 		{
 			((PlanetRenderer) it.next()).close();
 		}
-		plantexcaches.clear();
+		planetRenderCache.clear();
 		partsyss.clear();
 	}
 
@@ -672,4 +672,16 @@ public class GUIContext extends GLOContext
 			smoothStars = getBoolean("SmoothStars", false); 
 		}
 	};
+
+	public PlanetRenderer getPlanetRenderer(Planet planet)
+	{
+		Object key = planet;
+		PlanetRenderer prend = (PlanetRenderer) planetRenderCache.get(key);
+		if (prend == null)
+		{
+			prend = new PlanetRenderer(this, planet);
+			this.planetRenderCache.put(key, prend);
+		}
+		return prend;
+	}
 }
