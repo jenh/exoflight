@@ -63,7 +63,9 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 
 	GameSound gsound;
 
-	String missname, categname;
+	// mission category/name
+	String defaultMissionCategory = "Free Flight";
+	String defaultMissionName = "Lunar Hop";
 
 	Engine engine;
 
@@ -474,7 +476,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 	{
 		game = null;
 		if (mainframe != null)
-			mainframe.hide();
+			mainframe.setVisible(false);
 		if (mainwindow != null)
 			mainwindow.setVisible(false);
 		try
@@ -531,32 +533,15 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 
 	void startDefaultGame()
 	{
+		Mission m = Mission.getMission(defaultMissionCategory,
+				defaultMissionName);
+		// resetGame(guictx.createNewGame(m));
+		// TODO: we can't add the GUI here because we don't yet have a GUI :P
 		SpaceGame newgame = new SpaceGame();
-
-		if (categname != null && missname != null)
-		{
-			Mission m = Mission.getMission(categname, missname);
-			m.prepare(newgame);
-			m.getSequencer().setVar("ui", guictx);
-			m.getSequencer().start();
-		} else
-		{
-			// set game time to current "real" time
-			if (starttime == -1)
-			{
-				Date now = new Date();
-				newgame.setGameStartTime(now);
-			} else
-			{
-				newgame.setGameStartTime(starttime);
-			}
-			newgame.start();
-			newgame.setupEarthSats();
-		}
-
+		m.prepare(newgame);
+		m.getSequencer().setVar("ui", guictx);
+		m.getSequencer().start();
 		resetGame(newgame);
-		// try to force GC (todo: danger!)
-		System.gc();
 	}
 
 	Image getImage(String path)
@@ -582,7 +567,7 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 	void showMainWindow()
 	{
 		mainframe = new MenuedFrame(FRAME_TITLE);
-		GraphicsDevice scrnDevice = null;
+		//GraphicsDevice scrnDevice = null;
 		if (FULL_SCREEN)
 		{
 			mainframe.setUndecorated(true);

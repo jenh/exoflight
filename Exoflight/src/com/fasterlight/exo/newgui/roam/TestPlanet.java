@@ -60,6 +60,7 @@ extends GLOAWTComponent
 	boolean doBumpMap = false;
 	boolean showAxes = false;
 	boolean withSectors = false;
+	boolean trackGround = true;
 
 	Random rnd = new Random();
 
@@ -77,7 +78,7 @@ extends GLOAWTComponent
 	float ACCEL = 0.01f;
 	float MIN_ACCEL_PER_RAD = 0.0005f;
 	float DRAG = 0.1f;
-	float MIN_HEIGHT = 0.01f;
+	float MIN_HEIGHT = 3 / 1000.0f;
 	float ACCEL_SCALE = 0.1f;
 
 	PlanetRenderer prend;
@@ -258,19 +259,18 @@ extends GLOAWTComponent
 			vel.add(v);
 
 			// drag :)
-			double rad = planet.getRadius();
 			float damping = (1-DRAG);
 			vel.scale(damping);
-
 			vp.add(vel);
 
-			Vector3d vpllr = new Vector3d(vp);
-//			planet.xyz2ijk(vpllr);
-			planet.ijk2llr(vpllr, 0);
-			double pelev = planet.getElevationAt(vpllr.y, vpllr.x) +
-				planet.getRadius() + MIN_HEIGHT;
-			if (vp.length() < pelev)
+			// rot = time*rv+r0
+			// time = (0-r0)/rv
+			double t = -planet.getRotation0()/planet.getAngularVel();
+			double pelev = planet.getElevationAt(new Vector3d(vp), t)
+				+ planet.getRadius() + MIN_HEIGHT;
+			if (trackGround || vp.length() < pelev)
 			{
+				//System.out.println("BONK! " + (pelev - planet.getRadius()));
 				vp.scale((float)(pelev/vp.length()));
 			}
 		}

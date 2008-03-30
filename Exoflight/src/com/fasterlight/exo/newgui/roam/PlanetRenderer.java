@@ -774,6 +774,8 @@ public class PlanetRenderer implements Constants
 	public void render(Vector3f vp, Vector3f vel, GLOComponent cmpt, float fov, int scrnheight)
 	{
 		roam.setViewpoint(vp);
+		// TODO: should use reference point (ship) and not viewpoint?
+		roam.setCenterPoint(vp);
 		// todo: what if we change from normals to no normals?
 		roam.doNormals = doNormals;
 

@@ -1501,18 +1501,16 @@ public class ROAMPlanet
 		if ((tn.flags & REMOVED) != 0)
 			printBoth("***" + tn + " was REMOVED but is in tree");
 
-		/***
-				// see if the projected triangle volume contains the viewpoint
-				// we only do this test of the parent also contains the viewpoint
-				boolean contvp;	// = (tn.flags & CONTAINS_VP) != 0;
-				if ( (parent==null || (parent.flags&CONTAINS_VP)!=0) && containsPoint(tn, cenvp) )
-				{
-					tn.flags |= CONTAINS_VP;
-					contvp = true;
-				} else
-					contvp = false;
-		***/
-
+		// see if the projected triangle volume contains the viewpoint
+		// we only do this test of the parent also contains the viewpoint
+		boolean contvp;	// = (tn.flags & CONTAINS_VP) != 0;
+		if ( (parent==null || (parent.flags&CONTAINS_VP)!=0) && containsPoint(tn, cenvp) )
+		{
+			tn.flags |= CONTAINS_VP;
+			contvp = true;
+		} else
+			contvp = false;
+		
 		boolean is_split = tn.isSplit();
 
 		// inherit frustum flags from parent
@@ -1555,6 +1553,13 @@ public class ROAMPlanet
 			**/
 
 			float prio = computeVariance(tn, parent);
+			// give precedence to points which contain the center point
+			// TODO
+			if (prio < MAX_SPLIT_PRIO)
+			{
+				if (containsPoint(tn, cenvp))
+					prio *= 4;
+			}
 			if (prio > MAX_SPLIT_PRIO)
 			{
 				split(tn, level);

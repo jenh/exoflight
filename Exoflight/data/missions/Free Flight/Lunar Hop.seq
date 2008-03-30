@@ -1,0 +1,13 @@
+
+sequence "Lunar Hop" {
+
+    @module = ship.structure.'$Hopper';
+
+    @module.'$main engine'.armed = true;
+    @module.'$RCS'.armed = true;
+    @module.'$control surfaces'.armed = true;
+
+    ship.guidancecap.active = true;
+    ship.attsys.throtmanual = 1;
+}
+
