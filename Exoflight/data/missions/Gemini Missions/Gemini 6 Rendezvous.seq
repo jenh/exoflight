@@ -110,7 +110,7 @@ sequence "Gemini 6 Rendezvous" {
 
 	wait for condition (ship.telemetry.vertvel < 0.003) interval 1 timeout 600;
 
-	@ui.message =? "Now hold down the 'PgUp' key (on the keypad) to thrust forward with the OAMS.  Watch your periapsis and stop when your periapsis is within 2 km of your apoapsis.";
+	@ui.message =? "Now hold down the 'Ctrl' and 'PgUp' key (on the keypad) to thrust forward with the OAMS.  Watch your periapsis and stop when your periapsis is within 2 km of your apoapsis.";
 
 -- wait for circular orbit
 
@@ -142,7 +142,7 @@ sequence "Gemini 6 Rendezvous" {
 
 	wait for condition (ship.attctrl.guidance.mintti == 900) interval 2 timeout 3600;
 
-	@ui.message =? "Good!  Now activate the guidance system (if it hasn't been already) and hold down the PgUp key (on the keypad) to begin braking.  Watch the \0129V indicator -- it should start to decrease.  Let go of the PgUp key when it gets close to zero.";
+	@ui.message =? "Good!  Now activate the guidance system (if it hasn't been already) and hold down the Ctrl+PgUp key (on the keypad) to begin braking.  Watch the \0129V indicator -- it should start to decrease.  Let go of the PgUp key when it gets close to zero.";
 
 	wait for condition (ship.targsys.closure < 0.005) interval 2 timeout 3600;
 	wait for 2;
