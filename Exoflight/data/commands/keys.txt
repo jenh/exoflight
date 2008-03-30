@@ -62,6 +62,19 @@ Shift+Up+0x21=Control:Translate Z Null
 Shift+0x24=Control:Slow Translate -Z
 Shift+Up+0x24=Control:Translate Z Null
 
+Menu+0x26=Control:Rotate +X
+Menu+Up+0x26=Control:Rotate X Null
+Menu+0x28=Control:Rotate -X
+Menu+Up+0x28=Control:Rotate X Null
+Menu+0x25=Control:Rotate +Y
+Menu+Up+0x25=Control:Rotate Y Null
+Menu+0x27=Control:Rotate -Y
+Menu+Up+0x27=Control:Rotate Y Null
+Menu+0x21=Control:Rotate +Z
+Menu+Up+0x21=Control:Rotate Z Null
+Menu+0x24=Control:Rotate -Z
+Menu+Up+0x24=Control:Rotate Z Null
+
 Menu+1=Control:Throttle Off
 Menu+5=Control:Throttle 50%
 Menu+0=Control:Throttle 100%

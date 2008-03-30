@@ -178,6 +178,34 @@ ship.attsys.manthrottle=0.5
 [Control:Throttle 100%]
 ship.attsys.manthrottle=1.0
 
+[Control:Rotate +X]
+ship.attsys.rotx=1
+
+[Control:Rotate -X]
+ship.attsys.rotx=-1
+
+[Control:Rotate X Null]
+ship.attsys.rotx=0
+
+[Control:Rotate +Y]
+ship.attsys.roty=1
+
+[Control:Rotate -Y]
+ship.attsys.roty=-1
+
+[Control:Rotate Y Null]
+ship.attsys.roty=0
+
+[Control:Rotate +Z]
+ship.attsys.rotz=1
+
+[Control:Rotate -Z]
+ship.attsys.rotz=-1
+
+[Control:Rotate Z Null]
+ship.attsys.rotz=0
+
+
 ;-------
 
 [Sequencer:Abort]
