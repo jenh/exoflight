@@ -63,8 +63,6 @@ public class VisualView
 
 	//
 
-	static int debugflags = 0;
-
 	static final int DEBUG_SHOWAXES = 1;
 	static final int DEBUG_SHOWFORCES = 2;
 	static final int DEBUG_WIREFRAME = 4;
@@ -72,6 +70,8 @@ public class VisualView
 	static final int DEBUG_ROAM_COLORFLAGS = 16;
 	static final int DEBUG_PLANETLIGHTING = 256;
 	static final int DEBUG_FRUSTUM = 512;
+
+	static int debugflags = 0;
 
 	//
 
@@ -81,12 +81,12 @@ public class VisualView
 
 	//
 
-	public static final float NEARDIST = 5e-3f; // 5 m
-	public static final float INT_NEARDIST = 1e-4f; // 0.1 m
+	public static final float NEARDIST = 1.0f / 1000; // km
+	public static final float INT_NEARDIST = 0.1f / 1000; // km
 	static final float FARDIST = 1e15f; // pretty far?
 	static final int MAX_FRUSTUM_SECTIONS = 4;
 	static final float VISRAD_SLOP = 1.01f; // a factor
-	static final float FRUSTUM_SLOP = 0.05f; // in km!
+	static final float FRUSTUM_SLOP = 50.0f / 1000; // km
 
 	Matrix3f last_view_matrix = new Matrix3f();
 
@@ -996,6 +996,8 @@ public class VisualView
 					else
 						break;
 				}
+				if (((debugflags & DEBUG_FRUSTUM) != 0))
+					System.out.println("Internal view: " + fsect);
 			}
 			// is this the thing we are orbiting?
 			else if (drec.thing == refparent && drec.ang > MIN_VIEW_PIXSIZE)
@@ -1011,20 +1013,20 @@ public class VisualView
 					float horiz_dist =
 						(float) planet.getHorizonDist(
 							height + chicken_sacrifice);
-					if (((debugflags & DEBUG_FRUSTUM) != 0))
-						System.out.println(
-							"   Near surface: "
-								+ drec.thing
-								+ " "
-								+ horiz_dist
-								+ " "
-								+ height);
+					/*
 					fardist = horiz_dist;
 					neardist =
 						(float) Math.min(
 							getViewDistance() / 2,
 							Math.max(NEARDIST, height));
+					neardist = NEARDIST;
 					fsect = new FrustumSection(neardist, fardist);
+					*/
+					fsect = new FrustumSection(NEARDIST, horiz_dist);
+					if (((debugflags & DEBUG_FRUSTUM) != 0))
+						System.out.println("   Near surface: " + drec.thing
+								+ " " + horiz_dist + " " + height + " -> "
+								+ fsect);
 					mode = 3;
 				}
 				else
@@ -1034,15 +1036,10 @@ public class VisualView
 					fsect.merge(drec);
 					if (((debugflags & DEBUG_FRUSTUM) != 0))
 					{
-						System.out.println(
-							"   Far surface: "
-								+ drec.thing
-								+ " "
-								+ neardist
-								+ " "
-								+ fardist);
-						System.out.println(
-							"      " + drec.r + " " + drec.frustrad);
+						System.out.println("   Far surface: " + drec.thing
+								+ " " + neardist + " " + fardist);
+						System.out.println("      " + drec.r + " "
+								+ drec.frustrad);
 					}
 					mode = 1;
 				}
@@ -1054,6 +1051,10 @@ public class VisualView
 				if (!fsect.intersects(drec))
 					fsect = new FrustumSection();
 				fsect.merge(drec);
+				if (((debugflags & DEBUG_FRUSTUM) != 0))
+				{
+					System.out.println("  Far mode: " + drec.thing + " -> " + fsect);
+				}
 			}
 			else if (mode == 2)
 			{
