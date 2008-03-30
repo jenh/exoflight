@@ -71,7 +71,7 @@ public class VisualView
 	static final int DEBUG_PLANETLIGHTING = 256;
 	static final int DEBUG_FRUSTUM = 512;
 
-	static int debugflags = 0;
+	static int debugflags = DEBUG_FRUSTUM;
 
 	//
 
@@ -989,15 +989,20 @@ public class VisualView
 					// if this object is near the 'tracked' object,
 					// assign its view frustum to be the same
 					// (this fixes the "stage separation" problem)
+					// TODO: does this really work?
 					DisplayRec mergedrec = (DisplayRec) disprecs.get(j);
-					if (drec.thing instanceof SpaceShip
+					if (mergedrec.thing instanceof SpaceShip
 						&& mergedrec.r < mergedrec.frustrad + drec.frustrad)
+					{
 						mergedrec.fsect = fsect;
+						if (((debugflags & DEBUG_FRUSTUM) != 0))
+							System.out.println("   Merged " + mergedrec.thing);
+					}
 					else
 						break;
 				}
 				if (((debugflags & DEBUG_FRUSTUM) != 0))
-					System.out.println("Internal view: " + fsect);
+					System.out.println("   Internal view: " + fsect);
 			}
 			// is this the thing we are orbiting?
 			else if (drec.thing == refparent && drec.ang > MIN_VIEW_PIXSIZE)
