@@ -105,7 +105,7 @@ sequence "Gemini 6 Docking" {
 
     wait for 10;
 
-    @ui.message =? "Briefly press the Ctrl+PgUp key. This will begin moving your spacecraft towards the target.";
+    @ui.message =? "Briefly press the Shift+PgUp key. This will begin moving your spacecraft towards the target.";
 
     wait for condition (ship.targsys.velvec.z < -0.0001) interval 1 timeout 60;
 
@@ -113,7 +113,7 @@ sequence "Gemini 6 Docking" {
 
     wait for 10;
 
-    @ui.message =? "At the bottom of the MEDS, the Z value shows the distance to the target (in the forward direction) and the \0129Z value shows the rate of closure (negative means you are approaching the target). Hold down the Ctrl+PgUp key until \0129Z reaches -5 m/s.";
+    @ui.message =? "At the bottom of the MEDS, the Z value shows the distance to the target (in the forward direction) and the \0129Z value shows the rate of closure (negative means you are approaching the target). Hold down the Shift+PgUp key until \0129Z reaches -5 m/s.";
     
     wait for condition (ship.targsys.velvec.z < -0.005) interval 1 timeout 300;
 
@@ -121,7 +121,7 @@ sequence "Gemini 6 Docking" {
 
     wait for 10;
 
-    @ui.message =? "While the crosshairs on the left show a top-down view of your spacecraft, those on the right show a forward-facing view. Now use the Ctrl + up, down, left, and right keys on the keypad to move the yellow line on the right crosshair opposite the blue line.";
+    @ui.message =? "While the crosshairs on the left show a top-down view of your spacecraft, those on the right show a forward-facing view. Now use the Shift + up, down, left, and right keys on the keypad to move the yellow line on the right crosshair opposite the blue line.";
 
     wait for condition (ship.targsys.dockvec.z < 0.060) interval 1 timeout 300;
 
@@ -129,7 +129,7 @@ sequence "Gemini 6 Docking" {
     
     wait for 10;
     
-    @ui.message =? "Start slowing down by holding down the Ctrl+Home key (reverse thrust) until \0129Z gets less than 1 m/s.";
+    @ui.message =? "Start slowing down by holding down the Shift+Home key (reverse thrust) until \0129Z gets less than 1 m/s.";
     
     wait for condition (ship.targsys.velvec.z < -0.001) interval 1 timeout 60;
 
