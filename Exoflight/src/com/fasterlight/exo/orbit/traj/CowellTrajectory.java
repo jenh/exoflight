@@ -408,6 +408,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory
 				{
 					// if we've gone below the minimum timestep,
 					// correct the velocity and continue
+					// TODO: this still doesn't work too well
 					if (curts / 2 < MIN_TIMESTEP)
 					{
 						timeScaleFrac *= 0.5f;

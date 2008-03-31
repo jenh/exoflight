@@ -6,7 +6,7 @@ sequence "Lunar Hop" {
     //@ui.'$$Top Pager'.pagenum=1;
 
     // turn on ship systems
-    @module = ship.structure.'$Hopper';
+    @module = ship.structure.'$Space Wagon';
 
     @module.'$main engine'.armed = true;
     @module.'$RCS'.armed = true;

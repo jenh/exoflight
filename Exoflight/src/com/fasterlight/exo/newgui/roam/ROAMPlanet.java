@@ -1503,6 +1503,7 @@ public class ROAMPlanet
 
 		// see if the projected triangle volume contains the viewpoint
 		// we only do this test of the parent also contains the viewpoint
+		/*
 		boolean contvp;	// = (tn.flags & CONTAINS_VP) != 0;
 		if ( (parent==null || (parent.flags&CONTAINS_VP)!=0) && containsPoint(tn, cenvp) )
 		{
@@ -1510,6 +1511,7 @@ public class ROAMPlanet
 			contvp = true;
 		} else
 			contvp = false;
+		*/
 		
 		boolean is_split = tn.isSplit();
 
@@ -1558,7 +1560,7 @@ public class ROAMPlanet
 			if (prio < MAX_SPLIT_PRIO)
 			{
 				if (containsPoint(tn, cenvp))
-					prio *= 4;
+					prio *= tn.texlevel-6;
 			}
 			if (prio > MAX_SPLIT_PRIO)
 			{
