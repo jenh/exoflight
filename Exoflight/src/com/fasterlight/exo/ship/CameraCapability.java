@@ -48,7 +48,8 @@ extends Capability
 	float jitterScale;
 	float jitterDecayRate = 0.5f;
 	float jitterMax = 0.00025f; // 25 cm
-	Vector3f last_force = new Vector3f();
+	Vector3f last_accel = new Vector3f();
+	Vector3f jerk = new Vector3f();
 	long last_jitter_time = Game.INVALID_TICK;
 
 	//
@@ -285,29 +286,32 @@ extends Capability
 		{
 			return null;
 		}
+		/*
 		long tick = getGame().time();
-		Vector3f accelvec = new Vector3f(getShip().getTelemetry().getAccelVec());
-		last_force.sub(accelvec);
-
 		float rate = (last_jitter_time == Game.INVALID_TICK) ?
 			jitterDecayRate :
 			jitterDecayRate*(tick-last_jitter_time)/TICKS_PER_SEC;
 		if (rate > 1)
 			rate = 1;
-		last_jitter_time = tick;
-		last_force.scale(jitterDecayRate);
-
-		last_force.add(accelvec);
-		accelvec.set(last_force);
+		*/
+		
+		// jerk = (jerk + (accel*scale - last_accel*scale)) * rate
+		Vector3f accelvec = new Vector3f(getShip().getTelemetry().getAccelVec());
 		accelvec.scale(jitterScale);
-		accelvec.clamp(-jitterMax, jitterMax);
+		Vector3f djerk = new Vector3f(accelvec);
+		djerk.sub(last_accel);
+		last_accel.set(accelvec);
+		jerk.add(djerk);
+		jerk.scale(jitterDecayRate);
+		jerk.clamp(-jitterMax, jitterMax);
+		djerk.set(jerk);
+		return djerk;
 /*
 		double len2 = accelvec.lengthSquared();
 		if (len2 > jitterMax*jitterMax)
 			accelvec.scale((float)(jitterMax/Math.sqrt(len2)));
 */
 //System.out.println("accelvec = " + accelvec);
-		return accelvec;
 	}
 
 	// PROPERTIES
