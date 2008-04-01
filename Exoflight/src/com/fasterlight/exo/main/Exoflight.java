@@ -320,13 +320,52 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 				ioe.printStackTrace(System.out);
 			}
 		}
+		private GLOKeyEvent fixupKeyEvent(GLOKeyEvent e)
+		{
+			// convert keypad keys to arrow keys
+			int code = e.getKeyCode();
+			switch (code)
+			{
+				case KeyEvent.VK_NUMPAD8:
+				case 224:
+					code = KeyEvent.VK_UP;
+					break;
+				case KeyEvent.VK_NUMPAD2:
+				case 225:
+					code = KeyEvent.VK_DOWN;
+					break;
+				case KeyEvent.VK_NUMPAD4:
+				case 226:
+					code = KeyEvent.VK_LEFT;
+					break;
+				case KeyEvent.VK_NUMPAD6:
+				case 227:
+					code = KeyEvent.VK_RIGHT;
+					break;
+				case 103:
+					code = KeyEvent.VK_HOME;
+					break;
+				case 105:
+					code = KeyEvent.VK_END;
+					break;
+			}
+			if (code != e.getKeyCode())
+				return new GLOKeyEvent(guictx, e.getFlags(), code, e.getChar(), e.isPressed());
+			else
+				return e;
+		}
 		private boolean keyPressed(GLOKeyEvent e)
 		{
+			e = fixupKeyEvent(e);
+			System.out.println("handled " + e);
 			boolean exec = cmdmgr.executeControl(e);
 			if (exec)
 				return true;
 			if (e.getFlags() != 0)
+			{
+				System.out.println(e);
 				return false;
+			}
 			switch (e.getKeyCode())
 			{
 				case KeyEvent.VK_F10 :
