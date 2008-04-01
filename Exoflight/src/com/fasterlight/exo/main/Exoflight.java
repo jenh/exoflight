@@ -326,27 +326,22 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 			int code = e.getKeyCode();
 			switch (code)
 			{
-				case KeyEvent.VK_NUMPAD8:
+				// num-lock doesn't sent UP events (?)
+				//case KeyEvent.VK_NUMPAD8:
 				case 224:
 					code = KeyEvent.VK_UP;
 					break;
-				case KeyEvent.VK_NUMPAD2:
+				//case KeyEvent.VK_NUMPAD2:
 				case 225:
 					code = KeyEvent.VK_DOWN;
 					break;
-				case KeyEvent.VK_NUMPAD4:
+				//case KeyEvent.VK_NUMPAD4:
 				case 226:
 					code = KeyEvent.VK_LEFT;
 					break;
-				case KeyEvent.VK_NUMPAD6:
+				//case KeyEvent.VK_NUMPAD6:
 				case 227:
 					code = KeyEvent.VK_RIGHT;
-					break;
-				case 103:
-					code = KeyEvent.VK_HOME;
-					break;
-				case 105:
-					code = KeyEvent.VK_END;
 					break;
 			}
 			if (code != e.getKeyCode())
