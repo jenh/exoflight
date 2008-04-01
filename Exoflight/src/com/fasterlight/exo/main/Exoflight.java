@@ -709,9 +709,9 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 	{
 		try
 		{
-			// use settings.ini, create one & populate if its not there
+			// use settings.ini, create one & don't populate if its not there
 			Settings.setFilename("settings.ini");
-			Settings.setWriteable(true);
+			//Settings.setWriteDefaults(true);
 
 			// redirect stdout, stderr
 			PrintStream out = null;

@@ -1450,7 +1450,7 @@ public class VisualView
 		public void updateSettings()
 		{
 			DEFAULT_VIEW_DIST_SCALE = getFloat("InitialViewDistRadii", 6);
-			STAR_ALPHA_FACTOR = getFloat("StarAlphaFactor", 0.18f);
+			STAR_ALPHA_FACTOR = getFloat("StarAlphaFactor", 0.25f);
 			STARBURST_SCALE = getFloat("StarburstScale", 12);
 			MIN_STAR_ANGLE = getFloat("MinStarAngle", 8);
 			MIN_SHOWLABEL_PIXSIZE = getInt("MinShowLabelSize", 16);
