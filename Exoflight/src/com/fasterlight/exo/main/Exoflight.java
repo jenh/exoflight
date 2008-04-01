@@ -320,27 +320,39 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 				ioe.printStackTrace(System.out);
 			}
 		}
+		
+		boolean numLockWarning;
+		
 		private GLOKeyEvent fixupKeyEvent(GLOKeyEvent e)
 		{
 			// convert keypad keys to arrow keys
 			int code = e.getKeyCode();
 			switch (code)
 			{
-				// num-lock doesn't sent UP events (?)
-				//case KeyEvent.VK_NUMPAD8:
+				case KeyEvent.VK_NUMPAD8:
+				case KeyEvent.VK_NUMPAD2:
+				case KeyEvent.VK_NUMPAD4:
+				case KeyEvent.VK_NUMPAD6:
+					if (!numLockWarning)
+					{
+						numLockWarning = true;
+						throw new GLOUserException("Please turn NUM LOCK off.");
+					}
+					break;
 				case 224:
+				//case KeyEvent.VK_NUMPAD8:
 					code = KeyEvent.VK_UP;
 					break;
-				//case KeyEvent.VK_NUMPAD2:
 				case 225:
+				//case KeyEvent.VK_NUMPAD2:
 					code = KeyEvent.VK_DOWN;
 					break;
-				//case KeyEvent.VK_NUMPAD4:
 				case 226:
+				//case KeyEvent.VK_NUMPAD4:
 					code = KeyEvent.VK_LEFT;
 					break;
-				//case KeyEvent.VK_NUMPAD6:
 				case 227:
+				//case KeyEvent.VK_NUMPAD6:
 					code = KeyEvent.VK_RIGHT;
 					break;
 			}
@@ -351,16 +363,8 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		}
 		private boolean keyPressed(GLOKeyEvent e)
 		{
-			e = fixupKeyEvent(e);
-			System.out.println("handled " + e);
-			boolean exec = cmdmgr.executeControl(e);
-			if (exec)
-				return true;
 			if (e.getFlags() != 0)
-			{
-				System.out.println(e);
 				return false;
-			}
 			switch (e.getKeyCode())
 			{
 				case KeyEvent.VK_F10 :
@@ -452,9 +456,6 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 					reloadUI();
 					SettingsGroup.updateAll();
 					break;
-				default :
-					System.out.println(e);
-					break;
 			}
 			return false;
 		}
@@ -463,12 +464,16 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		{
 			if (event instanceof GLOKeyEvent)
 			{
-				boolean exec = cmdmgr.executeControl((GLOKeyEvent) event);
+				GLOKeyEvent ke = fixupKeyEvent((GLOKeyEvent)event);
+				boolean exec = cmdmgr.executeControl(ke);
 				if (exec)
 					return true;
-				if (((GLOKeyEvent) event).isPressed())
+				if (ke.isPressed())
 				{
-					return keyPressed((GLOKeyEvent) event);
+					if (keyPressed(ke))
+						return true;
+					else
+						System.out.println(ke);
 				}
 			} else if (event instanceof GLOActionEvent)
 			{
