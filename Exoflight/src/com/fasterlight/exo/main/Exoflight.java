@@ -387,9 +387,9 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 						int i = e.getKeyCode() - KeyEvent.VK_1;
 						if (i < ships.size())
 						{
-							SpaceShip ship = (SpaceShip) ships.get(0);
-							//   						setCurrentShip(ship);
+							SpaceShip ship = (SpaceShip) ships.get(i);
 							setSelected(ship);
+							setCurrentShip(ship);
 						}
 						return true;
 					}
