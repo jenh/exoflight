@@ -481,8 +481,22 @@ public class VisualView
 		// first decide whether to show labels!
 		if (showLabels && drec.ang < MIN_SHOWLABEL_PIXSIZE)
 		{
-			addPickPoint(PICK_RAD, ut, drec.pos);
-			showHintFor(ut);
+			boolean showLabel = true;
+			// don't show the label if the object and its parent are
+			// sufficiently close in angle
+			if (drec.parentrec != null)
+			{
+				Vector3d dvec = new Vector3d(drec.parentrec.pos);
+				dvec.sub(drec.pos);
+				double dot = dvec.dot(drec.parentrec.pos) * getWidth()
+						/ (drec.parentrec.pos.lengthSquared() * getSinFOV());
+				showLabel = (Math.abs(dot) > MIN_SHOWLABEL_PIXSIZE*2);
+			}
+			if (showLabel)
+			{
+				addPickPoint(PICK_RAD, ut, drec.pos);
+				showHintFor(ut);
+			}
 		}
 
 		// if it is too small to draw, draw as a point
@@ -746,7 +760,7 @@ public class VisualView
 
 		// add children recursively, starting from the Universe object
 
-		addChildrenRecursive(tracked.getUniverse());
+		addChildrenRecursive(tracked.getUniverse(), null);
 
 		// sort reverse by distance
 
@@ -766,22 +780,22 @@ public class VisualView
 
 	//
 
-	void addChildrenRecursive(UniverseThing p)
+	void addChildrenRecursive(UniverseThing p, DisplayRec parentrec)
 	{
 		Iterator it = p.getChildren();
 		while (it.hasNext())
 		{
 			UniverseThing ut = (UniverseThing) it.next();
-			addDispRecRecursive(ut);
+			addDispRecRecursive(ut, parentrec);
 		}
 	}
 
 	// render the object and its children,
 	// if the price is right
-	void addDispRecRecursive(UniverseThing ut)
+	void addDispRecRecursive(UniverseThing ut, DisplayRec parentrec)
 	{
 		DisplayRec drec = new DisplayRec(ut);
-
+		drec.parentrec = parentrec;
 		addDispRec(drec);
 
 		// if no children, just return
@@ -819,7 +833,7 @@ public class VisualView
 		// if drawchildren == true, recurse
 		if (drawchildren)
 		{
-			addChildrenRecursive(ut);
+			addChildrenRecursive(ut, drec);
 		}
 	}
 
@@ -859,6 +873,7 @@ public class VisualView
 		float frustrad; // radius in frustum (not visible radius)
 		float ang; // pixel size
 		FrustumSection fsect;
+		DisplayRec parentrec;
 
 		DisplayRec(UniverseThing thing)
 		{
