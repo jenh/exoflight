@@ -18,7 +18,7 @@ shader$text=title
 [label-version]
 parent=table0
 type=label
-minchars=30
+minchars=40
 text_prop=version
 align=1
 
@@ -32,7 +32,9 @@ align=1
 [label-copyright]
 parent=table0
 type=label
-text=Copyright (c) 2000-2008 Steven E. Hugg
+minchars=40
+text_prop=copyright
+align=1
 
 [okbtn]
 parent=table0

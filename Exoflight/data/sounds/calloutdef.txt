@@ -51,7 +51,7 @@ value_step=0.1
 [Mach]
 class=NumericCallout
 rangelo=0.5
-rangehi=100
+rangehi=25
 factor=0.2
 format=Mach {0,number,#}.
 value_prop=telemetry.adjmach

@@ -12,7 +12,7 @@
 <property name="jogl.platform" value="windows-i586" />
 <property name="models.dir" value="data/models" />
 
-<property name="exoflight.version" value="0.1.2"/>
+<property name="exoflight.version" value="0.1.3"/>
 
 <property name="exo.fullscreen" value="true"/>
 	
@@ -160,7 +160,9 @@
 	</copy>
 
 	<copy todir="${install.dir}">
-		<fileset dir="./data" excludes="elevtexs/**,texs/**,sounds/**,models/**,eph/**,uitexs/**" />
+		<fileset dir="./data"
+			excludes="elevtexs/**,texs/**,sounds/**,models/**,eph/**,uitexs/**"
+			includes="sounds/*.txt,texs/*/*.txt" />
 	</copy>
 	
 	<!-- these aren't ready yet -->
