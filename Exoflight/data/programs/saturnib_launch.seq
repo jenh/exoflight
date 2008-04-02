@@ -74,12 +74,17 @@ sequence "Saturn V Launch" {
 	@S_IV.'$gimbal system'.armed = true;
 	@S_IV.'$J-2 engine'.armed = true;
 	@S_IV.'$J-2 engine'.throttle = 1;
-	ship.attctrl.guidance.tau_bias = 0;
+--	ship.attctrl.guidance.tau_bias = 0;
+
+	ship.maneuvsys.updatelaunch = true;
+	ship.attsys.guidmode = "igm";
+	ship.attsys.rcsmanual = 0;
 	ship.launchsys.glimit = 0;
 	wait for 2;
 
 "Wait for circular orbit"
-	wait for condition (ship.attctrl.guidance.tgo < 1) interval 0.125 timeout 500;
+	wait for condition (ship.attctrl.guidance.tgo < 1) interval 0.125 timeout 600;
+	wait for 1;
 
 "Engine shutdown"
 	@S_IV.'$J-2 engine'.throttle = 0;
