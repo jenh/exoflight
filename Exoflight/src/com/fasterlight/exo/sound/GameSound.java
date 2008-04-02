@@ -202,7 +202,8 @@ implements PropertyAware
 	public void setCalloutGroup(String group)
 	{
 		vcrend.clearCallouts();
-		vcrend.addCalloutGroup(group);
+		if (group != null)
+			vcrend.addCalloutGroup(group);
 	}
 
 	public void close()

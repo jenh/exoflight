@@ -74,7 +74,9 @@ sequence "Titan 2 Launch" {
 --	ship.attctrl.guidance.rinhibit = true;
 --	ship.attctrl.guidance.yinhibit = true;
 
-	wait for condition (ship.attctrl.guidance.tgo < 0.15) interval 0.125;
+-- in case tgo doesn't go very close to zero
+	wait for condition (ship.attctrl.guidance.tgo < 2) interval 0.125;
+	wait for 2;
 	@Titan2.$engine.active = false;
 
 -- should be T=336 secs
@@ -91,6 +93,7 @@ sequence "Titan 2 Launch" {
 	wait for 1;
 
 "---END LAUNCH SEQUENCE---"
+	@gsound.calloutgroup =? null;
 	stop;
 
 ---
