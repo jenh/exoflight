@@ -69,8 +69,6 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 
 	Engine engine;
 
-	boolean showTitle;
-
 	static final int WORLD_WIDTH = 1024;
 	static final int WORLD_HEIGHT = 768;
 
@@ -567,7 +565,6 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 				e.printStackTrace();
 			}
 		}
-		showTitle = false;
 	}
 
 	void startDefaultGame()
@@ -662,7 +659,6 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 		}
 
 		mainframe.setVisible(true);
-		showTitle = true;
 		if (ADD_LISTENERS)
 		{
 			awtadapter.addListeners(glcanvas);

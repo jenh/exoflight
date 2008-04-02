@@ -580,6 +580,9 @@ public class GUIContext extends GLOContext
 			case 'v' :
 				if ("version".equals(key))
 					return Constants.EXOFLIGHT_VERSION;
+			case 'c' :
+				if ("copyright".equals(key))
+					return Constants.EXOFLIGHT_COPYRIGHT;
 			default :
 				Object o = vars.get(key);
 				if (o != null)
