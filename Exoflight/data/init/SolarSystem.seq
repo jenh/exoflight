@@ -30,6 +30,12 @@ sequence "Setup Solar System" {
 @traj.bodyindex = 1;
 @traj.parent = game.$Sun;
 
+@elev = new RasterLODElevationModel;
+@elev.fileprefix = "elevtexs/Mercury/Mercury-elev";
+@elev.maxprecision = 12;
+@elev.mindisplacement = -3;
+@elev.maxdisplacement = 3;
+
 @p = new Planet;
 @p.name = "Mercury";
 @p.mass = 3.303e23;
@@ -38,6 +44,7 @@ sequence "Setup Solar System" {
 @p.spinaxis = [281.01 deg, 61.45 deg];
 @p.rot0 = 149.684604 deg;
 @p.rotperiod = 58.6462;
+@p.elevmodel = @elev;
 
 --
 -- Venus
@@ -62,8 +69,8 @@ sequence "Setup Solar System" {
 
 @p = new Planet;
 @p.name = "Venus";
-@p.mass = 3.303e23;
-@p.radius = 2439.7;
+@p.mass = 4.685e24;
+@p.radius = 6051.8;
 @p.traj = @traj;
 @p.spinaxis = [92.76 deg, -67.16 deg];
 @p.rot0 = 199.801111 deg;
