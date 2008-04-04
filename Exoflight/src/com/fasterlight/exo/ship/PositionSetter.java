@@ -21,7 +21,7 @@ package com.fasterlight.exo.ship;
 import com.fasterlight.exo.orbit.*;
 import com.fasterlight.game.Game;
 import com.fasterlight.spif.*;
-import com.fasterlight.util.Vec3d;
+import com.fasterlight.util.*;
 import com.fasterlight.vecmath.Vector3d;
 
 /**
@@ -91,6 +91,22 @@ implements PropertyAware
 	// rp = 2*a - ra
 
 	//todo
+
+	private KeplerianElements cloneElements()
+	{
+		return new KeplerianElements(elements);
+	}
+
+	private void commitElements(KeplerianElements ke)
+	{
+		this.elements = ke;
+	}
+	
+	private void checkAlt(double x) throws UserException
+	{
+		if (x < 0)
+			throw new UserException("You must give a positive value (otherwise you'll be inside of the planet!)");
+	}
 
 	public double getSemiMajorAxis()
 	{
@@ -197,7 +213,15 @@ implements PropertyAware
 
 	public void setBody(UniverseThing body)
 	{
-		this.body = body;
+		if (body != this.body)
+		{
+			if (this.body != null && this.body.getRadius() > 0)
+			{
+				elements.setSemiMajorAxis(elements.getSemiMajorAxis()
+						* body.getRadius() / this.body.getRadius());
+			}
+			this.body = body;
+		}
 	}
 
 	public UniverseThing getBase()
