@@ -15,10 +15,10 @@
 
     You should have received a copy of the GNU General Public License
     along with Exoflight.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+ *********************************************************************/
 package com.fasterlight.exo.newgui;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.*;
 
 import javax.media.opengl.GL;
@@ -30,7 +30,6 @@ import com.fasterlight.exo.orbit.*;
 import com.fasterlight.exo.ship.*;
 import com.fasterlight.game.Game;
 import com.fasterlight.glout.*;
-import com.fasterlight.proctex.*;
 import com.fasterlight.spif.*;
 import com.fasterlight.vecmath.*;
 
@@ -41,11 +40,10 @@ import com.fasterlight.vecmath.*;
 // todo: don't scroll too far n or s
 
 /**
-  * Displays the groundtrack for a space object.
-  */
-public class GroundtrackView
-extends GLOComponent
-implements ThingSelectable, Constants
+ * Displays the groundtrack for a space object.
+ */
+public class GroundtrackView extends GLOComponent implements ThingSelectable,
+		Constants
 {
 	protected Game game;
 	protected GUIContext guictx;
@@ -58,17 +56,17 @@ implements ThingSelectable, Constants
 	protected String trackthingkey = "tracked";
 
 	protected float TRACKS_PER_ORBIT = 2;
-	protected long TICK_INC = TICKS_PER_SEC*60;
+	protected long TICK_INC = TICKS_PER_SEC * 60;
 	protected int MAX_TICKS = 800;
 
 	protected PickList picklist = new PickList();
 
 	protected float zoom = 1;
-	protected float cenlon,cenlat;
-	protected float x1,y1,xw,yh;
+	protected float cenlon, cenlat;
+	protected float x1, y1, xw, yh;
 	protected int drawMode = 0;
 	protected boolean drawGrid = true;
-	
+
 	public static final int MODE_MAP = 0;
 	public static final int MODE_COLOR = 1;
 
@@ -80,17 +78,17 @@ implements ThingSelectable, Constants
 
 	//
 
-
 	public GroundtrackView(Game game)
 	{
 		this.game = game;
-		init( (GUIContext)getContext() );
+		init((GUIContext) getContext());
 	}
 
 	public void zoom(float x)
 	{
 		zoom *= x;
-		if (zoom < 1) zoom = 1;
+		if (zoom < 1)
+			zoom = 1;
 		if (use_cache)
 			ohashmap.clear();
 	}
@@ -108,15 +106,15 @@ implements ThingSelectable, Constants
 
 	Vector2f ll2xy(double lon, double lat)
 	{
-		lon = AstroUtil.fixAngle(lon+Math.PI)-Math.PI;
-		double xx = xw/2 + lon*xw/(Math.PI*2);
-		double yy = yh/2 - lat*yh/Math.PI;
-		return new Vector2f((float)xx,(float)yy);
+		lon = AstroUtil.fixAngle(lon + Math.PI) - Math.PI;
+		double xx = xw / 2 + lon * xw / (Math.PI * 2);
+		double yy = yh / 2 - lat * yh / Math.PI;
+		return new Vector2f((float) xx, (float) yy);
 	}
 
 	Vector3d getThingLLR(UniverseThing ut, Planet p, long t)
 	{
-		double dt = t*(1d/TICKS_PER_SEC);
+		double dt = t * (1d / TICKS_PER_SEC);
 		Vector3d pos = ut.getPosition(p, t);
 		p.xyz2ijk(pos);
 		p.ijk2llr(pos, dt);
@@ -133,24 +131,24 @@ implements ThingSelectable, Constants
 		{
 			guictx.texcache.setTexture("circle-ALPHA.png");
 			gl.glColor3f(0.5f, 0.5f, 0.5f);
-		} else {
+		} else
+		{
 			guictx.texcache.setTexture("triangle-ALPHA.png");
 			gl.glColor3f(0.25f, 0.25f, 1f);
 		}
 		if (ut == getSelected())
 		{
 			gl.glColor3f(1f, 1f, 1f);
-		}
-		else if (ut == getTarget())
+		} else if (ut == getTarget())
 		{
 			gl.glColor3f(0.2f, 1f, 1f);
 		}
 
 		Vector2f scrnpos = ll2xy(pos.x, pos.y);
-		picklist.addPickRec(x1+scrnpos.x, y1+scrnpos.y, 8, ut);
+		picklist.addPickRec(x1 + scrnpos.x, y1 + scrnpos.y, 8, ut);
 
 		gl.glPushMatrix();
-		gl.glTranslatef(x1+scrnpos.x, y1+scrnpos.y, 0);
+		gl.glTranslatef(x1 + scrnpos.x, y1 + scrnpos.y, 0);
 		drawTexturedBox(ctx, -8, -8, 16, 16);
 		gl.glPopMatrix();
 	}
@@ -160,23 +158,26 @@ implements ThingSelectable, Constants
 	public void render(GLOContext ctx)
 	{
 		// todo
-		if (getSelected() != null && getSelected().getParent() instanceof Planet)
-			refthing = (Planet)getSelected().getParent();
+		if (getSelected() != null
+				&& getSelected().getParent() instanceof Planet)
+			refthing = (Planet) getSelected().getParent();
 		if (refthing == null)
 			return;
 
 		if (getTracked() != null && zoom > 1.001f)
 		{
 			Vector3d llr = getThingLLR(getTracked(), refthing, game.time());
-			cenlon = (float)llr.x;
-			cenlat = (float)llr.y;
-		} else {
+			cenlon = (float) llr.x;
+			cenlat = (float) llr.y;
+		} else
+		{
 			cenlon = cenlat = 0;
 		}
 
 		Planet p = refthing;
 		picklist.clear();
 
+		//drawMode = (zoom > 1) ? MODE_COLOR : MODE_MAP;
 		switch (drawMode)
 		{
 			case MODE_MAP:
@@ -200,7 +201,7 @@ implements ThingSelectable, Constants
 		if (hintrend.size() > 0)
 		{
 			gl.glPushMatrix();
-//			gl.glTranslatef(o.x, o.y, 0);
+			// gl.glTranslatef(o.x, o.y, 0);
 			hintrend.renderHints(ctx, picklist);
 			gl.glPopMatrix();
 		}
@@ -210,39 +211,54 @@ implements ThingSelectable, Constants
 	private void drawTexturedSurface(Planet p)
 	{
 		Point o = origin;
-
 		PlanetRenderer prend = guictx.getPlanetRenderer(p);
 		PlanetTextureCache ptc = prend.getTextureCacheColor();
-		float t = GUIContext.BORDER*1.0f/GUIContext.TEX_SIZE;
-		
-		int level = 8;
-		int ll = 1<<(level-8);
+		float t = GUIContext.BORDER * 1.0f / GUIContext.TEX_SIZE;
+
+		int level = Math.max(8, AstroUtil.log2((int)(w1*zoom)));
+		int ll = 1 << (level - 8);
+		Rectangle levelBounds = new Rectangle(0, 0, 1<<(level+1), 1<<level);
+		Rectangle viewBounds = new Rectangle(0, 0, getWidth(), getHeight());
+		viewBounds.translate((int)(-cenlon * xw / (Math.PI * 2)), (int)(cenlat * yh / Math.PI));
+		Rectangle cropBounds = levelBounds.intersection(viewBounds);
+		Rectangle quadBounds = new Rectangle(cropBounds.x>>level, cropBounds.y>>level, 
+				(cropBounds.width>>level)+1, (cropBounds.height>>level)+1);
 		GL gl = ctx.getGL();
-		gl.glBegin(GL.GL_QUADS);
-		gl.glColor3f(0.25f,0.25f,1);
-		for (int yy = 0; yy < level; yy++)
+		gl.glPushMatrix();
+		gl.glTranslatef(o.x+viewBounds.x, o.y+viewBounds.y, 0);
+		gl.glScalef(zoom, zoom, 1);
+		for (int yy = quadBounds.y; yy < quadBounds.y+quadBounds.height; yy++)
 		{
-			for (int xx = 0; xx < level*2; xx++)
+			for (int xx = quadBounds.x; xx < quadBounds.x+quadBounds.width; xx++)
 			{
-				ptc.setTexture(xx, yy, level);
-		 		float x = o.x + w1*0.5f*(1-zoom);
-				float y = o.y + h1*0.5f*(1-zoom);
-				float w = w1*zoom;
-				float h = h1*zoom;
+				ptc.setTexture(xx, yy, level);				
+				/*
+				float x = o.x + w1 * 0.5f * (1 - zoom);
+				float y = o.y + h1 * 0.5f * (1 - zoom);
+				float w = w1 * zoom;
+				float h = h1 * zoom;
 				// offset the view
-				x -= cenlon*xw/(Math.PI*2);
-				y += cenlat*yh/Math.PI;
-				gl.glTexCoord2f(t, 1-t);
+				x -= cenlon * xw / (Math.PI * 2);
+				y += cenlat * yh / Math.PI;
+				*/
+				int x = xx<<8;
+				int y = yy<<8;
+				int w = 256;
+				int h = 256;
+				gl.glBegin(GL.GL_QUADS);
+				gl.glColor3f(0.1f, 0.3f, 0.1f);
+				gl.glTexCoord2f(t, 1 - t);
 				gl.glVertex2f(x, y);
-				gl.glTexCoord2f(1-t, 1-t);
+				gl.glTexCoord2f(1 - t, 1 - t);
 				gl.glVertex2f(x + w, y);
-				gl.glTexCoord2f(1-t, t);
+				gl.glTexCoord2f(1 - t, t);
 				gl.glVertex2f(x + w, y + h);
 				gl.glTexCoord2f(t, t);
 				gl.glVertex2f(x, y + h);
+				gl.glEnd();
 			}
 		}
-		gl.glEnd();
+		gl.glPopMatrix();
 	}
 
 	private void drawThings(Planet p)
@@ -253,12 +269,12 @@ implements ThingSelectable, Constants
 
 		UniverseThing sel = getSelected();
 
-//		renderThing(ctx, p.getParent(), p, t); // render sun?
+		// renderThing(ctx, p.getParent(), p, t); // render sun?
 
 		Iterator it = p.getChildren();
 		while (it.hasNext())
 		{
-			UniverseThing ut = (UniverseThing)it.next();
+			UniverseThing ut = (UniverseThing) it.next();
 			if (ut != sel)
 				renderThing(ctx, ut, p, t);
 		}
@@ -267,9 +283,9 @@ implements ThingSelectable, Constants
 		if (sel != null)
 		{
 			gl.glColor3f(1f, 0.25f, 0.25f);
-//			gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);
+			// gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);
 			Conic conic = UniverseUtil.getConicFor(sel);
-//			System.out.println(conic);
+			// System.out.println(conic);
 			if (conic != null)
 			{
 				renderConic(p, conic);
@@ -286,13 +302,13 @@ implements ThingSelectable, Constants
 		Vector3d sunpos = p.getPosition(null, game.time());
 		sunpos.scale(-1);
 		p.xyz2ijk(sunpos);
-		p.ijk2llr(sunpos, game.time()*(1d/TICKS_PER_SEC));
+		p.ijk2llr(sunpos, game.time() * (1d / TICKS_PER_SEC));
 
 		double theta = sunpos.x;
 		double phi = sunpos.y;
 
-		float tranx = (float)(theta/(Math.PI*2));
-		int lmap = (int)Math.round(Math.abs(phi)*NUM_LMAPS/Math.PI);
+		float tranx = (float) (theta / (Math.PI * 2));
+		int lmap = (int) Math.round(Math.abs(phi) * NUM_LMAPS / Math.PI);
 
 		gl.glMatrixMode(GL.GL_TEXTURE);
 		gl.glLoadIdentity();
@@ -330,13 +346,13 @@ implements ThingSelectable, Constants
 		int w = getWidth();
 		int h = getHeight();
 
- 		x1 = o.x + w*0.5f*(1-zoom);
-		y1 = o.y + h*0.5f*(1-zoom);
-		xw = w*zoom;
-		yh = h*zoom;
+		x1 = o.x + w * 0.5f * (1 - zoom);
+		y1 = o.y + h * 0.5f * (1 - zoom);
+		xw = w * zoom;
+		yh = h * zoom;
 		// offset the view
-		x1 -= cenlon*xw/(Math.PI*2);
-		y1 += cenlat*yh/Math.PI;
+		x1 -= cenlon * xw / (Math.PI * 2);
+		y1 += cenlat * yh / Math.PI;
 
 		gl.glColor3f(0, 0.25f, 0);
 		drawTexturedBox(ctx, x1, y1, xw, yh);
@@ -344,32 +360,33 @@ implements ThingSelectable, Constants
 
 	void renderConic(Planet p, Conic conic)
 	{
-		long dur,tinc;
+		long dur, tinc;
 		long t = game.time();
 		double period = conic.getPeriod();
 		if (!Double.isNaN(period))
 		{
-			tinc = TICK_INC/2;
-			do {
+			tinc = TICK_INC / 2;
+			do
+			{
 				tinc *= 2;
-				dur = (long)(TRACKS_PER_ORBIT*period*Constants.TICKS_PER_SEC);
-			} while (tinc > 0 && dur/tinc > MAX_TICKS);
-		} else {
-			dur = TICK_INC*MAX_TICKS;
+				dur = (long) (TRACKS_PER_ORBIT * period * Constants.TICKS_PER_SEC);
+			} while (tinc > 0 && dur / tinc > MAX_TICKS);
+		} else
+		{
+			dur = TICK_INC * MAX_TICKS;
 			tinc = TICK_INC;
 		}
-		renderConic(p, conic, t, t+dur, tinc);
+		renderConic(p, conic, t, t + dur, tinc);
 	}
 
 	void renderConic(Planet p, Conic conic, long t1, long t2, long tinc)
 	{
 		guictx.texcache.setTexture("circle-ALPHA.png");
 
-		Point o = origin;
-		long t = (long)(Math.floor( (t1+tinc-1)*1d/tinc )*tinc);
+		long t = (long) (Math.floor((t1 + tinc - 1) * 1d / tinc) * tinc);
 		while (t < t2)
 		{
-			float alpha = (t2-t)*0.8f/(t2-t1)+0.2f;
+			float alpha = (t2 - t) * 0.8f / (t2 - t1) + 0.2f;
 			gl.glColor4f(1f, 0.25f, 0.25f, alpha);
 
 			Vector2f pt = getCachedConicPoint(p, conic, t);
@@ -377,7 +394,7 @@ implements ThingSelectable, Constants
 				break;
 
 			gl.glPushMatrix();
-			gl.glTranslatef(x1+pt.x, y1+pt.y, 0);
+			gl.glTranslatef(x1 + pt.x, y1 + pt.y, 0);
 			drawTexturedBox(guictx, -8, -8, 16, 16);
 			gl.glPopMatrix();
 			t += tinc;
@@ -386,17 +403,17 @@ implements ThingSelectable, Constants
 
 	Vector2f computeConicPoint(Planet p, Conic conic, long t)
 	{
-		int w = getWidth();
-		int h = getHeight();
-		double dt = t*(1d/TICKS_PER_SEC);
+		double dt = t * (1d / TICKS_PER_SEC);
 		StateVector res;
-		try {
+		try
+		{
 			res = conic.getStateVectorAtTime(dt);
-		} catch (ConvergenceException cve) {
-			return new Vector2f(Float.NaN,Float.NaN);
+		} catch (ConvergenceException cve)
+		{
+			return new Vector2f(Float.NaN, Float.NaN);
 		}
 		if (res.r.length() < p.getRadius())
-			return new Vector2f(Float.NaN,Float.NaN);
+			return new Vector2f(Float.NaN, Float.NaN);
 		Vector3d r = new Vector3d(res.r);
 		p.xyz2ijk(r);
 		p.ijk2llr(r, dt);
@@ -410,7 +427,7 @@ implements ThingSelectable, Constants
 			return computeConicPoint(p, conic, t);
 		}
 
-		Map ptmap = (Map)ohashmap.get(conic);
+		Map ptmap = (Map) ohashmap.get(conic);
 		if (ptmap == null)
 		{
 			ptmap = new LruHashtable(MAX_TICKS);
@@ -420,7 +437,7 @@ implements ThingSelectable, Constants
 		}
 
 		Long key = new Long(t);
-		Vector2f pt = (Vector2f)ptmap.get(key);
+		Vector2f pt = (Vector2f) ptmap.get(key);
 		if (pt == null)
 		{
 			pt = computeConicPoint(p, conic, t);
@@ -434,17 +451,17 @@ implements ThingSelectable, Constants
 	//
 
 	void setPlanetTexture(Planet p)
-   {
-      String n = p.getName();
-      if (guictx.texcache.setTexture(n + "/map.png") >= 0)
-         return;
-      else if (guictx.texcache.setTexture(n + "/bw.png") >= 0)
-         return;
-      else if (guictx.texcache.setTexture(n + "/" + n + ".png") >= 0)
-         return;
-   }
+	{
+		String n = p.getName();
+		if (guictx.texcache.setTexture(n + "/map.png") >= 0)
+			return;
+		else if (guictx.texcache.setTexture(n + "/bw.png") >= 0)
+			return;
+		else if (guictx.texcache.setTexture(n + "/" + n + ".png") >= 0)
+			return;
+	}
 
-//
+	//
 
 	HintRenderer hintrend = new HintRenderer(this);
 
@@ -457,47 +474,44 @@ implements ThingSelectable, Constants
 	{
 		if (event instanceof GLOMouseButtonEvent)
 		{
-			GLOMouseButtonEvent mbe = (GLOMouseButtonEvent)event;
+			GLOMouseButtonEvent mbe = (GLOMouseButtonEvent) event;
 			if (mbe.isPressed(1))
 			{
 				event.getContext().requestFocus(this);
-	   		// check pick list
-   			int x = mbe.x;
-		   	int y = mbe.y;
+				// check pick list
+				int x = mbe.x;
+				int y = mbe.y;
 
-		   	Object o = picklist.pickObject(x, y);
-   			if (o != null)
-		   	{
-	   			System.out.println( "SELECTED " + o );
-			   	setSelected( (UniverseThing)o );
-			   	return true;
-	   		}
-	   	}
-	   }
-		else if (event instanceof GLOMouseMovedEvent)
+				Object o = picklist.pickObject(x, y);
+				if (o != null)
+				{
+					System.out.println("SELECTED " + o);
+					setSelected((UniverseThing) o);
+					return true;
+				}
+			}
+		} else if (event instanceof GLOMouseMovedEvent)
 		{
 			if (!super.handleEvent(event))
 			{
-				GLOMouseMovedEvent mbe = (GLOMouseMovedEvent)event;
-		   	Point orig = origin;
-   			// check pick list
-  				int x = mbe.x;
-	   		int y = mbe.y;
+				GLOMouseMovedEvent mbe = (GLOMouseMovedEvent) event;
+				// check pick list
+				int x = mbe.x;
+				int y = mbe.y;
 
-		   	PickList.PickRec pickrec = picklist.pickObjectRec(x, y);
-  				if (pickrec != null)
-	   		{
-		   		showHintFor( (UniverseThing)pickrec.obj );
-		   	}
-		   	return true;
-		   }
-	   }
+				PickList.PickRec pickrec = picklist.pickObjectRec(x, y);
+				if (pickrec != null)
+				{
+					showHintFor((UniverseThing) pickrec.obj);
+				}
+				return true;
+			}
+		}
 
 		return super.handleEvent(event);
 	}
 
-
-//
+	//
 
 	public void setSelected(UniverseThing ut)
 	{
@@ -506,12 +520,12 @@ implements ThingSelectable, Constants
 
 	public UniverseThing getSelected()
 	{
-		return (UniverseThing)guictx.getProp(selthingkey);
+		return (UniverseThing) guictx.getProp(selthingkey);
 	}
 
 	public UniverseThing getTracked()
 	{
-		return (UniverseThing)guictx.getProp(trackthingkey);
+		return (UniverseThing) guictx.getProp(trackthingkey);
 	}
 
 	public void setThingSelectable(ThingSelectable thingsel)
@@ -529,29 +543,31 @@ implements ThingSelectable, Constants
 		return refthing;
 	}
 
-   public SpaceShip getCurrentShip()
-   {
-   	return (SpaceShip)guictx.getProp("ship");
-   }
+	public SpaceShip getCurrentShip()
+	{
+		return (SpaceShip) guictx.getProp("ship");
+	}
 
-   public UniverseThing getTarget()
-   {
-   	SpaceShip ship = getCurrentShip();
-   	if (ship != null)
-   		return ship.getShipTargetingSystem().getTarget();
-   	else
-   		return null;
-   }
+	public UniverseThing getTarget()
+	{
+		SpaceShip ship = getCurrentShip();
+		if (ship != null)
+			return ship.getShipTargetingSystem().getTarget();
+		else
+			return null;
+	}
 
-   //
+	//
 
-   boolean debug = !true;
+	boolean debug = !true;
 
 	// PROPERTIES
 
-	private static PropertyHelper prophelp = new PropertyHelper(GroundtrackView.class);
+	private static PropertyHelper prophelp = new PropertyHelper(
+			GroundtrackView.class);
 
-	static {
+	static
+	{
 		prophelp.registerSet("zoom", "zoom", float.class);
 	}
 
@@ -565,9 +581,11 @@ implements ThingSelectable, Constants
 
 	public void setProp(String key, Object value)
 	{
-		try {
+		try
+		{
 			prophelp.setProp(this, key, value);
-		} catch (PropertyRejectedException e) {
+		} catch (PropertyRejectedException e)
+		{
 			super.setProp(key, value);
 		}
 	}
