@@ -18,7 +18,6 @@
 *********************************************************************/
 package com.fasterlight.exo.newgui;
 
-import com.fasterlight.exo.orbit.Trajectory;
 import com.fasterlight.exo.ship.*;
 import com.fasterlight.glout.*;
 import com.fasterlight.spif.*;
@@ -49,7 +48,7 @@ extends GLODialog
 		else
 		{
 			setVisible(false);
-			GLOMessageBox.showOk("Cannot set position: Assign an object as a reference first.");
+			throw new GLOUserException("Cannot set position: Assign an object as a reference first.");
 		}
 	}
 
@@ -57,8 +56,6 @@ extends GLODialog
 
 	public void dialogApply(String s)
 	{
-		Trajectory curtraj = ship.getTrajectory();
-
 		// todo: other forms of trajectories
 		// todo: what happen to perturbs?
 		if (s.equals("-orbit"))
