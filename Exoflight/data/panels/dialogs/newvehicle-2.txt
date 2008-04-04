@@ -54,7 +54,7 @@ align=1
 parent=CB Description Table
 type=wraptext
 minxchars=30
-minrows=10
+minrows=14
 rowpadding=4
 text_prop=ui.$New Vehicle.bases_lm.selected.description
 

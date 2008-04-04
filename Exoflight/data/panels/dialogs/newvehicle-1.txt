@@ -54,7 +54,7 @@ align=1
 parent=CV Description Table
 type=wraptext
 minxchars=32
-minrows=10
+minrows=14
 rowpadding=4
 text_prop=ui.$New Vehicle.vehicle_lm.selected.description
 
