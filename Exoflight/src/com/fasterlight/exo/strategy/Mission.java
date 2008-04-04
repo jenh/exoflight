@@ -272,7 +272,7 @@ implements PropertyAware
 			seq.setShip(ship);
 		}
 	}
-
+	
    /**
      *  Call after prepare() to get the sequencer for this
      * mission
@@ -280,6 +280,21 @@ implements PropertyAware
    public Sequencer getSequencer()
    {
       return seq;
+   }
+   
+   public boolean getStarted()
+   {
+	   return seq != null && seq.isStarted();
+   }
+   
+   public void setStarted(boolean start)
+   {
+	   if (seq == null)
+		   throw new UserException("No mission is currently active.");
+	   else if (seq != null && !seq.isStarted())
+		   throw new UserException("The current mission has already ended, or you have selected a Custom Mission that has no end goal.");
+	   else
+		   seq.setStarted(start);
    }
 
 
@@ -296,6 +311,7 @@ implements PropertyAware
 		prophelp.registerGet("vehicle", "getVehicle");
 		prophelp.registerGet("basename", "getBaseName");
 		prophelp.registerGet("sequencer", "getSequencer");
+		prophelp.registerGetSet("started", "Started", boolean.class);
 	}
 
 	public Object getProp(String key)

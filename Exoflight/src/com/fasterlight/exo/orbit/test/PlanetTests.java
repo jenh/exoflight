@@ -58,7 +58,7 @@ extends TestSuite
 	{
 		super(name);
 	}
-
+	
 	//
 
 	class PlanetXYZTest
