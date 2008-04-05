@@ -329,16 +329,22 @@ implements PropertyAware
 	{
 		Vector3d llr = getLLR();
 
-		// if no velocity, add the thing's butt (todo?)
+		// if no velocity, add the thing's butt
+		// TODO: should use ship's orientation and contact points
 		if (ship != null && truevel <= 0)
+		{
 			llr.z += ship.getStructure().getLoExtents().z*Constants.M_TO_KM;
+			// turn guidance off so we don't spin around
+			ship.getGuidanceCapability().setActive(false);
+		}
 
+		Planet planet = (body instanceof Planet) ? ((Planet)body) : null;
 		// if we have a >0 velocity, add a velocity
 		long time = game.time();
-		if (body instanceof Planet && truevel > 0)
+		if (planet != null && truevel > 0)
 		{
 			UniverseUtil.setPositionOnGroundWithVel(thing,
-				(Planet)body, llr, time, new Vec3d(heading, fpa, truevel));
+				planet, llr, time, new Vec3d(heading, fpa, truevel));
 		} else {
 			UniverseUtil.setPositionOnGround(thing, body, llr, time);
 		}
