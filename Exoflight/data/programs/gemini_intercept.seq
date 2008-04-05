@@ -1,12 +1,13 @@
 
 sequence "Gemini Intercept" {
 
-	wait until -45;
+	wait until -15;
 
 "Wait for intercept time"
 	ship.attsys.guidmode = "lambert";
 	ship.attctrl.guidance.targtime = @targtime;
 
+    wait until -5;
 "Prepare for burn"
 	ship.guidancecap.active = true;
 

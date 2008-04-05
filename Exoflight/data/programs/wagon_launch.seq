@@ -9,6 +9,7 @@ sequence "Space Wagon Launch" {
 	wait until -3;
 "Arm engines"
     @mod.'$hover engine'.armed = true;
+    @mod.'$main engine'.armed = true;
 	@mod.'$RCS'.armed = true;
 
 	wait until 0;

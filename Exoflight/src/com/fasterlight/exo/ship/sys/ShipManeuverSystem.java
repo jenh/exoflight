@@ -22,6 +22,7 @@ import com.fasterlight.exo.orbit.*;
 import com.fasterlight.exo.seq.Sequencer;
 import com.fasterlight.exo.ship.SpaceShip;
 import com.fasterlight.spif.*;
+import com.fasterlight.util.UserException;
 
 /**
   * Performs various orbital maneuvers for a ship.
@@ -162,16 +163,20 @@ implements PropertyAware
 
 	protected Sequencer loadSequencer()
 	{
-		Sequencer seq = ship.loadProgram("raiselower");
-		long t0 = getBurnTime();
-		if (t0 == INVALID_TICK)
-			throw new PropertyRejectedException("Could not compute burn time");
-		if (t0 < getGame().time())
-			throw new PropertyRejectedException("Burn time is in the past");
-
-		initialdir = getDirection();
-		seq.setZeroTime(t0);
-		return seq;
+		try {
+			Sequencer seq = ship.loadProgram("raiselower");
+			long t0 = getBurnTime();
+			if (t0 == INVALID_TICK)
+				throw new PropertyRejectedException("Could not compute burn time");
+			if (t0 < getGame().time())
+				throw new PropertyRejectedException("Burn time is in the past");
+	
+			initialdir = getDirection();
+			seq.setZeroTime(t0);
+			return seq;
+		} catch (Exception e) {
+			throw new UserException("Could not compute maneuver: " + e.getMessage(), e);
+		}
 	}
 
 	public boolean isDone()

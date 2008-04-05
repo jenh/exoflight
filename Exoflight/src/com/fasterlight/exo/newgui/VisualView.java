@@ -102,6 +102,7 @@ public class VisualView
 		neardist = NEARDIST;
 		fardist = FARDIST;
 		setViewDistance(0.05f);
+		ball.setTarget(new Quat4d(0, 1, 0.17, 0));
 	}
 
 	public void setSize(int w, int h)
@@ -1362,6 +1363,9 @@ public class VisualView
 						return true;
 					case GLOKeyEvent.VK_R :
 						debugflags ^= DEBUG_FRUSTUM;
+						return true;
+					case GLOKeyEvent.VK_B :
+						System.out.println("trackball = " + ball.getDest());
 						return true;
 					default :
 						//   	         	System.out.println("keycode: " + keyev.getKeyCode());
