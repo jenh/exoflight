@@ -277,5 +277,5 @@ ui.loaddialog=panels/dialogs/settings-realism.txt
 ui.loaddialog=panels/dialogs/settings-ui.txt
 
 [Game:Stop Mission]
-game.mission.sequencer.started=false
+game.mission.started=false
 

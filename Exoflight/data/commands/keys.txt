@@ -86,6 +86,7 @@ Shift+C=Visual:Prev Camera
 
 Menu+N=Dialog:New Mission
 Menu+Shift+P=Dialog:Set Position
+Menu+Shift+R=Game:Reset
 
 Menu+M=Display:Toggle Messages
 Menu+Shift+M=Display:Toggle Console
