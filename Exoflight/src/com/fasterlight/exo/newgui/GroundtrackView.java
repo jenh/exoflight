@@ -68,6 +68,7 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 	protected float x1, y1, xw, yh;
 	protected int drawMode = 0;
 	protected boolean drawGrid = true;
+	protected boolean autoMapScale = false;
 
 	public static final int MODE_MAP = 0;
 	public static final int MODE_COLOR = 1;
@@ -174,7 +175,7 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 
 		cenlon = cenlat = 0;
 		drawMode = MODE_MAP;
-		if (getTracked() != null)// && getZoomFactor() > 1)
+		if (getTracked() != null && autoMapScale)
 		{
 			Telemetry telem = getTracked().getTelemetry();
 			if (telem.getConic() != null)
@@ -185,13 +186,16 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 				float ratio = (float)(peri / parentRadius);
 				if (ratio < 1)
 				{
-					Vector3d llr = getThingLLR(getTracked(), refthing, game.time());
-					cenlon = (float) llr.x;
-					cenlat = (float) llr.y;
 					zoomSmoother.setTarget((float)(1.0 / (ratio+0.01)));
-					drawMode = MODE_COLOR;
 				}
 			}
+		}
+		if (getTracked() != null && getZoomFactor() > 1)
+		{
+			Vector3d llr = getThingLLR(getTracked(), refthing, game.time());
+			cenlon = (float) llr.x;
+			cenlat = (float) llr.y;
+			drawMode = MODE_COLOR;
 		}
 
 		Planet p = refthing;
