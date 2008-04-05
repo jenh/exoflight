@@ -488,7 +488,7 @@ public class KeplerianElements implements Constants, PropertyAware
 
 	public void setSemiLatusRectum(double semilatus)
 	{
-		this.p = checkNaN(semilatus);
+		this.p = checkNaN(semilatus, "semi-latus rectum");
 	}
 
 	public double getEccentricity()
@@ -565,7 +565,7 @@ public class KeplerianElements implements Constants, PropertyAware
 
 	public void setInclination(double incl)
 	{
-		this.i = checkNaN(incl);
+		this.i = checkNaN(incl, "inclination");
 		cached_matrix = null;
 	}
 
@@ -576,7 +576,7 @@ public class KeplerianElements implements Constants, PropertyAware
 
 	public void setRAAN(double raan)
 	{
-		this.O = checkNaN(raan);
+		this.O = checkNaN(raan, "right angle ascension node");
 		cached_matrix = null;
 	}
 
@@ -587,7 +587,7 @@ public class KeplerianElements implements Constants, PropertyAware
 
 	public void setArgPeriapsis(double argperi)
 	{
-		this.W = checkNaN(argperi);
+		this.W = checkNaN(argperi, "argument of periapsis");
 		cached_matrix = null;
 	}
 
@@ -598,7 +598,7 @@ public class KeplerianElements implements Constants, PropertyAware
 
 	public void setTrueAnomaly(double trueanom)
 	{
-		this.v = checkNaN(trueanom);
+		this.v = checkNaN(trueanom, "true anomaly");
 		cached_matrix = null;
 	}
 
@@ -661,7 +661,7 @@ public class KeplerianElements implements Constants, PropertyAware
 	  */
 	public void setEccentricAnomaly(double E)
 	{
-		setTrueAnomaly(checkNaN(getTrueAnomalyForEcc(E)));
+		setTrueAnomaly(checkNaN(getTrueAnomalyForEcc(E), "eccentric anomaly"));
 	}
 
 	public double getTrueAnomalyForEcc(double E)
@@ -717,7 +717,7 @@ public class KeplerianElements implements Constants, PropertyAware
 
 	public void setEpoch(double t)
 	{
-		this.T = checkNaN(t);
+		this.T = checkNaN(t, "epoch");
 	}
 
 	public double getMu()
@@ -760,10 +760,10 @@ public class KeplerianElements implements Constants, PropertyAware
 		return x;
 	}
 
-	private double checkNaN(double x) throws IllegalArgumentException
+	private double checkNaN(double x, String msg) throws IllegalArgumentException
 	{
 		if (Double.isNaN(x))
-			throw new IllegalArgumentException("checkNaN failed");
+			throw new IllegalArgumentException("Bad orbital parameter: " + msg);
 		return x;
 	}
 

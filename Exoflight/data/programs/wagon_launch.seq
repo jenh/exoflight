@@ -1,0 +1,63 @@
+
+sequence "Space Wagon Launch" {
+
+	ship.trajectory.locked = true;
+	@mod = ship.structure.'$Space Wagon';
+	@guidcap = @mod.'$guidance system';
+	ship.maneuvsys.updatelaunch = true;
+
+	wait until -3;
+"Arm engines"
+    @mod.'$hover engine'.armed = true;
+	@mod.'$RCS'.armed = true;
+
+	wait until 0;
+"Hover maneuver"
+    ship.trajectory.locked = false;
+    @mod.'$hover engine'.throttle = 1;
+	wait until 2;
+    @mod.'$hover engine'.throttle = 0;
+    @mod.'$hover engine'.armed = false;
+    @mod.'$main engine'.armed = true;
+
+"Begin roll"
+	ship.attsys.guidmode = "pyr";
+	ship.attctrl.guidance.pitch = 87 deg;
+	ship.attctrl.guidance.doincl = true;
+	@guidcap.active = true;
+
+	wait until 5;
+"Begin gravity turn"
+	ship.attsys.guidmode = "aoa";
+	@guidance = ship.attctrl.guidance;
+	@guidance.pitch = -1 deg;
+	@guidance.doincl = true;
+    @mod.'$main engine'.throttle = 0.5;
+    
+    wait until 10;
+"Reduce throttle"
+    @mod.'$main engine'.throttle = 0.2;
+
+    wait until 40;
+"IGM"
+    @mod.'$main engine'.throttle = 1.0;
+	ship.maneuvsys.updatelaunch = true;
+	ship.attsys.guidmode = "igm";
+	ship.attsys.rcsmanual = 0;
+
+	wait for 1;
+	wait for condition (ship.attctrl.guidance.tgo < 3) interval 1;
+-- in case tgo doesn't go very close to zero
+	wait for condition (ship.attctrl.guidance.tgo < 2) interval 0.125;
+	wait for 2;
+	@mod.'$main engine'.active = false;
+
+"SECO"
+	ship.guidancecap.active = false;
+
+"---END LAUNCH SEQUENCE---"
+	@gsound.calloutgroup =? null;
+	stop;
+
+}
+

@@ -59,7 +59,6 @@ implements PropertyAware, Constants
 		if (ship.getParent() instanceof Planet)
 		{
 			Planet plan = (Planet)ship.getParent();
-			double lat = getShipTelemetry().getLAT();
 			double lon = getShipTelemetry().getLONG();
 			// Vallado, pgs. 296-297
 			double cosang = Math.cos(azimuth)/Math.sin(incl);
@@ -182,7 +181,7 @@ implements PropertyAware, Constants
 	{
 		// make sure conic will be vali!
 		if (getTargetApoapsis() < getTargetAltitude())
-			return null;
+			throw new PropertyRejectedException("Target apoapsis must be greater or equal to target altitude.");
 
 		Planet planet = (Planet)ship.getParent();
 		KeplerianElements ke = new KeplerianElements();
@@ -194,9 +193,13 @@ implements PropertyAware, Constants
 		if (argPeriapsis != 0)
 			ke.setArgPeriapsis(argPeriapsis); // todo: can we calculate this?
 		else {
+			// TODO: calculate this?
+			/*
 			double argPeri =
 				ship.getTelemetry().getARGPERI() +
 				ship.getTelemetry().getMEANANOM();
+			ke.setArgPeriapsis(argPeri);
+			*/
 		}
 		ke.setMu(ship.getParent().getMass()*GRAV_CONST_KM);
 		Conic conic = new Conic(ke);
@@ -224,7 +227,6 @@ implements PropertyAware, Constants
 		if (ship.getParent() instanceof Planet)
 		{
 			Planet plan = (Planet)ship.getParent();
-			double lat = getShipTelemetry().getLAT();
 			double lon = getShipTelemetry().getLONG();
 			// Vallado, pgs. 296-297
 			double cosang = Math.cos(azimuth)/Math.sin(incl);
@@ -258,13 +260,20 @@ System.out.println("ttl = " + getTimeToLaunch());
 
 	protected Sequencer loadSequencer()
 	{
-		long t0 = getLaunchTime();
-		if (t0 == INVALID_TICK)
-			return null; //todo?
-		Sequencer seq = ship.loadProgram("launch");
-		seq.setZeroTime(t0);
-		seq.setVar("incl", new Double(incl));
-		return seq;
+		try {
+			long t0 = getLaunchTime();
+			if (t0 == INVALID_TICK)
+				throw new UserException(
+						"The target inclination may be invalid; " +
+						"it must be greater than the launch vehicle's latitude.");
+			ship.getShipManeuverSystem().updateLaunch(true);
+			Sequencer seq = ship.loadProgram("launch");
+			seq.setZeroTime(t0);
+			seq.setVar("incl", new Double(incl));
+			return seq;
+		} catch (Exception e) {
+			throw new UserException("Could not compute launch parameters: " + e.getMessage(), e);
+		}
 	}
 
 	public boolean isTargeting()
