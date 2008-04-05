@@ -144,6 +144,7 @@ public class PorkchopPlot extends GLOComponent
 		}
 
 
+		texdata.rewind();
 		gl.glTexSubImage2D(GL.GL_TEXTURE_2D, 0, 0, 0, texw, texh, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, texdata);
 	}
 
