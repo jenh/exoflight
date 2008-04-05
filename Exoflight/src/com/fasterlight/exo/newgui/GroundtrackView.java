@@ -31,6 +31,7 @@ import com.fasterlight.exo.ship.*;
 import com.fasterlight.game.Game;
 import com.fasterlight.glout.*;
 import com.fasterlight.spif.*;
+import com.fasterlight.util.Rect4f;
 import com.fasterlight.vecmath.*;
 
 // todo: put colors in a file, or make Shaders
@@ -58,10 +59,11 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 	protected float TRACKS_PER_ORBIT = 2;
 	protected long TICK_INC = TICKS_PER_SEC * 60;
 	protected int MAX_TICKS = 800;
+	protected float MAX_ZOOM = 64;
 
 	protected PickList picklist = new PickList();
 
-	protected float zoom = 1;
+	protected GLOSmoother zoomSmoother = new GLOSmoother(1);
 	protected float cenlon, cenlat;
 	protected float x1, y1, xw, yh;
 	protected int drawMode = 0;
@@ -84,11 +86,16 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 		init((GUIContext) getContext());
 	}
 
+	public float getZoomFactor()
+	{
+		float z = zoomSmoother.getValue();
+		return (z < 1.01f) ? 1.0f : z;
+	}
+
 	public void zoom(float x)
 	{
-		zoom *= x;
-		if (zoom < 1)
-			zoom = 1;
+		zoomSmoother.setTarget(Math.max(1, Math.min(MAX_ZOOM, zoomSmoother.getTarget() * x)));
+		// TODO: must clear cache more often
 		if (use_cache)
 			ohashmap.clear();
 	}
@@ -164,20 +171,25 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 		if (refthing == null)
 			return;
 
-		if (getTracked() != null && zoom > 1.001f)
+		cenlon = cenlat = 0;
+		drawMode = MODE_MAP;
+		if (getTracked() != null)// && getZoomFactor() > 1)
 		{
-			Vector3d llr = getThingLLR(getTracked(), refthing, game.time());
-			cenlon = (float) llr.x;
-			cenlat = (float) llr.y;
-		} else
-		{
-			cenlon = cenlat = 0;
+			double ecc = getTracked().getTelemetry().getECCENT();
+			double peri = getTracked().getTelemetry().getPERIAPSIS();
+			if (ecc > 0 && ecc < 1 && peri < getTracked().getParent().getRadius())
+			{
+				Vector3d llr = getThingLLR(getTracked(), refthing, game.time());
+				cenlon = (float) llr.x;
+				cenlat = (float) llr.y;
+				zoomSmoother.setTarget((float)(1 / (0.99-ecc)));
+				drawMode = MODE_COLOR;
+			}
 		}
 
 		Planet p = refthing;
 		picklist.clear();
 
-		//drawMode = (zoom > 1) ? MODE_COLOR : MODE_MAP;
 		switch (drawMode)
 		{
 			case MODE_MAP:
@@ -210,55 +222,87 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 	// TODO
 	private void drawTexturedSurface(Planet p)
 	{
+		float zoom = getZoomFactor();
 		Point o = origin;
 		PlanetRenderer prend = guictx.getPlanetRenderer(p);
 		PlanetTextureCache ptc = prend.getTextureCacheColor();
 		float t = GUIContext.BORDER * 1.0f / GUIContext.TEX_SIZE;
 
-		int level = Math.max(8, AstroUtil.log2((int)(w1*zoom)));
-		int ll = 1 << (level - 8);
-		Rectangle levelBounds = new Rectangle(0, 0, 1<<(level+1), 1<<level);
-		Rectangle viewBounds = new Rectangle(0, 0, getWidth(), getHeight());
-		viewBounds.translate((int)(-cenlon * xw / (Math.PI * 2)), (int)(cenlat * yh / Math.PI));
-		Rectangle cropBounds = levelBounds.intersection(viewBounds);
+		int wsize = (int)(w1*zoom);
+		int level = Math.max(8, AstroUtil.log2(wsize));
+		int lo = level - GUIContext.TEX_LEVEL;
+		// compute view boundaries in "world" coordinates
+		Rectangle quadBounds = new Rectangle(0, 0, 2<<lo, 1<<lo);
+		float cx = (float)(cenlon / (Math.PI*2) + 0.5f);
+		float cy = (float)(-cenlat / Math.PI + 0.5f);
+		float sx = 0.5f/zoom;
+		float sy = 0.5f/zoom;
+		Rect4f worldRect = new Rect4f(cx - sx, cy - sy, cx + sx, cy + sy);
+		//System.out.println(worldRect);
+		Rect4f quadRect = new Rect4f(worldRect);
+		quadRect.scale(quadBounds.width, quadBounds.height);
+		Rectangle quadView = new Rectangle(
+				(int) Math.floor(quadRect.x1), 
+				(int) Math.floor(quadRect.y1), 
+				(int) (quadRect.width() + 1),
+				(int) (quadRect.height() + 1)); // .intersection(quadBounds);
+		/*
+		// now figure out what the quad boundaries are (divide by TEX_SIZE)
+		Rectangle texBounds = new Rectangle(0, 0, GUIContext.TEX_SIZE<<(lo+1), GUIContext.TEX_SIZE<<lo);
+		texBounds.intersect(viewBounds);
 		Rectangle quadBounds = new Rectangle(cropBounds.x>>level, cropBounds.y>>level, 
 				(cropBounds.width>>level)+1, (cropBounds.height>>level)+1);
-		GL gl = ctx.getGL();
-		gl.glPushMatrix();
-		gl.glTranslatef(o.x+viewBounds.x, o.y+viewBounds.y, 0);
-		gl.glScalef(zoom, zoom, 1);
-		for (int yy = quadBounds.y; yy < quadBounds.y+quadBounds.height; yy++)
-		{
-			for (int xx = quadBounds.x; xx < quadBounds.x+quadBounds.width; xx++)
-			{
-				ptc.setTexture(xx, yy, level);				
-				/*
-				float x = o.x + w1 * 0.5f * (1 - zoom);
-				float y = o.y + h1 * 0.5f * (1 - zoom);
-				float w = w1 * zoom;
-				float h = h1 * zoom;
-				// offset the view
-				x -= cenlon * xw / (Math.PI * 2);
-				y += cenlat * yh / Math.PI;
 				*/
-				int x = xx<<8;
-				int y = yy<<8;
-				int w = 256;
-				int h = 256;
+		setMapColor();
+		gl.glPushMatrix();
+		/*
+		Matrix3f mat = new Matrix3f();
+		mat.m00 = w1*1.0f/quadBounds.width;
+		mat.m11 = h1*1.0f/quadBounds.height;
+		mat.m02 = o.x;
+		mat.m12 = o.h;
+		mat.m22 = 1;
+		/*
+		Matrix3f mat2 = new Matrix3f();
+		mat2.m00 = worldRect.width();
+		mat2.m11 = worldRect.height();
+		mat2.m20 = worldRect.x1;
+		mat2.m21 = worldRect.y1;
+		mat2.m22 = 1;
+		mat2.invert();
+		mat.mul(mat2, mat);
+		GLOUtil.glMultMatrixf(gl, mat);
+		*/
+		gl.glTranslatef(o.x - w1*worldRect.x1*zoom, o.y - h1*worldRect.y1*zoom, 0);
+		gl.glScalef(w1*zoom/quadBounds.width, h1*zoom/quadBounds.height, 1);
+		/*
+		gl.glScalef(zoom, zoom, 1);
+		gl.glTranslatef((0.5f-cx)*zoom, (0.5f-cy)*zoom, 0);
+		*/
+		for (int yy = quadView.y; yy < quadView.y+quadView.height; yy++)
+		{
+			for (int xx = quadView.x; xx < quadView.x+quadView.width; xx++)
+			{
+				ptc.setTexture(xx & ((2<<lo)-1), yy & ((1<<lo)-1), level);
+				int x = xx;
+				int y = yy;
+				int w = 1;
+				int h = 1;
 				gl.glBegin(GL.GL_QUADS);
-				gl.glColor3f(0.1f, 0.3f, 0.1f);
 				gl.glTexCoord2f(t, 1 - t);
-				gl.glVertex2f(x, y);
-				gl.glTexCoord2f(1 - t, 1 - t);
-				gl.glVertex2f(x + w, y);
-				gl.glTexCoord2f(1 - t, t);
-				gl.glVertex2f(x + w, y + h);
-				gl.glTexCoord2f(t, t);
 				gl.glVertex2f(x, y + h);
+				gl.glTexCoord2f(1 - t, 1 - t);
+				gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(1 - t, t);
+				gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(t, t);
+				gl.glVertex2f(x, y);
 				gl.glEnd();
 			}
 		}
 		gl.glPopMatrix();
+		
+		transformComponentForMap();
 	}
 
 	private void drawThings(Planet p)
@@ -342,10 +386,22 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 	{
 		// draw map
 		setPlanetTexture(p);
+		transformComponentForMap();
+
+		setMapColor();
+		drawTexturedBox(ctx, x1, y1, xw, yh);
+	}
+
+	/**
+	 * For some reason, we find it neccessary to modify the window coordinates
+	 * here to render the rest of the map ... ewwww...
+	 */
+	private void transformComponentForMap()
+	{
+		float zoom = getZoomFactor();
 		Point o = origin;
 		int w = getWidth();
 		int h = getHeight();
-
 		x1 = o.x + w * 0.5f * (1 - zoom);
 		y1 = o.y + h * 0.5f * (1 - zoom);
 		xw = w * zoom;
@@ -353,9 +409,11 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 		// offset the view
 		x1 -= cenlon * xw / (Math.PI * 2);
 		y1 += cenlat * yh / Math.PI;
+	}
 
-		gl.glColor3f(0, 0.25f, 0);
-		drawTexturedBox(ctx, x1, y1, xw, yh);
+	private void setMapColor()
+	{
+		gl.glColor3f(0.1f, 0.3f, 0.1f);
 	}
 
 	void renderConic(Planet p, Conic conic)
