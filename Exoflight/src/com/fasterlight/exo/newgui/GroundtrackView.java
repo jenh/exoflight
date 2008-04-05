@@ -175,14 +175,19 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 		drawMode = MODE_MAP;
 		if (getTracked() != null)// && getZoomFactor() > 1)
 		{
+			/*
 			double ecc = getTracked().getTelemetry().getECCENT();
 			double peri = getTracked().getTelemetry().getPERIAPSIS();
-			if (ecc > 0 && ecc < 1 && peri < getTracked().getParent().getRadius())
+			*/
+			double parentRadius = getTracked().getParent().getRadius();
+			double peri = getTracked().getTelemetry().getPERIAPSIS() + parentRadius;
+			float ratio = (float)(peri * 2 / parentRadius);
+			if (ratio < 1)
 			{
 				Vector3d llr = getThingLLR(getTracked(), refthing, game.time());
 				cenlon = (float) llr.x;
 				cenlat = (float) llr.y;
-				zoomSmoother.setTarget((float)(1 / (0.99-ecc)));
+				zoomSmoother.setTarget(1.0f / (ratio+0.01f));
 				drawMode = MODE_COLOR;
 			}
 		}
@@ -239,46 +244,18 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 		float sy = 0.5f/zoom;
 		Rect4f worldRect = new Rect4f(cx - sx, cy - sy, cx + sx, cy + sy);
 		//System.out.println(worldRect);
+		setMapColor();
+		gl.glPushMatrix();
+		gl.glTranslatef(o.x - w1*worldRect.x1*zoom, o.y - h1*worldRect.y1*zoom, 0);
+		gl.glScalef(w1*zoom/quadBounds.width, h1*zoom/quadBounds.height, 1);
+		// compute boundary for quad rectangles
 		Rect4f quadRect = new Rect4f(worldRect);
 		quadRect.scale(quadBounds.width, quadBounds.height);
 		Rectangle quadView = new Rectangle(
 				(int) Math.floor(quadRect.x1), 
 				(int) Math.floor(quadRect.y1), 
-				(int) (quadRect.width() + 1),
-				(int) (quadRect.height() + 1)); // .intersection(quadBounds);
-		/*
-		// now figure out what the quad boundaries are (divide by TEX_SIZE)
-		Rectangle texBounds = new Rectangle(0, 0, GUIContext.TEX_SIZE<<(lo+1), GUIContext.TEX_SIZE<<lo);
-		texBounds.intersect(viewBounds);
-		Rectangle quadBounds = new Rectangle(cropBounds.x>>level, cropBounds.y>>level, 
-				(cropBounds.width>>level)+1, (cropBounds.height>>level)+1);
-				*/
-		setMapColor();
-		gl.glPushMatrix();
-		/*
-		Matrix3f mat = new Matrix3f();
-		mat.m00 = w1*1.0f/quadBounds.width;
-		mat.m11 = h1*1.0f/quadBounds.height;
-		mat.m02 = o.x;
-		mat.m12 = o.h;
-		mat.m22 = 1;
-		/*
-		Matrix3f mat2 = new Matrix3f();
-		mat2.m00 = worldRect.width();
-		mat2.m11 = worldRect.height();
-		mat2.m20 = worldRect.x1;
-		mat2.m21 = worldRect.y1;
-		mat2.m22 = 1;
-		mat2.invert();
-		mat.mul(mat2, mat);
-		GLOUtil.glMultMatrixf(gl, mat);
-		*/
-		gl.glTranslatef(o.x - w1*worldRect.x1*zoom, o.y - h1*worldRect.y1*zoom, 0);
-		gl.glScalef(w1*zoom/quadBounds.width, h1*zoom/quadBounds.height, 1);
-		/*
-		gl.glScalef(zoom, zoom, 1);
-		gl.glTranslatef((0.5f-cx)*zoom, (0.5f-cy)*zoom, 0);
-		*/
+				(int) Math.ceil(quadRect.width() + 1),
+				(int) Math.ceil(quadRect.height() + 1)); // .intersection(quadBounds);
 		for (int yy = quadView.y; yy < quadView.y+quadView.height; yy++)
 		{
 			for (int xx = quadView.x; xx < quadView.x+quadView.width; xx++)
@@ -413,7 +390,7 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 
 	private void setMapColor()
 	{
-		gl.glColor3f(0.1f, 0.3f, 0.1f);
+		gl.glColor3f(0.1f, 0.333f, 0.1f);
 	}
 
 	void renderConic(Planet p, Conic conic)
