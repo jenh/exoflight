@@ -846,5 +846,25 @@ public class AstroUtil implements Constants
 	{
 		return parseVector3(s);
 	}
+	
+	public static double greatCircleRad(Tuple2d a, Tuple2d b) 
+	{
+		double lon1 = a.x;
+		double lat1 = a.y;
+		double lon2 = b.x;
+		double lat2 = b.y;
 
+		return greatCircleRad(lon1, lat1, lon2, lat2);
+	}
+
+	public static double greatCircleRad(double lon1, double lat1, double lon2,
+			double lat2) 
+	{
+		// Haverside 
+		double pow = sqr(Math.sin((lat2 - lat1) / 2));
+		double pow2 = sqr(Math.sin((lon2 - lon1) / 2));
+		double d = pow + Math.cos(lat1) * Math.cos(lat2) * pow2;
+
+		return 2 * Math.asin(Math.min(1, Math.sqrt(d)));
+	}
 }
