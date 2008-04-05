@@ -77,6 +77,7 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 	WeakHashMap ohashmap = new WeakHashMap();
 	int ocache_age = 0; // age of cache in frames
 	boolean use_cache = false;
+	private Vector2f lastRenderPt;
 
 	//
 
@@ -175,20 +176,21 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 		drawMode = MODE_MAP;
 		if (getTracked() != null)// && getZoomFactor() > 1)
 		{
-			/*
-			double ecc = getTracked().getTelemetry().getECCENT();
-			double peri = getTracked().getTelemetry().getPERIAPSIS();
-			*/
-			double parentRadius = getTracked().getParent().getRadius();
-			double peri = getTracked().getTelemetry().getPERIAPSIS() + parentRadius;
-			float ratio = (float)(peri * 2 / parentRadius);
-			if (ratio < 1)
+			Telemetry telem = getTracked().getTelemetry();
+			if (telem.getConic() != null)
 			{
-				Vector3d llr = getThingLLR(getTracked(), refthing, game.time());
-				cenlon = (float) llr.x;
-				cenlat = (float) llr.y;
-				zoomSmoother.setTarget(1.0f / (ratio+0.01f));
-				drawMode = MODE_COLOR;
+				double parentRadius = getTracked().getParent().getRadius();
+				double peri = telem.getPERIAPSIS() + parentRadius;
+				double ecc = telem.getECCENT();
+				float ratio = (float)(peri / parentRadius);
+				if (ratio < 1)
+				{
+					Vector3d llr = getThingLLR(getTracked(), refthing, game.time());
+					cenlon = (float) llr.x;
+					cenlat = (float) llr.y;
+					zoomSmoother.setTarget((float)(1.0 / (ratio+0.01)));
+					drawMode = MODE_COLOR;
+				}
 			}
 		}
 
@@ -425,6 +427,7 @@ public class GroundtrackView extends GLOComponent implements ThingSelectable,
 			gl.glColor4f(1f, 0.25f, 0.25f, alpha);
 
 			Vector2f pt = getCachedConicPoint(p, conic, t);
+			lastRenderPt = pt;
 			if (Float.isNaN(pt.x))
 				break;
 
