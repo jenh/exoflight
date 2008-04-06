@@ -27,6 +27,19 @@ load=panels/position_panel.txt
 parent=MSD Pager
 load=panels/landing_panel.txt
 
+[msd-switch]
+parent=midpane
+type=switch
+x=164
+y=150
+width=24
+height=24
+propname=ui.$$MSD Pager.pagenum
+setting#0.texname=switch-down.png
+setting#0.value=0
+setting#1.texname=switch-up.png
+setting#1.value=1
+
 ;;;
 
 [MEDS-frame]
