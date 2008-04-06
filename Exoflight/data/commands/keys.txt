@@ -75,9 +75,9 @@ Up+0x21=Control:Rotate Z Null
 0x24=Control:Rotate -Z
 Up+0x24=Control:Rotate Z Null
 
-Menu+1=Control:Throttle Off
-Menu+5=Control:Throttle 50%
-Menu+0=Control:Throttle 100%
+Ctrl+1=Control:Throttle Off
+Ctrl+5=Control:Throttle 50%
+Ctrl+0=Control:Throttle 100%
 
 N=Visual:Toggle Night Vision
 D=Visual:Toggle Show Decals
