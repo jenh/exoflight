@@ -93,7 +93,14 @@ implements GuidanceProgram, Constants, PropertyAware
 	{
 		SpaceShip ship = attctrl.getShip();
 		Telemetry telem = ship.getTelemetry();
+		Orientation pyrort = getPYROrientation(ship);
+		Orientation planetort = telem.getPlanetRefOrientation();
+		pyrort.concat(planetort);
+		attctrl.setTargetOrientation(pyrort);
+	}
 
+	public Orientation getPYROrientation(SpaceShip ship) 
+	{
 		// if using inclination, set yaw
 		// todo: make azimuth depend on position, like before
 		if (doincl)
@@ -108,11 +115,9 @@ implements GuidanceProgram, Constants, PropertyAware
 		}
 
 		// convert pyr coords to planet-reference frame
-		Orientation planetort = telem.getPlanetRefOrientation();
 		Orientation pyrort = new Orientation();
 		pyrort.setEulerPYR(pyr);
-		pyrort.concat(planetort);
-		attctrl.setTargetOrientation(pyrort);
+		return pyrort;
 	}
 
 	// PROPERTIES

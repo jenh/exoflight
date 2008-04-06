@@ -28,6 +28,7 @@ import com.fasterlight.vecmath.Vector3d;
   * Quadratic guidance, similar to P64 on the LM
   */
 public class ApproachProgram
+extends PYRProgram
 implements GuidanceProgram, Constants, PropertyAware
 {
 	SpaceShip ship;
@@ -178,7 +179,12 @@ implements GuidanceProgram, Constants, PropertyAware
 			//up.scale(-1); // windows-up?
 			ort = new Orientation(ac, up);
 		}
-		attctrl.setTargetOrientation(ort);
+		// multiply by PYR
+		Orientation pyrort = new Orientation();
+		pyrort.setEulerPYR(pyr);
+		pyrort.concat(ort);
+
+		attctrl.setTargetOrientation(pyrort);
 
 		if (adj_throttle)
 		{
@@ -214,12 +220,19 @@ implements GuidanceProgram, Constants, PropertyAware
 
 	public Object getProp(String key)
 	{
-		return prophelp.getProp(this, key);
+		Object o = prophelp.getProp(this, key);
+		if (o == null)
+			o = super.getProp(key);
+		return o;
 	}
 
 	public void setProp(String key, Object value)
 	{
-		prophelp.setProp(this, key, value);
+		try {
+			prophelp.setProp(this, key, value);
+		} catch (PropertyRejectedException e) {
+			super.setProp(key, value);
+		}
 	}
 
 }

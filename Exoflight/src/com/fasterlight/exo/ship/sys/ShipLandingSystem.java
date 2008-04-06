@@ -66,6 +66,7 @@ public class ShipLandingSystem extends ShipSystem {
 		{
 			ship.getShipWarningSystem().setWarning("GUID-TIME", "Not enough time left for braking");
 		}
+		timeToThrust += 120; // TODO: configurable bias?
 		seq.setZeroTime(t + AstroUtil.dbl2tick(timeToTarget - timeToThrust));
 		return seq;
 	}

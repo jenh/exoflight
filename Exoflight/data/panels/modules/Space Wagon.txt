@@ -3,7 +3,7 @@
 
 [top]
 type=frame
-width=150
+width=200
 height=310
 shader$frame=screwpanel-small
 shader$text=text-10pt
@@ -30,7 +30,7 @@ type=table
 x=80
 y=40
 rows=4
-cols=1
+cols=2
 rowpadding=16
 colpadding=4
 layout=true
@@ -40,28 +40,54 @@ shader$button-off-down=greenbutton-down
 shader$button-on-up=greenbutton-down
 shader$button-on-down=greenbutton
 
-[1.1]
+[hover]
 parent=engtab
 type=button
 text=HOVER
 flags=2
 bool_prop=$hover engine.armed
 
-[1.2]
+[main]
 parent=engtab
 type=button
 text=MAIN
 flags=2
 bool_prop=$main engine.armed
 
-[2.1]
+[hover-throt]
+parent=engtab
+type=meter
+x=60
+y=30
+width=32
+height=80
+value_prop=$hover engine.throttle
+value_scale=100
+lo=0
+hi=100
+scale=20
+
+[main-throt]
+parent=engtab
+type=meter
+x=60
+y=30
+width=32
+height=80
+value_prop=$main engine.throttle
+value_scale=100
+lo=0
+hi=100
+scale=20
+
+[rcs]
 parent=engtab
 type=button
 text=RCS
 flags=2
 bool_prop=$RCS.armed
 
-[2.2]
+[acs]
 parent=engtab
 type=button
 text=ACS
