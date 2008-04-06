@@ -263,16 +263,21 @@ System.out.println("ttl = " + getTimeToLaunch());
 		try {
 			long t0 = getLaunchTime();
 			if (t0 == INVALID_TICK)
-				throw new UserException(
+			{
+				ship.getShipWarningSystem().setWarning("NAV-INCL", 
 						"The target inclination may be invalid; " +
 						"it must be greater than the launch vehicle's latitude.");
+				return null;
+			}
 			ship.getShipManeuverSystem().updateLaunch(true);
 			Sequencer seq = ship.loadProgram("launch");
 			seq.setZeroTime(t0);
 			seq.setVar("incl", new Double(incl));
 			return seq;
 		} catch (Exception e) {
-			throw new UserException("Could not compute launch parameters: " + e.getMessage(), e);
+			ship.getShipWarningSystem().setWarning("NAV-ERROR", 
+					"Could not compute launch parameters: " + e.getMessage());
+			return null;
 		}
 	}
 

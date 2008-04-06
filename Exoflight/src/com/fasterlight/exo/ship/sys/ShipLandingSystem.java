@@ -22,13 +22,13 @@ public class ShipLandingSystem extends ShipSystem {
 		UniverseThing target = ship.getShipTargetingSystem().getTarget();
 		if (target == null)
 		{
-			ship.getShipWarningSystem().setWarning("GUID-NOTARGET", "No target for approach program");
+			ship.getShipWarningSystem().setWarning("NAV-NOTARGET", "No target for approach program");
 			return null;
 		}
 		UniverseThing ref = ship.getParent();
 		if (target.getParent() != ref)
 		{
-			ship.getShipWarningSystem().setWarning("GUID-REF", "Ship must orbit same body as target");
+			ship.getShipWarningSystem().setWarning("NAV-REF", "Ship must orbit same body as target");
 			return null;
 		}
 
@@ -38,7 +38,7 @@ public class ShipLandingSystem extends ShipSystem {
 		double maxdv = ship.getMaxAccel();
 		if (maxdv == 0)
 		{
-			ship.getShipWarningSystem().setWarning("GUID-NOACCEL", "No current acceleration capability");
+			ship.getShipWarningSystem().setWarning("NAV-NOACCEL", "No current acceleration capability");
 			return null;
 		}
 		// now figure out angle between source & target
@@ -53,6 +53,11 @@ public class ShipLandingSystem extends ShipSystem {
 		Conic conic = telem.getConic();
 		// TODO: compute for hyperbolic orbtis?
 		double E0 = conic.getElements().getEccentricAnomaly();
+		if (Double.isNaN(E0))
+		{
+			ship.getShipWarningSystem().setWarning("NAV-NAN", "Could not compute eccentric anomaly -- hyperbolic orbit?");
+			return null;
+		}
 		double E = convertTrueAnomToEcc(conic.getEccentricity(), telem.getTRUEANOM() + ang);
 		double[] times = conic.getTimesAtEccAnom(conic.getSemiMajorAxis(), conic.getEccentricity(), E0, E);
 		double timeAtTarget = times[0]; // TODO?
@@ -64,7 +69,7 @@ public class ShipLandingSystem extends ShipSystem {
 		double timeToThrust = v1.length()/maxdv;
 		if (timeToThrust > timeToTarget)
 		{
-			ship.getShipWarningSystem().setWarning("GUID-TIME", "Not enough time left for braking");
+			ship.getShipWarningSystem().setWarning("NAV-TIME", "Not enough time left for braking");
 		}
 		timeToThrust += 120; // TODO: configurable bias?
 		seq.setZeroTime(t + AstroUtil.dbl2tick(timeToTarget - timeToThrust));
