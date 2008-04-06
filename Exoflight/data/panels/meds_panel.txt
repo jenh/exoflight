@@ -52,6 +52,13 @@ text=DISPLAY
 value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
 action=0
 
+[medsbtn3]
+type=button
+parent=meds-nav
+text= LAUNCH
+value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
+action=3
+
 [medsbtn1]
 type=button
 parent=meds-nav
@@ -66,13 +73,6 @@ text=DOCKING
 value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
 action=2
 
-[medsbtn3]
-type=button
-parent=meds-nav
-text= LAUNCH
-value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
-action=3
-
 [medsbtn4]
 type=button
 parent=meds-nav
@@ -83,7 +83,7 @@ action=4
 [medsbtn5]
 type=button
 parent=meds-nav
-text=REENTRY
+text=LANDING
 value_prop=.parent.parent.$meds-frame.$MEDS Pager.pagenum
 action=5
 

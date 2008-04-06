@@ -195,7 +195,7 @@ implements GuidanceProgram, Constants, PropertyAware
 
 	public double getTimeRemaining()
 	{
-		return TGO;
+		return (TGO - timebias)/timescale;
 	}
 
 	public String toString()

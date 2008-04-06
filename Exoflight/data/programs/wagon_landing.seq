@@ -11,6 +11,7 @@ sequence "Space Wagon Landing" {
 	
 	ship.attsys.guidmode = "approach";
 	ship.attctrl.guidance.timebias = 15;
+	ship.attctrl.guidance.heightbias = 0.02;
 	@mod.$RCS.armed = true;
 	@mod.'$guidance system'.active = true;
 
@@ -22,7 +23,7 @@ sequence "Space Wagon Landing" {
 "Begin braking phase"
 	ship.attctrl.guidance.adjthrottle = true;
 
-	wait for condition (ship.attctrl.guidance.timerem < 16) interval 0.5 timeout 300;
+	wait for condition (ship.attctrl.guidance.timerem < 1) interval 0.5 timeout 300;
 "Convert to hover mode"
 	ship.attctrl.guidance.pitch = -90 deg;
 	ship.attctrl.guidance.heightbias = -0.02;
@@ -33,8 +34,8 @@ sequence "Space Wagon Landing" {
 	wait for condition (ship.telemetry.altagl < 0.006) interval 0.5 timeout 1200;
 "Engine stop"
 	@mod.'$hover engine'.armed = false;
+	@mod.'$guidance system'.active = false;
 	ship.attsys.throtmanual = 1;
-	@mod.$RCS.armed = false;
 
 	wait for condition (ship.trajectory.type == "landed") interval 0.125 timeout 10;
 "---END LANDING SEQUENCE---"

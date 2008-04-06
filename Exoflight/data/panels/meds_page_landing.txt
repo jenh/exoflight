@@ -28,6 +28,19 @@ units=s
 minchars=11
 align=2
 
+[1.tgo.a]
+parent=table1
+type=label
+text=TT GO
+
+[1.tgo.b]
+parent=table1
+type=numlabel
+text_prop=ship.attctrl.guidance.timerem
+units=s
+minchars=11
+align=2
+
 [1.intalt.a]
 parent=table1
 type=label
