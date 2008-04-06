@@ -305,7 +305,7 @@ implements Constants
    						{
    							Vector3f tofs = new Vector3f();
    							Vector3f tdir = new Vector3f();
-   							float size=0.001f; // todo: const
+   							float size = rcscap.getExitRadius();
    							for (int i=0; i<16; i++)
    							{
    								if ( (flags&(1<<i)) != 0 )

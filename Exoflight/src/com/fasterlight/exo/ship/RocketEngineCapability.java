@@ -33,7 +33,7 @@ import com.fasterlight.vecmath.*;
 public abstract class RocketEngineCapability
 extends PropulsionCapability
 {
-	private transient float exitarea, exitpres, exitrad;
+	private transient float exitpres;
 	private transient float minthrot, maxthrot, limthrot;
 	private transient int throtsteps;
 	private transient float tattack, tdecay;
@@ -66,8 +66,6 @@ extends PropulsionCapability
 
 		super.initialize(props);
 
-		exitarea = Util.parseFloat(props.getProperty("exitarea", "0"));
-		exitrad = (float)Math.sqrt(exitarea/Math.PI)/1000;
 		exitpres = Util.parseFloat(props.getProperty("exitpres", "0"));
 		setThrustProfile( props.getProperty("profile", "") );
 		minthrot = Util.parseFloat(props.getProperty("minthrot", "0"));
@@ -92,19 +90,9 @@ extends PropulsionCapability
 		return new ResourceSet(super.getReactants(), act_throttle);
 	}
 
-	public float getExitArea() // in m^2
-	{
-		return exitarea;
-	}
-
 	public float getExitPressure() // in kPa
 	{
 		return exitpres;
-	}
-
-	public float getExitRadius() // in km
-	{
-		return exitrad;
 	}
 
 	public float getThrottle()
@@ -313,7 +301,6 @@ extends PropulsionCapability
 	static {
 		prophelp.registerGetSet("throttle", "Throttle", float.class);
 		prophelp.registerGetSet("fired", "Fired", boolean.class);
-		prophelp.registerGet("exitarea", "getExitArea");
 		prophelp.registerGet("exitpressure", "getExitPressure");
 		prophelp.registerGet("pctthrust", "getPctThrust");
 		prophelp.registerSet("profile", "setThrustProfile", String.class);

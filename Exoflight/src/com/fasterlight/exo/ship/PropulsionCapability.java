@@ -31,6 +31,7 @@ import com.fasterlight.vecmath.Vector3d;
 public abstract class PropulsionCapability
 extends PerturbationCapability
 {
+	protected transient float exitarea, exitrad;
 	protected transient float exhaustv;
 	// exhmass is per-interval
 	// exhmass1 is per-second
@@ -54,6 +55,8 @@ extends PerturbationCapability
 		exhaustv = Util.parseFloat(props.getProperty("exhaustv", "0"));
 		maxexhrate = getMaximumReactants().mass()/getIntervalFloat();
 		vectoredThrustAffectsAttitude = "true".equals(props.getProperty("vectoratt", "false"));
+		exitarea = Util.parseFloat(props.getProperty("exitarea", "3.14152"));
+		exitrad = (float)Math.sqrt(exitarea/Math.PI)/1000;
 	}
 
 	//
@@ -66,6 +69,16 @@ extends PerturbationCapability
 	public float getExhaustVel()
 	{
 		return exhaustv;
+	}
+
+	public float getExitArea() // in m^2
+	{
+		return exitarea;
+	}
+
+	public float getExitRadius() // in km
+	{
+		return exitrad;
 	}
 
 	// returns true if there is a net thrust along one of the axes
@@ -138,6 +151,7 @@ extends PerturbationCapability
 	static {
 		prophelp.registerGet("exhaustvel", "getExhaustVel");
 		prophelp.registerGet("consumerate", "getConsumeMassPerSec");
+		prophelp.registerGet("exitarea", "getExitArea");
 	}
 
 	public Object getProp(String key)
