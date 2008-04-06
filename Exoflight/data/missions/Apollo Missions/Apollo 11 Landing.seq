@@ -49,7 +49,9 @@ sequence "Apollo 11 Landing" {
 	@ui.ship =? ship;
 	@ui.message =? "You are in the Eagle, 110 km above the moon.  You are about to begin the powered descent to the lunar surface.";
 
+	wait for 3;
 	ship.targsys.target = game.'$Apollo 11';
+	ship.structure.'$Apollo LDM'.'$descent engine'.armed = true;
 	ship.landingsys.active = true;
 
 --	wait for 30;
