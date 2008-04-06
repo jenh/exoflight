@@ -155,10 +155,17 @@ colpadding=8
 layout=true
 y=140
 
-[launchbtn]
+[reentry-btn]
 parent=btntable
 type=button
-text=Activate
+text=Reentry
 bool_prop=ship.reentrysys.active
+flags=2
+
+[landing-btn]
+parent=btntable
+type=button
+text=Landing
+bool_prop=ship.landingsys.active
 flags=2
 
