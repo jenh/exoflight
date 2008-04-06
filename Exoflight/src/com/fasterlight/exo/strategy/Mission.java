@@ -289,10 +289,9 @@ implements PropertyAware
    
    public void setStarted(boolean start)
    {
-	   if (seq == null)
-		   throw new UserException("No mission is currently active.");
-	   else if (seq != null && !seq.isStarted())
-		   throw new UserException("The current mission has already ended, or you have selected a Custom Mission that has no end goal.");
+	   if (seq == null || !seq.isStarted())
+		   throw new UserException("No mission is currently active, " +
+		   		"or you have selected a Custom Mission that has no end goal.");
 	   else
 		   seq.setStarted(start);
    }
