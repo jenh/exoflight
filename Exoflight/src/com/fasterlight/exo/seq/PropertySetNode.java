@@ -19,6 +19,7 @@
 package com.fasterlight.exo.seq;
 
 import com.fasterlight.spif.*;
+import com.fasterlight.util.UserException;
 
 public class PropertySetNode
 extends SequencerNode
@@ -57,6 +58,9 @@ extends SequencerNode
 				PropertyEvaluator.set(seq, key, value);
 			}
 			notifySeq(SUCCESS);
+		} catch (UserException ue) {
+			System.out.println(ue);
+			notifySeq(optional ? SUCCESS : FAIL);
 		} catch (PropertyException pre) {
 			System.out.println(pre);
 			notifySeq(optional ? SUCCESS : FAIL);

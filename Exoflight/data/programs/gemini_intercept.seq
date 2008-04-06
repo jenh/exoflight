@@ -1,18 +1,14 @@
 
 sequence "Gemini Intercept" {
 
-	wait until -15;
+	wait until -5;
 
 "Wait for intercept time"
 	ship.attsys.guidmode = "lambert";
 	ship.attctrl.guidance.targtime = @targtime;
 
-    wait until -5;
+    wait until 0;
 "Prepare for burn"
-	ship.guidancecap.active = true;
-
-	wait until 0;
-"Wait for attitude lock"
 	ship.guidancecap.active = true;
 	wait for condition (ship.attctrl.locked == true) interval 0.25;
 

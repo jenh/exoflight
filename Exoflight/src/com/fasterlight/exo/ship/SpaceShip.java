@@ -27,7 +27,7 @@ import com.fasterlight.exo.seq.*;
 import com.fasterlight.exo.ship.sys.*;
 import com.fasterlight.game.Game;
 import com.fasterlight.spif.*;
-import com.fasterlight.util.Vec3d;
+import com.fasterlight.util.*;
 import com.fasterlight.vecmath.*;
 
 /**
@@ -205,6 +205,10 @@ extends StructureThing
 			}
 		}
 
+		if (progname == null)
+			throw new UserException("Could not find suitable "
+					+ progid.toUpperCase() + " program for " + this.getName()
+					+ '.');
 		return loadProgramVerbatim(progname);
 	}
 

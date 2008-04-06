@@ -1,0 +1,33 @@
+
+sequence "Space Wagon Landing" {
+
+	@mod = ship.structure.'$Space Wagon';
+
+	wait until -15;
+"Set braking attitude"
+	@mod.'$main engine'.armed = true;
+	ship.guidancecap.settingidx = 0;
+	ship.attsys.guidmode = "aoa-aft";
+	@mod.'$guidance system'.active = true;
+	@mod.$RCS.armed = true;
+	
+	wait until -5;
+"Approch program enable"
+	ship.attsys.guidmode = "approach";
+--	ship.attctrl.guidance.timebias = 60;
+
+"Wait for attitude lock"
+	wait for condition (ship.attctrl.locked == true) interval 0.25 timeout 90;
+	wait for 1;
+
+	wait until 0;
+"Begin braking phase"
+	@mod.'$main engine'.throttle = 0.10;
+
+	wait until 5;
+"Throttle to 100%"
+	ship.attctrl.guidance.adjthrottle = true;
+	@mod.'$main engine'.throttle = 1.00;
+
+}
+

@@ -397,6 +397,8 @@ public class Exoflight implements Runnable, Constants, NotifyingEventObserver
 						getCurrentShip().getShipTargetingSystem().setTarget(
 							getSelected());
 						// todo: message
+						if (getTracked() != null)
+							setSelected(getTracked());
 					}
 					return true;
 				case KeyEvent.VK_R :

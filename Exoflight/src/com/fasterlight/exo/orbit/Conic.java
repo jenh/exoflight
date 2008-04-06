@@ -207,11 +207,16 @@ public class Conic implements PropertyAware
 
 		// now get the initial ecc. anom
 		double E0 = cop.getEccentricAnomaly();
+		double E = Math.PI / 2 - Math.asin(ce2);
+		return getTimesAtEccAnom(a, e, E0, E);
+	}
+
+	public double[] getTimesAtEccAnom(double a, double e, double E0, double E)
+	{
 		double E0sinE0 = E0 - e * Math.sin(E0);
 
 		double aaaU = Math.sqrt(a * a * a / mu);
 		double[] arr = new double[2];
-		double E = Math.PI / 2 - Math.asin(ce2);
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -225,8 +230,6 @@ public class Conic implements PropertyAware
 						+ E
 						+ "\te = "
 						+ e
-						+ "\tce2="
-						+ ce2
 						+ "\tE0 sin E0="
 						+ E0sinE0
 						+ "\tt2t="
