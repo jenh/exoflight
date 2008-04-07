@@ -11,7 +11,7 @@ sequence "Space Wagon Landing" {
 	
 	ship.attsys.guidmode = "approach";
 	ship.attctrl.guidance.timebias = 15;
-	ship.attctrl.guidance.heightbias = 0.02;
+	ship.attctrl.guidance.heightbias = 0.1;
 	@mod.$RCS.armed = true;
 	@mod.'$guidance system'.active = true;
 
