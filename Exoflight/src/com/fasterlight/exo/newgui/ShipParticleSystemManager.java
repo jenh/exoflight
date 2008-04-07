@@ -313,9 +313,9 @@ implements Constants
    									float fac = rcscap.getThrusterFactor(i);
    									if (fac > 0)
    									{
-   										fac += 0.20f;
    										rcscap.getThrusterPosition(i, tofs);
    										rcscap.getThrusterDirection(i, 1, tdir);
+   										tofs.scaleAdd(-size, tdir, tofs);
    										addThrustParticles(psc, m, tdir, tofs, fac, -fac, size, 1);
    									}
    								}
