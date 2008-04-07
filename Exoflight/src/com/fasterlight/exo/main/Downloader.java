@@ -153,6 +153,7 @@ public class Downloader implements Runnable
 		filesets.add(new Fileset(BASEURL, "Exoflight-0.1-media.zip"));
 		filesets.add(new Fileset(BASEURL, "Exoflight-0.1-ephemeris.zip"));
 		filesets.add(new Fileset(BASEURL, "basemaps-low.zip"));
+		filesets.add(new Fileset(BASEURL, "Exoflight-0.1.3-patch.zip"));
 	}
 	
 	void checkAll()
