@@ -1,8 +1,8 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>lib\Exoflight.jar</jar>
-  <outfile>C:\workarea\Exoflight\dist\windows-i586\Exoflight.exe</outfile>
+  <jar>lib/Exoflight.jar</jar>
+  <outfile>./dist/windows-i586/Exoflight.exe</outfile>
   <errTitle></errTitle>
   <cmdLine>-stdout stdout.txt -stderr stderr.txt -download</cmdLine>
   <chdir>.</chdir>

@@ -33,6 +33,7 @@
 <target name="clean">
 	<ant antfile="${shared.dir}/build.xml" target="clean" />
 	<delete dir="${models.dir}" includes="*.esm" />
+	<delete dir="./dist" />
 </target>
 
 <target name="clean-all" depends="clean">
@@ -61,7 +62,7 @@
 <!-- compile-lwo -->
 
 <target name="compile-lwo">
-<mkdir dir="${install.dir}/models" />
+<mkdir dir="data/models" />
 <apply executable="${java.home}/bin/java" dest="${models.dir}" parallel="false">
   <arg value="-cp"/>
   <arg value="../FLCore/bin"/>
@@ -70,7 +71,7 @@
   <arg value="-o"/>
   <targetfile/>
   <fileset dir="${models.dir}" includes="*.lwo"/>
-  <mapper type="glob" from="*.lwo" to="../../${install.dir}/models/*.esm"/>
+  <mapper type="glob" from="*.lwo" to="../../data/models/*.esm"/>
 </apply>
 </target>
 
@@ -161,7 +162,10 @@
 
 	<copy todir="${install.dir}">
 		<fileset dir="./data"
-			excludes="elevtexs/**,texs/**,sounds/**,models/**,eph/**,uitexs/**"
+			excludes="elevtexs/**,texs/**,sounds/**,models/**,eph/**,uitexs/**" />
+	</copy>
+	<copy todir="${install.dir}">
+		<fileset dir="./data"
 			includes="sounds/*.txt,texs/*/*.txt" />
 	</copy>
 	
@@ -192,7 +196,7 @@
 	<!-- win32 launcher -->
 	<launch4j configFile="./launch4j.xml" />
 	<!-- build final dist archives -->
-	<zip level="9"
+	<zip
 		destfile="dist/Exoflight-${exoflight.version}-windows-i586.zip"
 		basedir="dist/windows-i586" />
 </target>
@@ -219,6 +223,7 @@
 		icon="data/etc/Exoflight.icns"
 	    workingdirectory="$APP_PACKAGE/Contents/Resources"
 	    extraclasspath="$APP_PACKAGE/Contents/Resources"
+	    stubfile="scripts/JavaApplicationStub"
 		jvmversion="1.4+"
 	>
 		<jarfileset dir="dist/macosx-universal/lib" includes="**/**" />
@@ -247,7 +252,7 @@
 <target name="install-zipfiles">
 	<zip level="9"
 		includes="texs/*,uitexs/**,sounds/**,models/**"
-		excludes="texs/*/*.*"
+		excludes="texs/*/*.*,sounds/*.txt,texs/*/*.txt,models/*.lwo"
 		destfile="./dist/Exoflight-${exoflight.version}-media.zip"
 		basedir="./data" />
 	<zip level="9"
@@ -255,6 +260,18 @@
 		destfile="./dist/Exoflight-${exoflight.version}-ephemeris.zip"
 		basedir="./data" />
 </target>
+
+<target name="install-patch">
+	<zip level="9"
+		includes="texs/*,uitexs/**,sounds/**,models/**"
+		excludes="texs/*/*.*,sounds/*.txt,texs/*/*.txt,models/*.lwo"
+		destfile="./dist/Exoflight-${exoflight.version}-patch.zip"
+		basedir="./data">
+		<different targetdir="${lastversion.dir}" />
+	</zip>
+</target>
+
+<target name="install-all" depends="all,install-win32,install-macosx,install-zipfiles,install-patch"/>
 
 <!-- clover -->
 
