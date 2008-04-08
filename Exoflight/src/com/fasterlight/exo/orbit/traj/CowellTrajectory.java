@@ -298,7 +298,6 @@ public class CowellTrajectory extends DefaultMutableTrajectory
 			int err_iters = 50;
 			do
 			{
-				double error;
 				double ts = curts * timeScaleFrac * (1d / TICKS_PER_SEC);
 
 				wheels_detected = 0;
@@ -311,31 +310,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory
 				// do crappy integration first
 				// s = s + v*t + 0.5*a*t^2
 
-				Vector3d r = new Vector3d();
-				r.scaleAdd(0.5 * ts * ts, dy1.b, oldy0.a);
-				r.scaleAdd(ts, dy1.a, r);
-				r.sub(y0.a);
-				error = Math.sqrt(r.lengthSquared() / y0.a.lengthSquared());
-				// also do velocity
-				Vector3d v = new Vector3d();
-				v.scaleAdd(ts, dy1.b, oldy0.b);
-				v.sub(y0.b);
-				double vl = v.length();
-				error += vl;
-
-				// angular velocity error
-				if (integrateAngular)
-				{
-					double y0dl2 = y0.d.lengthSquared();
-					// limit angular vel
-					if (y0dl2 > MAX_ANG_VEL_2)
-						y0.d.scale(Math.sqrt(MAX_ANG_VEL_2 / y0dl2));
-					double angerr =
-						Math.sqrt(oldy0.d.lengthSquared() + y0dl2) * ts * ANGVEL_ERROR_SCALE;
-					error += angerr;
-					if (debug2)
-						System.out.println("  angerr=" + angerr);
-				}
+				double error = estimateError(ts);
 
 				if (debug2)
 					System.out.println(
@@ -470,6 +445,37 @@ public class CowellTrajectory extends DefaultMutableTrajectory
 					}
 				}
 			}
+		}
+		private double estimateError(double ts)
+		{
+			double error;
+			Vector3d r = new Vector3d();
+			r.scaleAdd(0.5 * ts * ts, dy1.b, oldy0.a);
+			r.scaleAdd(ts, dy1.a, r);
+			r.sub(y0.a);
+			error = Math.sqrt(r.lengthSquared() / y0.a.lengthSquared());
+			// also do velocity
+			Vector3d v = new Vector3d();
+			v.scaleAdd(ts, dy1.b, oldy0.b);
+			v.sub(y0.b);
+			double vl = v.length();
+			error += vl;
+
+			// angular velocity error
+			if (integrateAngular)
+			{
+				double y0dl2 = y0.d.lengthSquared();
+				// limit angular vel
+				if (y0dl2 > MAX_ANG_VEL_2)
+					y0.d.scale(Math.sqrt(MAX_ANG_VEL_2 / y0dl2));
+				double angerr =
+					Math.sqrt(oldy0.d.lengthSquared() + y0dl2) * ts * ANGVEL_ERROR_SCALE;
+				error += angerr;
+				if (debug2)
+					System.out.println("  angerr=" + angerr);
+			}
+
+			return error;
 		}
 		public String toString()
 		{
