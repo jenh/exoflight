@@ -5,7 +5,7 @@ Name Exoflight
 
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.1.2
+!define VERSION 0.1.3
 !define COMPANY "Steven E. Hugg"
 !define URL http://code.google.com/p/exoflight/
 
