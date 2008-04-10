@@ -317,7 +317,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 
 				double error = lastIntegrationError;
 
-				if (debug2)
+				if (debug)
 					System.out.println(
 						"t="
 							+ game.time()
@@ -816,7 +816,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 		for (int i=0; i<yerr.length; i++)
 		{
 			m = Math.max(yerr[i], m);
-			if (debug2 && yerr[i] > HI_ERROR_THRESH)
+			if (debug && yerr[i] > HI_ERROR_THRESH)
 				System.out.println("element " + i + " went above error thresh: " + yerr[i]);
 		}
 		return m;
@@ -1132,6 +1132,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 
 	//
 
+	public static boolean debug = false;
 	public static boolean debug2 = false;
 	public static boolean debug3 = false;
 

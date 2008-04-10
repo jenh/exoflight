@@ -180,6 +180,7 @@ implements PropertyAware, Constants
 	public Conic getTargetOrbit()
 	{
 		// make sure conic will be vali!
+		// TODO: allow a little bit of wiggle room
 		if (getTargetApoapsis() < getTargetAltitude())
 			throw new PropertyRejectedException("Target apoapsis must be greater or equal to target altitude.");
 

@@ -73,10 +73,6 @@ sequence "Gemini 6 Reentry" {
 	wait for condition (ship.targsys.target == @targzone) interval 2 timeout 600;
 	wait for 2;
 
-	@ui.message =? "Good.  Now press the '1' key to select your ship again.";
-	wait for condition (@ui.selected == ship) interval 2 timeout 600;
-	wait for 3;
-
 	@ui.message =? "Now let's turn the ship into the proper orientation for retrofire -- the aft end should be facing into the direction of travel.  Select the GUIDANC screen on the MEDS, then press the RETRO button.";
 	wait for condition (ship.attsys.guidmode == "aoa-aft") interval 1 timeout 600;
 	wait for 1;
@@ -89,7 +85,7 @@ sequence "Gemini 6 Reentry" {
 	wait for condition (@retro.'$rocket 3'.armed == true) interval 1 timeout 600;
 	wait for condition (@retro.'$rocket 4'.armed == true) interval 1 timeout 600;
 
-	@ui.message =? "We are GO for retrofire.  Bring up the REENTRY screen on your MEDS.  At the prescribed time, you will press the Activate button on this screen to fire the retros.  Now please stand by while we confirm the retrofire time...";
+	@ui.message =? "We are GO for retrofire.  Bring up the LANDING screen on your MEDS.  At the prescribed time, you will press the Activate button on this screen to fire the retros.  Now please stand by while we confirm the retrofire time...";
 	wait for 10;
 
 	@ui.message =? "...Retrofire will take place at 23:41:00 MET.";
@@ -102,7 +98,7 @@ sequence "Gemini 6 Reentry" {
 	wait for condition (@retro.structure.thing != ship) interval 1 timeout 600;
 	wait for 3;
 
-	@ui.message =? "Now you should be getting a readout on the REENTRY screen.  This screen will show your predicted range to target, maximum G, and landing position.  The important readouts are RANGE ERR (downrange error) and LAT ERR (crossrange error).  Thrust fore and aft to correct the downrange error, and left and right to correct the crossrange error.  Small errors (<20 km for crossrange, <200 km downrange) will be corrected by the reentry control system.";
+	@ui.message =? "Now you should be getting a readout on the LANDING screen.  This screen will show your predicted range to target, maximum G, and landing position.  The important readouts are RANGE ERR (downrange error) and LAT ERR (crossrange error).  Thrust fore and aft to correct the downrange error, and left and right to correct the crossrange error.  Small errors (<20 km for crossrange, <200 km downrange) will be corrected by the reentry control system.";
 	wait for 20;
 
 	@ui.message =? "Starting at about 95 km, the reentry guidance system will kick in and fly you the rest of the way in.";

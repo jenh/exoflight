@@ -165,13 +165,15 @@ implements PropertyAware
 			{
 				curtime = Long.parseLong(tmp);
 			}
+			if (curtime == 0 || starttime == 0)
+				throw new IllegalArgumentException("Need either 'date' or 'start' and 'get/tick'");
 			tmp = ini.getString(id, "vehicle", "");
 			if (tmp.length() > 0)
 			{
 				vehicle = Vehicle.getVehicle(tmp);
-            if (vehicle == null)
-               System.out.println("Mission " + name + ": Could not find vehicle " + tmp);
 			}
+            if (vehicle == null)
+                throw new IllegalArgumentException("Cannot find vehicle '" + tmp + "'");
 			basename = ini.getString(id, "base", "");
 			seqname = ini.getString(id, "sequence",
 				"missions/" + categname + "/" + name);
