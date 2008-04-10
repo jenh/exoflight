@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="/FLCore/lib/macosx-universal/jinput-test.jar"/>
 	<classpathentry kind="lib" path="/FLCore/lib/macosx-universal/joal.jar"/>
 	<classpathentry kind="lib" path="/FLCore/lib/macosx-universal/jogl.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Jat"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
