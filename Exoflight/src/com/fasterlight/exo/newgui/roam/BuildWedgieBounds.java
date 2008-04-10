@@ -23,6 +23,7 @@ import java.util.BitSet;
 
 import com.fasterlight.exo.game.SpaceGame;
 import com.fasterlight.exo.orbit.Planet;
+import com.fasterlight.proctex.ProcTexProvider;
 import com.fasterlight.vecmath.Vector3f;
 
 /**
@@ -151,9 +152,12 @@ public class BuildWedgieBounds
 	public static void main(String[] args)
 	throws Exception
 	{
+		ProcTexProvider.debug = false;
 		SpaceGame game = new SpaceGame();
 		game.start();
 		Planet planet = (Planet)game.getBody(args[0]);
+		if (planet == null)
+			throw new RuntimeException("Could not find planet '" + args[0] + "'");
 		BuildWedgieBounds bwb = new BuildWedgieBounds(planet);
 		int maxlev = 12;
 		if (args.length > 1)
@@ -161,7 +165,7 @@ public class BuildWedgieBounds
 		bwb.maxlevel = maxlev;
 		bwb.start();
 
-		String destfile = planet.getName() + ".vtr";
+		String destfile = "./data/texs/" + planet.getName() + "/" + planet.getName() + ".vtr";
 		System.out.println("writing " + destfile);
 		bwb.writeTree(new FileOutputStream(destfile));
 	}

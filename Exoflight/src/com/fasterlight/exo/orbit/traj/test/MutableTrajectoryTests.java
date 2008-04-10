@@ -22,7 +22,9 @@ import junit.framework.*;
 
 import com.fasterlight.exo.game.SpaceGame;
 import com.fasterlight.exo.orbit.*;
-import com.fasterlight.exo.orbit.traj.CowellTrajectory;
+import com.fasterlight.exo.orbit.traj.*;
+import com.fasterlight.exo.ship.*;
+import com.fasterlight.exo.strategy.Vehicle;
 import com.fasterlight.testing.*;
 import com.fasterlight.vecmath.Vector3d;
 
@@ -49,6 +51,36 @@ extends NumericTestCase
 
 	//
 
+	public void testCowell1()
+	{
+		SpaceGame game = new SpaceGame();
+		game.start();
+
+		Planet planet = (Planet)game.getBody("Earth");
+		
+		CowellTrajectory traj = new CowellTrajectory();
+		traj.setParent(planet);
+		double alt = 1;
+		Vector3d r = new Vector3d(0, 0, planet.getRadius()+alt);
+		Vector3d v = new Vector3d(planet.getAirVelocity(r, game.time() * (1d/Constants.TICKS_PER_SEC)));
+		traj.setStateVector(new StateVector(r, v));
+
+		DefaultMutableTrajectory.perturbFlags = DefaultMutableTrajectory.PF_DRAG;
+  		Vehicle vehicle = Vehicle.getVehicle("Space Wagon");
+  		Structure struct = vehicle.toStructure(game.getAgency());
+		SpaceShip ship = new SpaceShip(struct);
+		ship.setTrajectory(traj);
+		ship.getShipAttitudeSystem().setThrottleManual(1);
+		CowellTrajectory.debug2 = true;
+		for (int i=0; i<100; i++)
+		{
+			game.update(1);
+			System.out.println("--->" + i + ": " + traj.getPos(game.time()));
+			ship.getShipAttitudeSystem().setManualThrottle(1);
+		}
+		System.out.println(traj);
+	}
+	
 	public void testMutable1()
 	{
 		SpaceGame game = new SpaceGame();
