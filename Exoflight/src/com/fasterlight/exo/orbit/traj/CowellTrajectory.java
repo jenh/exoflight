@@ -60,7 +60,8 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	// whether or not to integrate orientation
 	private boolean integrateAngular = true;
 
-	PerturbForce lastpforce, curpforce; // curpforce is the one we want to show the world
+	PerturbForce lastpforce;
+	PerturbForce curpforce; // curpforce is the one we want to show the world
 
 	private boolean in_routine; // set when we are computing forces
 
@@ -732,7 +733,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 				long tick = t + (long) (dt * TICKS_PER_SEC);
 				RKState2 s = new RKState2();
 				s.setFrom2(y);
-				boolean taint = true; // TODO: taint?
+				boolean taint = false; // TODO: taint?
 				s = f(tick, s, taint);
 				double[] arr = new double[STATE_LENGTH_POS];
 				s.copyTo2(arr);
@@ -743,7 +744,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 				long tick = t + (long) (dt * TICKS_PER_SEC);
 				RKState4 s = new RKState4();
 				s.setFrom4(y);
-				boolean taint = true; // TODO: taint?
+				boolean taint = false; // TODO: taint?
 				s = f(tick, s, taint);
 				double[] arr = new double[STATE_LENGTH_POS_ANG];
 				s.copyTo4(arr);
@@ -1136,7 +1137,6 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 
 	// SETTINGS
 
-	private static double DEFAULT_ELAST;
 	private static int MIN_TIMESTEP;
 	private static int INITIAL_TIMESTEP;
 	private static int MAX_TIMESTEP;
@@ -1150,7 +1150,6 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	{
 		public void updateSettings()
 		{
-			DEFAULT_ELAST = getDouble("Elasticity", 0.3);
 			MIN_TIMESTEP = getInt("MinTimestep", 1);
 			INITIAL_TIMESTEP = getInt("InitialTimestep", (int) TICKS_PER_SEC / 64);
 			MAX_TIMESTEP = getInt("MaxTimestep", (int) TICKS_PER_SEC * 32768) / 2;
