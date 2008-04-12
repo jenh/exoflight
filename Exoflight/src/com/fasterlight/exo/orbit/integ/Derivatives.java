@@ -27,6 +27,7 @@ package com.fasterlight.exo.orbit.integ;
  * that computes the derivatives to an integrator.
  *
  * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
+ * @author modified by Steven Hugg
  * @version 1.0
  */
 public interface Derivatives {

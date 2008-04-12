@@ -1,10 +1,10 @@
 
 sequence "lunar drop" {
 
-	ship.structure.'$Apollo LDM'.'$descent engine'.armed = true;
+	ship.structure.'$Space Wagon'.'$main engine'.armed = true;
 	ship.attsys.throttle = 1;
 
-	wait for 5;
+	wait for 0.25;
 
 	ship.attsys.throttle = 0;
 

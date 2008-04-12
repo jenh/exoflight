@@ -18,6 +18,8 @@
 *********************************************************************/
 package com.fasterlight.exo.orbit.traj.test;
 
+import java.io.*;
+
 import junit.framework.*;
 
 import com.fasterlight.exo.game.SpaceGame;
@@ -51,7 +53,7 @@ extends NumericTestCase
 
 	//
 
-	public void testCowell1()
+	public void testCowell1() throws FileNotFoundException
 	{
 		SpaceGame game = new SpaceGame();
 		game.start();
@@ -60,7 +62,7 @@ extends NumericTestCase
 		
 		CowellTrajectory traj = new CowellTrajectory();
 		traj.setParent(planet);
-		double alt = 1;
+		double alt = 3;
 		Vector3d r = new Vector3d(0, 0, planet.getRadius()+alt);
 		Vector3d v = new Vector3d(planet.getAirVelocity(r, game.time() * (1d/Constants.TICKS_PER_SEC)));
 		traj.setStateVector(new StateVector(r, v));
@@ -70,15 +72,41 @@ extends NumericTestCase
   		Structure struct = vehicle.toStructure(game.getAgency());
 		SpaceShip ship = new SpaceShip(struct);
 		ship.setTrajectory(traj);
-		ship.getShipAttitudeSystem().setThrottleManual(1);
-		CowellTrajectory.debug2 = true;
-		for (int i=0; i<100; i++)
+		//ship.getShipAttitudeSystem().setThrottleManual(1);
+		CowellTrajectory.debug = true;
+		//CowellTrajectory.debug2 = true;
+		CowellTrajectory.debug3 = true;
+		long tlast = 0;
+		long t0 = game.time();
+		PrintStream out = new PrintStream(new FileOutputStream("trv.csv"));
+		for (int i=0; i<100000; i++)
 		{
 			game.update(1);
-			System.out.println("--->" + i + ": " + traj.getPos(game.time()));
-			ship.getShipAttitudeSystem().setManualThrottle(1);
+			long t = traj.getLastT0(); 
+			if (tlast != t)
+			{
+				StateVector lastInitialState = traj.getLastInitialState();
+				//System.out.println("--->" + (t-t0) + ": " + lastInitialState);
+				out.print(t-t0);
+				out.print(',');
+				out.print(lastInitialState.r.x);
+				out.print(',');
+				out.print(lastInitialState.r.y);
+				out.print(',');
+				out.print(lastInitialState.r.z);
+				out.print(',');
+				out.print(lastInitialState.v.x);
+				out.print(',');
+				out.print(lastInitialState.v.y);
+				out.print(',');
+				out.print(lastInitialState.v.z);
+				out.println();
+				tlast = t;
+				assertTrue(!Double.isNaN(lastInitialState.r.length()));
+			}
+			//ship.getShipAttitudeSystem().setManualThrottle(0);
 		}
-		System.out.println(traj);
+		out.println(traj);
 	}
 	
 	public void testMutable1()

@@ -18,7 +18,7 @@
 *********************************************************************/
 package com.fasterlight.exo.orbit.traj;
 
-import java.util.*;
+import java.util.Iterator;
 
 import com.fasterlight.exo.game.AlertEvent;
 import com.fasterlight.exo.orbit.*;
@@ -46,8 +46,9 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 
 	PosUpdateEvent posevent;
 	int timestep = INITIAL_TIMESTEP;
-	//RungeKutta4 rk4 = new RungeKutta4();
-	RungeKuttaFehlberg78 rkf78 = new RungeKuttaFehlberg78();
+	HeunEuler heul = new HeunEuler();
+	RungeKutta4 rk4 = new RungeKutta4();
+	RungeKuttaFehlberg45 rkf = new RungeKuttaFehlberg45();
 
 	// laststate is the last state solved by solve()
 	// but if integrateAngular is false, only r & v are valid
@@ -312,17 +313,31 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 				wheels_detected = 0;
 				min_wheelvel2_detected = 1e30;
 
+				double error;
 				// update y0 and dy1 for next tick
-				integrateStep(t0 + curts, y0, dy1, true);
-
-				double error = lastIntegrationError;
+				if (true) // curts > MIN_TIMESTEP)
+				{
+					integrateStep(t0 + curts, y0, dy1, true);
+					error = lastIntegrationError;
+					if (wheels_mask != 0)
+						error *= STIFF_ERROR_SCALE;
+				}
+				else
+				{
+					// if we are touching the ground, the equations are stiff
+					// so we use a very loose error which doesn't do zero crossings
+					integrateStiff2(t0 + curts, y0, dy1, true);
+					error = lastIntegrationError;
+					// estimate error with polynomial d = v*t + 0.5*a*t^2
+					//error = estimateError(curts * timeScaleFrac / TICKS_PER_SEC) * STIFF_ERROR_SCALE;
+				}
 
 				if (debug)
 					System.out.println(
 						"t="
 							+ game.time()
 							+ " timestep="
-							+ timestep
+							+ (timestep * timeScaleFrac)
 							+ " error="
 							+ error
 							+ " "
@@ -391,6 +406,9 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 					// TODO: this still doesn't work too well
 					if (curts / 2 < MIN_TIMESTEP)
 					{
+						curts = MIN_TIMESTEP;
+						if (!ALLOW_TIMEFRAC)
+							break;
 						timeScaleFrac *= 0.5f;
 						System.out.println(ship + " timeScaleFrac = " + timeScaleFrac + " error = " + error);
 						if (DO_UCE_WARNING && ship != null)
@@ -444,11 +462,52 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 					}
 					else
 					{
-						timestep *= 2;
+						// the INITIAL_TIMESTEP is a multiple of the smallest possible
+						// timestep that can have only integer time values in the
+						// intermediate steps .. so we want to try to keep values
+						// a multiple of that if possible
+						if (timestep < INITIAL_TIMESTEP)
+						{
+							timestep *= 2;
+							if (timestep > INITIAL_TIMESTEP)
+								timestep = INITIAL_TIMESTEP;
+						} else {
+							timestep *= 2;
+						}
 						timeScaleFrac = 1.0f;
 					}
 				}
 			}
+		}
+
+		private double estimateError(double ts)
+		{
+			double error;
+			Vector3d r = new Vector3d();
+			r.scaleAdd(0.5 * ts * ts, dy1.b, oldy0.a);
+			r.scaleAdd(ts, dy1.a, r);
+			r.sub(y0.a);
+			error = Math.sqrt(r.lengthSquared() / y0.a.lengthSquared());
+			// also do velocity
+			Vector3d v = new Vector3d();
+			v.scaleAdd(ts, dy1.b, oldy0.b);
+			v.sub(y0.b);
+			double vl = v.length();
+			error += vl;
+
+			// angular velocity error
+			if (integrateAngular)
+			{
+				double y0dl2 = y0.d.lengthSquared();
+				// limit angular vel
+				double angerr =
+					Math.sqrt(oldy0.d.lengthSquared() + y0dl2) * ts * HI_ERROR_THRESH;
+				error += angerr;
+				if (debug2)
+					System.out.println("  angerr=" + angerr);
+			}
+
+			return error;
 		}
 
 		public String toString()
@@ -726,11 +785,12 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 
 	public double[] derivs(long t, double dt, double[] y)
 	{
+		// TODO: rounding sucks
 		switch (y.length)
 		{
 			case STATE_LENGTH_POS:
 			{
-				long tick = t + (long) (dt * TICKS_PER_SEC);
+				long tick = t + Math.round(dt * TICKS_PER_SEC);
 				RKState2 s = new RKState2();
 				s.setFrom2(y);
 				boolean taint = false; // TODO: taint?
@@ -741,7 +801,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 			}
 			case STATE_LENGTH_POS_ANG:
 			{
-				long tick = t + (long) (dt * TICKS_PER_SEC);
+				long tick = t + Math.round(dt * TICKS_PER_SEC);
 				RKState4 s = new RKState4();
 				s.setFrom4(y);
 				boolean taint = false; // TODO: taint?
@@ -775,13 +835,11 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 		double h = tdelta * timeScaleFrac * (1d / TICKS_PER_SEC);
 		double[] y = new double[STATE_LENGTH_POS_ANG];
 		y0.copyTo4(y);
-//		rk4.setStepSize(h);
-//		double[] yy = rk4.step(time, 0, y, this);
 
         double[] yy = new double[STATE_LENGTH_POS_ANG]; // end state
         double[] yerr = new double[STATE_LENGTH_POS_ANG]; // error
         double[] dydx = derivs(time, 0, y);
-        rkf78.rkck(y, dydx, time, 0, h, yy, yerr, this);
+        rkf.rkck(y, dydx, time, 0, h, yy, yerr, this);
         lastIntegrationError = getMaxArr(yerr);
 
 		y0.setFrom4(yy);
@@ -796,16 +854,46 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 		double h = tdelta * timeScaleFrac * (1d / TICKS_PER_SEC);
 		double[] y = new double[STATE_LENGTH_POS]; // start state 
 		y0.copyTo2(y);
-//		rk4.setStepSize(h);
-//		double[] yy = rk4.step(time, 0, y, this);
 		
         double[] yy = new double[STATE_LENGTH_POS]; // end state
         double[] yerr = new double[STATE_LENGTH_POS]; // error
         double[] dydx = derivs(time, 0, y);
-        rkf78.rkck(y, dydx, time, 0, h, yy, yerr, this);
+        rkf.rkck(y, dydx, time, 0, h, yy, yerr, this);
         lastIntegrationError = getMaxArr(yerr);
         
 		y0.setFrom2(yy);
+		// TODO: taint force in first step
+		this.laststate.set(y0);
+	}
+	
+	// integrate position and orientation
+	void integrateStiff2(long time, RKState4 y0, RKState4 dy1, boolean taint)
+	{
+		long tdelta = time - t0;
+		double h = tdelta * timeScaleFrac * (1d / TICKS_PER_SEC);
+		double[] y = new double[STATE_LENGTH_POS_ANG];
+		y0.copyTo4(y);
+
+        double[] yy = new double[STATE_LENGTH_POS_ANG]; // end state
+        double[] yerr = new double[STATE_LENGTH_POS_ANG]; // error
+        double[] dydx = derivs(time, 0, y);
+        heul.rkck(y, dydx, time, 0, h, yy, yerr, this);
+        lastIntegrationError = getMaxArr(yerr);
+
+		y0.setFrom4(yy);
+		// TODO: taint force in first step
+		this.laststate.set(y0);
+	}
+
+	void integrateStiff(long time, RKState4 y0, RKState4 dy1, boolean taint)
+	{
+		long tdelta = time - t0;
+		double h = tdelta * timeScaleFrac * (1d / TICKS_PER_SEC);
+		double[] y = new double[STATE_LENGTH_POS_ANG];
+		y0.copyTo4(y);
+		rk4.setStepSize(h);
+		double[] yy = rk4.step(time, 0, y, this);
+		y0.setFrom4(yy);
 		// TODO: taint force in first step
 		this.laststate.set(y0);
 	}
@@ -815,8 +903,9 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 		double m = 0;
 		for (int i=0; i<yerr.length; i++)
 		{
-			m = Math.max(yerr[i], m);
-			if (debug && yerr[i] > HI_ERROR_THRESH)
+			double err = Math.abs(yerr[i]);
+			m = Math.max(err, m);
+			if (debug && err > HI_ERROR_THRESH)
 				System.out.println("element " + i + " went above error thresh: " + yerr[i]);
 		}
 		return m;
@@ -1010,6 +1099,12 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 		Vector3d w0,
 		long time)
 	{
+		if (wheels_mask == 0)
+			return;
+		
+		if (debug3)
+			System.out.println("addContactForces(): t=" + time + ", mask=" + wheels_mask);
+		
 		Planet planet = (Planet) ref;
 		Vector3d nml = planet.getNormalAt(r0, AstroUtil.tick2dbl(time));
 		float mass = (float) thing.getMass(time);
@@ -1068,6 +1163,8 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 					agl = Math.max(agl, -cpts[i].maxCompress);
 					float Kdamping = cpts[i].Kdamping;
 					float forcemag = (float) (Kspring * agl + vertvel * Kdamping);
+					//if (agl < -cpts[i].maxCompress)
+						//forcemag *= MAX_COMPRESS_SCALE;
 					// apply force
 					if (forcemag < 0)
 						pf.addOffsetForce(fdir, pt, -forcemag);
@@ -1129,6 +1226,16 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	{
 		return "cowell";
 	}
+	
+	public long getLastT0()
+	{
+		return t0;
+	}
+	
+	public StateVector getLastInitialState()
+	{
+		return new StateVector(oldy0.a, oldy0.b);
+	}
 
 	//
 
@@ -1146,19 +1253,25 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	private static float COARSE_ERROR_FACTOR;
 	private static double MIN_SURFACE_VEL_2;
 	private static boolean DO_UCE_WARNING;
+	//private static double MAX_COMPRESS_SCALE;
+	private static double STIFF_ERROR_SCALE;
+	private static boolean ALLOW_TIMEFRAC;
 
 	static SettingsGroup settings = new SettingsGroup(CowellTrajectory.class, "Cowell")
 	{
 		public void updateSettings()
 		{
-			MIN_TIMESTEP = getInt("MinTimestep", 1);
-			INITIAL_TIMESTEP = getInt("InitialTimestep", (int) TICKS_PER_SEC / 64);
+			MIN_TIMESTEP = getInt("MinTimestep", 3);
+			INITIAL_TIMESTEP = getInt("InitialTimestep", 13*8); //(int) TICKS_PER_SEC / 64);
 			MAX_TIMESTEP = getInt("MaxTimestep", (int) TICKS_PER_SEC * 32768) / 2;
-			LO_ERROR_THRESH = getDouble("LoErrorThresh", 1e-6);
-			HI_ERROR_THRESH = getDouble("HiErrorThresh", 1e-5);
-			COARSE_ERROR_FACTOR = getFloat("CoarseError", 0.25f);
+			LO_ERROR_THRESH = getDouble("LoErrorThresh", 1e-10);
+			HI_ERROR_THRESH = getDouble("HiErrorThresh", 1e-9);
+			COARSE_ERROR_FACTOR = getFloat("CoarseError", 0.1f);
 			MIN_SURFACE_VEL_2 = AstroUtil.sqr(getDouble("MinStoppingVel", 0.0005));
 			DO_UCE_WARNING = getBoolean("UCEWarning", false);
+			//MAX_COMPRESS_SCALE = getDouble("MaxCompressScale", 10);
+			STIFF_ERROR_SCALE = getDouble("StiffErrorScale", 10);
+			ALLOW_TIMEFRAC = getBoolean("AllowTimefrac", false);
 		}
 	};
 

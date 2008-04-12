@@ -27,6 +27,7 @@ package com.fasterlight.exo.orbit.integ;
  * Fehlberg, Erwin, NASA TR R-287.
  *
  * @author <a href="mailto:dgaylor@users.sourceforge.net">Dave Gaylor
+ * @author modified by Steven Hugg
  * @version 1.0
  */
 
