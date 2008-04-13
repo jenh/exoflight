@@ -21,6 +21,11 @@ owner=U.S.
 ll=375000N 752000W
 desc=Wallops Flight Facility (WFF), located on the Eastern Shore of Virginia, is operated by Goddard Space Flight Center primarily as a rocket launch site to support science and exploration missions for NASA and other federal agencies.
 
+[Salt Flats]
+owner=U.S.
+ll=404938N 1134814W
+desc=Not strictly a launch site, the Bonneville Salt Flats is a 159 square mile area used for land speed record attempts in the 50's, 60's and 70's.
+
 ;
 
 [Baikonur]

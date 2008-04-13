@@ -16,8 +16,8 @@ sequence "STS-31 Launch" {
     @ui.message =? "Launch the shuttle and deploy the Hubble!";
     @ui.ship =? ship;
 
-    wait until 30;
-    ship.attctrl.guidance.pitch = -5 deg;
+    wait until 10;
+    ship.structure.'$External Tank'.jettison = true;
 
     -- todo: all components should come to stop
 }

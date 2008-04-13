@@ -280,6 +280,11 @@ public class StructureThing extends DefaultUniverseThing
 					// transform, and add total torque to 'force'
 					ort.transform(m);
 					force.T.scaleAdd(T, m, force.T);
+					
+					if (debug)
+						System.out.println(thing + ": Q=" + Q + " area="
+								+ af.area + " BC=" + af.BC + " damp="
+								+ totalDamping.length() + " dampf=" + dampfactor);
 				}
 			}
 		}
@@ -304,7 +309,7 @@ public class StructureThing extends DefaultUniverseThing
 
 	//
 
-	static boolean debug = false;
+	public static boolean debug = false;
 
 	// SETTINGS
 

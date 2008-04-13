@@ -393,6 +393,8 @@ public abstract class DefaultMutableTrajectory
 
 	PerturbForce getPerturbForces(Vector3d r, Vector3d v, Orientation ort, Vector3d w, long time)
 	{
+		if (debug)
+			System.out.println(">>>" + this.getThing());
 		PerturbForce pf = new PerturbForce();
 		// now go thru list of perturbs
 		Iterator it = getPerturbations();
@@ -400,6 +402,8 @@ public abstract class DefaultMutableTrajectory
 		{
 			Perturbation pert = (Perturbation) it.next();
 			pert.addPerturbForce(pf, r, v, ort, w, time);
+			if (debug)
+				System.out.println(pert + ": a=" + pf.a + " f=" + pf.f + " T=" + pf.T);
 		}
 		return pf;
 	}
@@ -618,7 +622,7 @@ public abstract class DefaultMutableTrajectory
 		prophelp.registerSet("statevector", "setStateVector", StateVector.class);
 	}
 
-	static boolean debug = !true;
+	public static boolean debug = false;
 
 	// SETTINGS
 

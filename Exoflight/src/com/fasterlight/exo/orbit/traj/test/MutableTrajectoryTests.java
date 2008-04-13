@@ -26,7 +26,7 @@ import com.fasterlight.exo.game.SpaceGame;
 import com.fasterlight.exo.orbit.*;
 import com.fasterlight.exo.orbit.traj.*;
 import com.fasterlight.exo.ship.*;
-import com.fasterlight.exo.strategy.Vehicle;
+import com.fasterlight.exo.strategy.*;
 import com.fasterlight.testing.*;
 import com.fasterlight.vecmath.Vector3d;
 
@@ -53,26 +53,72 @@ extends NumericTestCase
 
 	//
 
+	public void testCowell2() throws FileNotFoundException
+	{
+		SpaceGame game = new SpaceGame();
+		game.start();
+
+		DefaultMutableTrajectory.perturbFlags = DefaultMutableTrajectory.PF_DRAG;
+		Mission m = Mission.getMission("Test Missions", "Shuttle Bug");
+		m.prepare(game);
+		m.getSequencer().start();
+		SpaceShip ship = m.getSequencer().getShip();
+		CowellTrajectory.debug = true;
+		CowellTrajectory.debug2 = true;
+		CowellTrajectory.debug3 = true;
+		DefaultMutableTrajectory.debug = true;
+		StructureThing.debug = true;
+		long tlast = 0;
+		long t0 = game.time();
+		PrintStream out = new PrintStream(new FileOutputStream("trv.csv"));
+		for (int i=0; i<100000; i++)
+		{
+			assertTrue(!ship.getShipWarningSystem().hasWarningPrefix("UCE"));
+			game.update(1);
+			Trajectory traj2 = ship.getTrajectory();
+			if (!(traj2 instanceof CowellTrajectory))
+				continue;
+			CowellTrajectory traj = (CowellTrajectory)traj2;
+			long t = traj.getLastT0(); 
+			if (tlast != t)
+			{
+				StateVector lastInitialState = traj.getLastInitialState();
+				//System.out.println("--->" + (t-t0) + ": " + lastInitialState);
+				out.print(t-t0);
+				out.print(',');
+				out.print(lastInitialState.r.length());
+				out.print(',');
+				out.print(lastInitialState.v.length());
+				out.print(',');
+				out.print(traj.getLastPerturbForce().a.length());
+				out.print(',');
+				out.print(traj.getLastPerturbForce().f.length());
+				out.print(',');
+				out.print(traj.getLastPerturbForce().T.length());
+				out.print(',');
+				out.print(traj.getLastIntegrationError());
+				out.println();
+				tlast = t;
+			}
+			//ship.getShipAttitudeSystem().setManualThrottle(0);
+		}
+	}
+	
 	public void testCowell1() throws FileNotFoundException
 	{
 		SpaceGame game = new SpaceGame();
 		game.start();
 
-		Planet planet = (Planet)game.getBody("Earth");
-		
-		CowellTrajectory traj = new CowellTrajectory();
-		traj.setParent(planet);
-		double alt = 3;
-		Vector3d r = new Vector3d(0, 0, planet.getRadius()+alt);
-		Vector3d v = new Vector3d(planet.getAirVelocity(r, game.time() * (1d/Constants.TICKS_PER_SEC)));
-		traj.setStateVector(new StateVector(r, v));
-
 		DefaultMutableTrajectory.perturbFlags = DefaultMutableTrajectory.PF_DRAG;
+		SpaceBase base = (SpaceBase)game.getUniverse().getThingByName("Salt Flats");
   		Vehicle vehicle = Vehicle.getVehicle("Space Wagon");
   		Structure struct = vehicle.toStructure(game.getAgency());
 		SpaceShip ship = new SpaceShip(struct);
-		ship.setTrajectory(traj);
-		//ship.getShipAttitudeSystem().setThrottleManual(1);
+		ship = game.getAgency().prepareVehicle(vehicle, (SpaceBase)base);
+		//ship.setTrajectory(traj);
+		((PropulsionCapability)ship.getStructure().getModuleByName("Space Wagon").getCapabilityByName("main engine")).setArmed(true);
+		ship.getShipAttitudeSystem().setThrottleManual(1);
+		ship.getShipAttitudeSystem().setManualThrottle(1);
 		CowellTrajectory.debug = true;
 		//CowellTrajectory.debug2 = true;
 		CowellTrajectory.debug3 = true;
@@ -81,13 +127,24 @@ extends NumericTestCase
 		PrintStream out = new PrintStream(new FileOutputStream("trv.csv"));
 		for (int i=0; i<100000; i++)
 		{
+			assertTrue(!ship.getShipWarningSystem().hasWarningPrefix("UCE"));
 			game.update(1);
+			Trajectory traj2 = ship.getTrajectory();
+			if (!(traj2 instanceof CowellTrajectory))
+				continue;
+			CowellTrajectory traj = (CowellTrajectory)traj2;
 			long t = traj.getLastT0(); 
 			if (tlast != t)
 			{
 				StateVector lastInitialState = traj.getLastInitialState();
 				//System.out.println("--->" + (t-t0) + ": " + lastInitialState);
 				out.print(t-t0);
+				out.print(',');
+				out.print(lastInitialState.r.length());
+				out.print(',');
+				out.print(lastInitialState.v.length());
+				out.print(',');
+				out.print(traj.getLastIntegrationError());
 				out.print(',');
 				out.print(lastInitialState.r.x);
 				out.print(',');
@@ -102,13 +159,11 @@ extends NumericTestCase
 				out.print(lastInitialState.v.z);
 				out.println();
 				tlast = t;
-				assertTrue(!Double.isNaN(lastInitialState.r.length()));
 			}
 			//ship.getShipAttitudeSystem().setManualThrottle(0);
 		}
-		out.println(traj);
 	}
-	
+
 	public void testMutable1()
 	{
 		SpaceGame game = new SpaceGame();
