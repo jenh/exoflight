@@ -59,7 +59,7 @@ extends NumericTestCase
 		game.start();
 
 		DefaultMutableTrajectory.perturbFlags = DefaultMutableTrajectory.PF_DRAG;
-		Mission m = Mission.getMission("Test Missions", "Shuttle Bug");
+		Mission m = Mission.getMission("Test Missions", "Drag Bug");
 		m.prepare(game);
 		m.getSequencer().start();
 		SpaceShip ship = m.getSequencer().getShip();

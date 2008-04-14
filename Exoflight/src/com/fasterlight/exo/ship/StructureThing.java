@@ -115,30 +115,6 @@ public class StructureThing extends DefaultUniverseThing
 		{
 			return lastv2;
 		}
-		private void addGroundInteractionForce(
-			PerturbForce force,
-			Vector3d r,
-			Vector3d v,
-			Orientation ort,
-			Vector3d w,
-			long time,
-			Planet planet,
-			double rl)
-		{
-			double altagl =
-				rl
-					- planet.getRadius()
-					- planet.getElevationAt(r, time * (1d / Constants.TICKS_PER_SEC));
-			altagl -= getRadius();
-			if (altagl < 0)
-			{
-				Vec3d f = new Vec3d(r);
-				double BOUNCE_FACTOR = 1e4;
-				f.scale(altagl * altagl * BOUNCE_FACTOR / rl);
-				//				System.out.println(f);
-				//				force.add(f);
-			}
-		}
 		public void addPerturbForce(
 			PerturbForce force,
 			Vector3d r,
@@ -267,8 +243,8 @@ public class StructureThing extends DefaultUniverseThing
 					Vector3d dm = new Vec3d(w);
 					ort.invTransform(dm);
 
-					double wl = w.length();
-					double dampfactor = density * wl;
+					//double wl = w.length();
+					double dampfactor = density;// * wl;
 
 					Vector3f totalDamping = struct.getTotalDamping();
 
@@ -284,7 +260,8 @@ public class StructureThing extends DefaultUniverseThing
 					if (debug)
 						System.out.println(thing + ": Q=" + Q + " area="
 								+ af.area + " BC=" + af.BC + " damp="
-								+ totalDamping.length() + " dampf=" + dampfactor);
+								+ totalDamping.length() + " dampf=" 
+								+ dampfactor);
 				}
 			}
 		}

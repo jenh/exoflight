@@ -1,0 +1,23 @@
+
+sequence "Drag Bug" {
+
+    // turn on ship systems
+    @module = ship.structure.'$Space Wagon';
+
+    @module.'$hover engine'.armed = true;
+    @module.'$main engine'.armed = true;
+    @module.'$RCS'.armed = true;
+    ship.guidancecap.active = true;
+
+    @module.'$hover engine'.throttle = 1;
+    wait for 1;
+    @module.'$hover engine'.throttle = 0;
+    @module.'$main engine'.throttle = 1;
+
+    ship.attsys.guidmode = "aoa";
+    wait for 7;
+    @module.'$main engine'.throttle = 0;
+    ship.attctrl.guidance.pitch = -10 deg;
+
+    --ship.guidancecap.active = false;
+}

@@ -1045,7 +1045,7 @@ implements java.io.Serializable, PropertyAware
 	{
 		public void updateSettings()
 		{
-			DEFAULT_DAMPING_FACTOR = getFloat("DefaultDampingFactor", 0.10f);
+			DEFAULT_DAMPING_FACTOR = getFloat("DefaultDampingFactor", 0.010f);
 			DO_AEROSTRESS = getBoolean("DoAerostress", true);
 		}
 	};

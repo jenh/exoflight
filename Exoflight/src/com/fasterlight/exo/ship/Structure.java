@@ -148,8 +148,6 @@ implements java.io.Serializable, PropertyAware, Constants
 			ort = new Orientation(
 				Module.getModuleOrientation(pointdir).getDirection(),
 				Module.getModuleOrientation(updir).getDirection());
-			Orientation from_ort = Module.getModuleOrientation(fromdir);
-			Orientation to_ort = Module.getModuleOrientation(todir);
 		} else {
 			ort = Module.getModuleOrientation(fromdir ^ 1);
 			ort.concat(Module.getModuleOrientation(todir));
@@ -682,15 +680,15 @@ implements java.io.Serializable, PropertyAware, Constants
 	{
 		Iterator it;
 		Vector3f mdir = new Vector3f();
-		Vector3f pt = new Vector3f();
 		AeroForces res = new AeroForces();
-		float bc, area;
+		float area;
 		float totarea = 0.0f;
 
 		it = getModules().iterator();
 		while (it.hasNext())
 		{
 			Module m = (Module)it.next();
+			// TODO: don't include modules that are inside of other modules
 			// get direction of module
 			Orientation mort = m.getOrientation();
 			mdir.set(mort.getDirection());
