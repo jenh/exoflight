@@ -63,15 +63,17 @@ extends NumericTestCase
 		m.prepare(game);
 		m.getSequencer().start();
 		SpaceShip ship = m.getSequencer().getShip();
+		/*
 		CowellTrajectory.debug = true;
 		CowellTrajectory.debug2 = true;
 		CowellTrajectory.debug3 = true;
 		DefaultMutableTrajectory.debug = true;
 		StructureThing.debug = true;
+		*/
 		long tlast = 0;
 		long t0 = game.time();
 		PrintStream out = new PrintStream(new FileOutputStream("trv.csv"));
-		for (int i=0; i<100000; i++)
+		for (int i=0; i<60*1000; i++)
 		{
 			assertTrue(!ship.getShipWarningSystem().hasWarningPrefix("UCE"));
 			game.update(1);
@@ -83,7 +85,7 @@ extends NumericTestCase
 			if (tlast != t)
 			{
 				StateVector lastInitialState = traj.getLastInitialState();
-				//System.out.println("--->" + (t-t0) + ": " + lastInitialState);
+				System.out.println("--->" + (t-t0) + ": " + lastInitialState);
 				out.print(t-t0);
 				out.print(',');
 				out.print(lastInitialState.r.length());
@@ -119,13 +121,13 @@ extends NumericTestCase
 		((PropulsionCapability)ship.getStructure().getModuleByName("Space Wagon").getCapabilityByName("main engine")).setArmed(true);
 		ship.getShipAttitudeSystem().setThrottleManual(1);
 		ship.getShipAttitudeSystem().setManualThrottle(1);
-		CowellTrajectory.debug = true;
+		//CowellTrajectory.debug = true;
 		//CowellTrajectory.debug2 = true;
-		CowellTrajectory.debug3 = true;
+		//CowellTrajectory.debug3 = true;
 		long tlast = 0;
 		long t0 = game.time();
 		PrintStream out = new PrintStream(new FileOutputStream("trv.csv"));
-		for (int i=0; i<100000; i++)
+		for (int i=0; i<60*1000; i++)
 		{
 			assertTrue(!ship.getShipWarningSystem().hasWarningPrefix("UCE"));
 			game.update(1);
@@ -137,7 +139,7 @@ extends NumericTestCase
 			if (tlast != t)
 			{
 				StateVector lastInitialState = traj.getLastInitialState();
-				//System.out.println("--->" + (t-t0) + ": " + lastInitialState);
+				System.out.println("--->" + (t-t0) + ": " + lastInitialState);
 				out.print(t-t0);
 				out.print(',');
 				out.print(lastInitialState.r.length());
