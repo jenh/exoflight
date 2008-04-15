@@ -81,8 +81,8 @@ public class RasterLODElevationModel implements ElevationModel, PropertyAware
 	public void setFilePrefix(String fp)
 	{
 		ptp.setPathPrefix(fp);
-		//ptp.setPixelConfabulator(new RandomNeighborPixelConfabulator());
-		ptp.setPixelConfabulator(new AveragingPixelConfabulator());
+		ptp.setPixelConfabulator(new RandomNeighborPixelConfabulator());
+		//ptp.setPixelConfabulator(new AveragingPixelConfabulator());
 		ptp.setCacheAll(true);
 	}
 
