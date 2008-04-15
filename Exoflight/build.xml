@@ -75,6 +75,39 @@
 </apply>
 </target>
 
+<!-- compile-lwo -->
+
+<target name="compile-vtr">
+	<java classname="com.fasterlight.exo.newgui.roam.BuildWedgieBounds" fork="yes">
+	    <classpath refid="libs.path" />
+	    <arg value="${planet}" />
+	</java>
+</target>
+
+<target name="build-wedgie-bounds">
+	<antcall target="compile-vtr">
+		<param name="planet" value="Earth" />
+	</antcall>
+    <antcall target="compile-vtr">
+        <param name="planet" value="Mars" />
+    </antcall>
+    <antcall target="compile-vtr">
+        <param name="planet" value="Luna" />
+    </antcall>
+    <antcall target="compile-vtr">
+        <param name="planet" value="Venus" />
+    </antcall>
+    <antcall target="compile-vtr">
+        <param name="planet" value="Eros" />
+    </antcall>
+    <antcall target="compile-vtr">
+        <param name="planet" value="Deimos" />
+    </antcall>
+    <antcall target="compile-vtr">
+	    <param name="planet" value="Phobos" />
+	</antcall>
+</target>
+
 <!-- unzip resources -->
 
 <target name="unpack">
