@@ -158,10 +158,10 @@ extends PropulsionCapability
 		if (exitarea > 0)
 		{
 			StructureThing thing = getThing();
-			if (getThing() != null &&
-				getThing().getParent() != null && getThing().getParent() instanceof Planet)
+			if (thing != null &&
+				thing.getParent() != null && thing.getParent() instanceof Planet)
 			{
-				Planet p = (Planet)(getThing().getParent());
+				Planet p = (Planet)(thing.getParent());
 				Atmosphere atmo = p.getAtmosphere();
 				if (atmo != null)
 				{
@@ -232,6 +232,11 @@ extends PropulsionCapability
 			ort.transform(cmofs);
 			cmofs.scale(1d/1000);
 			force.addOffsetForce(f, cmofs);
+		}
+		
+		public String toString() 
+		{
+			return super.toString() + " (" + getModule().getShip() + ")";
 		}
 	}
 

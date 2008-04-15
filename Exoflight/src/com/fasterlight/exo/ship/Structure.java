@@ -119,7 +119,14 @@ implements java.io.Serializable, PropertyAware, Constants
 		m.setStructure(this);
 		adjustMass(m.getMass());
 //		adjustSupply(m.getSupply(), 1);
-		allcaps.addAll(m.getCapabilities());
+		List caps = m.getCapabilities();
+		allcaps.addAll(caps);
+		Iterator it = caps.iterator();
+		while (it.hasNext())
+		{
+			Capability cap = (Capability)it.next();
+			cap.setModule(m);
+		}
 		// if only 1 module, adjust structure's center of mass
 		if (modules.size() == 1)
 			adjustCenterOfMass();

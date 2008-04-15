@@ -1,0 +1,22 @@
+
+sequence "STS-31 Launch" {
+
+    ship.name = "STS-31";
+    @Orbiter = ship.structure.'$Orbiter';
+
+    wait for 0.5;
+
+    ship.launchsys.incl = 28.65 deg;
+    ship.launchsys.burntime = 470;
+    ship.launchsys.timetolaunch = 60;
+    ship.launchsys.targalt = 115;
+    ship.launchsys.targapo = 270;
+    ship.launchsys.active = true;
+
+    wait until 65;
+    ship.structure.'$Left SRB'.jettison = true;
+    ship.structure.'$Right SRB'.jettison = true;
+
+    -- todo: all components should come to stop
+}
+

@@ -74,6 +74,11 @@ implements Constants, PropertyAware
 	{
 		return module;
 	}
+	
+	public void setModule(Module m)
+	{
+		this.module = m;
+	}
 
 	public Structure getStructure()
 	{

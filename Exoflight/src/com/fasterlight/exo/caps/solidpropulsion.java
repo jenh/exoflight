@@ -23,6 +23,8 @@ import com.fasterlight.exo.ship.*;
 public class solidpropulsion
 extends RocketEngineCapability
 {
+	boolean hasFired = false;
+	
 	public solidpropulsion(Module module)
 	{
 		super(module);
@@ -31,16 +33,32 @@ extends RocketEngineCapability
 	public void setActive(boolean b)
 	{
 		if (b)
+		{
 			super.setActive(true);
+			if (isActive())
+				hasFired = true;
+		}
 		else
 			; // can't deactivate a solid!
 	}
 
 	public void shutdown()
 	{
-		// can't do that either!
+		// TODO: we can't override this because removeModule()
+		// depends on this (so we can detach a solid rocket part)
+		super.shutdown();
 	}
-
+	
+	public void setModule(Module m)
+	{
+		super.setModule(m);
+		// we never shutdown!
+		if (hasFired)
+		{
+			setActive(true);
+		}
+	}
+	
 	public String getTech()
 	{
 		return "SOLI";
