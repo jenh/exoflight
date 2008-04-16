@@ -87,10 +87,6 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	static final boolean alwaysCheckContacts = true;
 	static final boolean crashExpendable = true;
 
-	// we reduce this value to avoid large integration errors
-	// from diverging and killing everyone
-	float timeScaleFrac = 1.0f;
-	
 	static final int STATE_LENGTH_POS = 6;
 	static final int STATE_LENGTH_POS_ANG = STATE_LENGTH_POS + 7;
 
@@ -326,7 +322,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 						"t="
 							+ game.time()
 							+ " timestep="
-							+ (timestep * timeScaleFrac)
+							+ timestep
 							+ " error="
 							+ error
 							+ " "
@@ -396,32 +392,22 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 					if (curts / 2 < MIN_TIMESTEP)
 					{
 						curts = MIN_TIMESTEP;
-						if (!ALLOW_TIMEFRAC)
+						// this is the maximum error we'll tolerate
+						// if we exceed it, we just crash() which
+						// sets the trajectory to LandedTrajectory
+						// (stops it in its tracks)
+						if (!(error < BAD_ERROR_THRESH))
 						{
-							// this is the maximum error we'll tolerate
-							// if we exceed it, we just crash() which
-							// sets the trajectory to LandedTrajectory
-							// (stops it in its tracks)
-							if (!(error < BAD_ERROR_THRESH))
-							{
-								if (DO_UCE_WARNING && ship != null)
-									ship.getShipWarningSystem().setWarning(
-										"UCE",
-										"Trajectory overflow");
-								System.out.println(ship + " error = " + error);
-								crash();
-								return;
-							}
-							// otherwise, just deal with the error and continue
-							break;
-						} else {
-							timeScaleFrac *= 0.5f;
-							System.out.println(ship + " timeScaleFrac = " + timeScaleFrac + " error = " + error);
 							if (DO_UCE_WARNING && ship != null)
 								ship.getShipWarningSystem().setWarning(
 									"UCE",
-									"Time step reduced: " + timeScaleFrac);
+									"Trajectory overflow");
+							System.out.println(ship + " error = " + error);
+							crash();
+							return;
 						}
+						// otherwise, just deal with the error and continue
+						break;
 					}
 					else
 					{
@@ -472,28 +458,17 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 			{
 				if (errortries++ > NUM_ERROR_TRIES && timestep < MAX_TIMESTEP)
 				{
-					if (timeScaleFrac < 1)
+					// the INITIAL_TIMESTEP is a multiple of the smallest possible
+					// timestep that can have only integer time values in the
+					// intermediate steps .. so we want to try to keep values
+					// a multiple of that if possible
+					if (timestep < LARGE_TIMESTEP)
 					{
-						timeScaleFrac *= 2;
-						System.out.println(ship + " timeScaleFrac up = " + timeScaleFrac);
-						if (ship != null)
-							ship.getShipWarningSystem().clearWarning("UCE");
-					}
-					else
-					{
-						// the INITIAL_TIMESTEP is a multiple of the smallest possible
-						// timestep that can have only integer time values in the
-						// intermediate steps .. so we want to try to keep values
-						// a multiple of that if possible
-						if (timestep < LARGE_TIMESTEP)
-						{
-							timestep *= 2;
-							if (timestep > LARGE_TIMESTEP)
-								timestep = LARGE_TIMESTEP;
-						} else {
-							timestep *= 2;
-						}
-						timeScaleFrac = 1.0f;
+						timestep *= 2;
+						if (timestep > LARGE_TIMESTEP)
+							timestep = LARGE_TIMESTEP;
+					} else {
+						timestep *= 2;
 					}
 				}
 			}
@@ -853,7 +828,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	// integrate position and orientation
 	double integrateWithAng(int tdelta, RKState4 y0, RKState4 dy1, boolean taint)
 	{
-		double h = tdelta * timeScaleFrac * (1d / TICKS_PER_SEC);
+		double h = tdelta * (1d / TICKS_PER_SEC);
 		double[] y = new double[STATE_LENGTH_POS_ANG];
 		y0.copyTo4(y);
 
@@ -871,7 +846,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	// integrate position only
 	double integrateWithNoAng(int tdelta, RKState2 y0, RKState2 dy1, boolean taint)
 	{
-		double h = tdelta * timeScaleFrac * (1d / TICKS_PER_SEC);
+		double h = tdelta * (1d / TICKS_PER_SEC);
 		double[] y = new double[STATE_LENGTH_POS]; // start state 
 		y0.copyTo2(y);
 		
@@ -888,7 +863,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	
 	double integrateRK4(int tdelta, RKState4 y0, RKState4 dy1, boolean taint)
 	{
-		double h = tdelta * timeScaleFrac * (1d / TICKS_PER_SEC);
+		double h = tdelta * (1d / TICKS_PER_SEC);
 		double[] y = new double[STATE_LENGTH_POS_ANG];
 		y0.copyTo4(y);
 		rk4.setStepSize(h);
@@ -899,7 +874,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 		// if we are touching the ground, the equations are stiff
 		// so we use a very loose error which doesn't do zero crossings
 		// estimate error with polynomial d = v*t + 0.5*a*t^2
-		return estimateError(tdelta * timeScaleFrac / TICKS_PER_SEC, y0, dy1); // * STIFF_ERROR_SCALE;
+		return estimateError(tdelta / TICKS_PER_SEC, y0, dy1); // * STIFF_ERROR_SCALE;
 	}
 
 	private double getMaxArr(double[] yerr)
@@ -1120,7 +1095,6 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 		Vector3d v = new Vec3d();
 		Vector3f pt = new Vector3f();
 		Vector3f fdir = new Vector3f();
-		int npts = 0;
 
 		// iterate thru each contact point
 		int mask = wheels_mask;
@@ -1267,9 +1241,6 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 	private static float COARSE_ERROR_FACTOR;
 	private static double MIN_SURFACE_VEL_2;
 	private static boolean DO_UCE_WARNING;
-	//private static double MAX_COMPRESS_SCALE;
-	private static double STIFF_ERROR_SCALE;
-	private static boolean ALLOW_TIMEFRAC;
 
 	static SettingsGroup settings = new SettingsGroup(CowellTrajectory.class, "Cowell")
 	{
@@ -1285,9 +1256,6 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 			COARSE_ERROR_FACTOR = getFloat("CoarseErrorScale", 0.1f);
 			MIN_SURFACE_VEL_2 = AstroUtil.sqr(getDouble("MinStoppingVel", 0.0005));
 			DO_UCE_WARNING = getBoolean("UCEWarning", true);
-			//MAX_COMPRESS_SCALE = getDouble("MaxCompressScale", 10);
-			STIFF_ERROR_SCALE = getDouble("StiffErrorScale", 10);
-			ALLOW_TIMEFRAC = getBoolean("AllowTimefrac", false);
 		}
 	};
 
