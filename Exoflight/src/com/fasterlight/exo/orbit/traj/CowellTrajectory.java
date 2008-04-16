@@ -1253,7 +1253,7 @@ public class CowellTrajectory extends DefaultMutableTrajectory implements Deriva
 			LO_ERROR_THRESH = getDouble("LoErrorThresh", 1e-10);
 			HI_ERROR_THRESH = getDouble("HiErrorThresh", 1e-9);
 			BAD_ERROR_THRESH = getDouble("BadErrorThresh", 1e-3);
-			COARSE_ERROR_FACTOR = getFloat("CoarseErrorScale", 0.1f);
+			COARSE_ERROR_FACTOR = getFloat("CoarseErrorScale", 0.01f);
 			MIN_SURFACE_VEL_2 = AstroUtil.sqr(getDouble("MinStoppingVel", 0.0005));
 			DO_UCE_WARNING = getBoolean("UCEWarning", true);
 		}
