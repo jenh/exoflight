@@ -20,7 +20,7 @@ height=180
 value_prop=$fuel tank.%Fus6
 ;pointeralign=0
 ;labelalign=1
-shader$meter=meter-r
+shader$meter=meter
 
 ;
 
@@ -66,6 +66,8 @@ value_scale=100
 lo=0
 hi=100
 scale=20
+shader$meter=meter-invert
+shader$metertext=metertext-invert
 
 [main-throt]
 parent=engtab
@@ -79,6 +81,8 @@ value_scale=100
 lo=0
 hi=100
 scale=20
+shader$meter=meter-invert
+shader$metertext=metertext-invert
 
 [rcs]
 parent=engtab

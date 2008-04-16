@@ -18,8 +18,8 @@
 *********************************************************************/
 package com.fasterlight.exo.orbit.nav;
 
+import com.fasterlight.exo.orbit.integ.RKState2;
 import com.fasterlight.game.Settings;
-import com.fasterlight.util.Vec3d;
 import com.fasterlight.vecmath.Vector3d;
 
 /**
@@ -31,7 +31,7 @@ import com.fasterlight.vecmath.Vector3d;
   */
 public abstract class Integrator3d
 {
-	RKState curstate = new RKState();
+	RKState2 curstate = new RKState2();
 	double timestep = 1.0;
 	double min_timestep = Settings.getDouble("Integrator", "MinTimestep", 1d/256);
 	double max_timestep = Settings.getDouble("Integrator", "MaxTimestep", 256);
@@ -50,9 +50,9 @@ public abstract class Integrator3d
 	  */
 	public abstract boolean getAccel(double t, Vector3d r, Vector3d v, Vector3d a);
 
-	protected RKState getF(double t, RKState s)
+	protected RKState2 getF(double t, RKState2 s)
 	{
-		RKState s2 = new RKState(s.b);
+		RKState2 s2 = new RKState2(s.b);
 		if (!getAccel(t, s.a, s.b, s2.b))
 			stopped = true;
 		return s2;
@@ -74,7 +74,7 @@ public abstract class Integrator3d
 		curstate.b.set(v);
 	}
 
-	public RKState getState()
+	public RKState2 getState()
 	{
 		return curstate;
 	}
@@ -138,9 +138,9 @@ public abstract class Integrator3d
 
 	public void autointegrate()
 	{
-		RKState dy1 = getF(curtime, curstate);
+		RKState2 dy1 = getF(curtime, curstate);
 		lastforce.set(dy1.b);
-		RKState newstate = new RKState(curstate);
+		RKState2 newstate = new RKState2(curstate);
 
 		// curts is the actual time step calculated in this step
 		// while 'timestep' is the time step used for the next iteration
@@ -186,30 +186,30 @@ public abstract class Integrator3d
 
 	public void integrate(double h)
 	{
-		RKState dy1 = getF(curtime, curstate);
+		RKState2 dy1 = getF(curtime, curstate);
 		lastforce.set(dy1.b);
 		solve(curstate, dy1, curtime, h);
 		curtime += h;
 	}
 
-	private void solve(RKState y0, RKState dy1, double t, double h)
+	private void solve(RKState2 y0, RKState2 dy1, double t, double h)
 	{
- 		RKState ry2 = new RKState(dy1);
+ 		RKState2 ry2 = new RKState2(dy1);
 		ry2.scale(h/2);
 		ry2.add(y0);
-  		RKState dy2 = getF(t+h/2, ry2);
+  		RKState2 dy2 = getF(t+h/2, ry2);
 
-  		RKState ry3 = new RKState(dy2);
+  		RKState2 ry3 = new RKState2(dy2);
   		ry3.scale(h/2);
 	  	ry3.add(y0);
-  		RKState dy3 = getF(t+h/2, ry3);
+  		RKState2 dy3 = getF(t+h/2, ry3);
 
-	  	RKState ry4 = new RKState(dy3);
+	  	RKState2 ry4 = new RKState2(dy3);
   		ry4.scale(h);
   		ry4.add(y0);
-	  	RKState dy4 = getF(t+h, ry4);
+	  	RKState2 dy4 = getF(t+h, ry4);
 
-  		RKState term = new RKState(dy1);
+  		RKState2 term = new RKState2(dy1);
   		term.add(dy4);
 	  	term.scale(1d/2);
   		term.add(dy2);
@@ -217,34 +217,6 @@ public abstract class Integrator3d
 	  	term.scale(h/3);
 
   		y0.add(term);
-	}
-
-	//
-
-	/**
-	  * Stores info about a Runge-Kutta step.
-	  * (todo : merge with CowellTrajectory)
-	  */
-	class RKState
-	{
-		Vector3d a,b; // pos/vel, or vel/accel
-		RKState()
-		{
-			this.a = new Vec3d();
-			this.b = new Vec3d();
-		}
-		RKState(Vector3d a)	{
-			this.a = new Vec3d(a);
-			this.b = new Vec3d();
-		}
-		RKState(Vector3d a, Vector3d b)	{
-			this.a = new Vec3d(a);
-			this.b = new Vec3d(b);
-		}
-		RKState(RKState s) { this(s.a, s.b); }
-		void add(RKState s) { a.add(s.a); b.add(s.b); }
-		void scale(double x) { a.scale(x); b.scale(x); }
-		public String toString() { return "[" + a + ", " + b + "]"; }
 	}
 
 	//
