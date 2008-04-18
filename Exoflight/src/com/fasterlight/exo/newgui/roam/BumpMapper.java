@@ -18,7 +18,10 @@
 *********************************************************************/
 package com.fasterlight.exo.newgui.roam;
 
+import java.nio.IntBuffer;
+
 import com.fasterlight.exo.orbit.AstroUtil;
+import com.fasterlight.proctex.*;
 import com.fasterlight.vecmath.Vector3f;
 
 /**
@@ -146,12 +149,17 @@ public class BumpMapper
 			tmparr[x*2+1] = (float)Math.cos(lon);
 		}
 
+		// define right triangle with adjacent = xscale or yscale
+		// opposite = slope
+		// thus tan(a) = slope/scale
 		for (x=-255; x<=255; x++)
 		{
-			sinxslope[x+256] = (float)Math.sin(x*xscale);
-			sinyslope[x+256] = (float)Math.sin(x*yscale + sunlatf);
-			cosxslope[x+256] = (float)Math.cos(x*xscale);
-			cosyslope[x+256] = (float)Math.cos(x*yscale + sunlatf);
+			double atanx = Math.atan(x*xscale);
+			double atany = Math.atan(x*yscale);
+			sinxslope[x+256] = (float)Math.sin(atanx);
+			sinyslope[x+256] = (float)Math.sin(atany + sunlatf);
+			cosxslope[x+256] = (float)Math.cos(atanx);
+			cosyslope[x+256] = (float)Math.cos(atany + sunlatf);
 		}
 	}
 
@@ -386,6 +394,66 @@ public class BumpMapper
 				(float)Math.PI/8);
 			long t2 = System.currentTimeMillis();
 			System.out.println("Iteration " + i + ": " + (t2-t1) + " msec");
+		}
+	}
+	public void makeNormalMap(TexQuad srcquad, IntBuffer destbuf,
+			int imgw, int imgh,
+			float lolat, float lolon, float hilat, float hilon)
+	{
+		float range = srcquad.maxvalue - srcquad.minvalue;
+		// TODO: account for border
+		// TODO: scale?
+		float xscale,yscale;
+		xscale = yscale = 1f/255;
+		buildTables(xscale, yscale, lolat, lolon, hilat, hilon, 0);
+		byte[] arr = srcquad.getByteData();
+		for (int y=0; y<imgh; y++)
+		{
+			float lat = lolat + y*(hilat-lolat)/imgh;
+			float sinlat = (float)Math.sin(lat);
+			float coslat = (float)Math.cos(lat);
+			int yy = Math.max(1, Math.min(imgh-2, y));
+			int i = (yy*imgw)+1;
+			for (int x=1; x<imgw-1; x++)
+			{
+				int n1 = (arr[i-imgw-1] & 0xff);
+				int n2 = (arr[i-imgw] & 0xff);
+				int n3 = (arr[i-imgw+1] & 0xff);
+				int n4 = (arr[i-1] & 0xff);
+				int n6 = (arr[i+1] & 0xff);
+				int n7 = (arr[i+imgw-1] & 0xff);
+				int n8 = (arr[i+imgw] & 0xff);
+				int n9 = (arr[i+imgw+1] & 0xff);
+				// 7/5 is close
+				int xslope = ((n6-n4)*10 + (n3+n9-n1-n7)*7);
+				int yslope = ((n2-n8)*10 + (n1+n3-n7-n9)*7);
+				xslope /= 17;
+				yslope /= 17;
+				float coslon = cosX(x);
+				float sinlon = sinX(x);
+				Vector3f nml = new Vector3f(
+						coslon * coslat,
+						sinlon * coslat,
+						sinlat
+				);
+				// TODO: do the Y vector as well
+				nml = new Vector3f(
+						nml.x * cosxslope[xslope+256] - nml.y * sinxslope[xslope+256],
+						-nml.x * sinxslope[xslope+256] + nml.y * cosxslope[xslope+256],
+						nml.z
+				);
+				//Vector3f nml = new Vector3f(xslope, yslope, 256*17/2);
+				//nml.normalize();
+				//System.out.println(x + " " + y + " " + nml);
+				int r = 128 + Math.round(nml.x*127);
+				int g = 128 + Math.round(nml.y*127);
+				int b = 128 + Math.round(nml.z*127);
+				int rgb = r + (g<<8) + (b<<16);
+				destbuf.put(rgb);
+				if (x==1 || x==imgw-2)
+					destbuf.put(rgb);
+				i++;
+			}
 		}
 	}
 

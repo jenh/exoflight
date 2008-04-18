@@ -68,6 +68,7 @@ public class GUIContext extends GLOContext
 
 	Map planetRenderCache = new HashMap();
 	WeakHashMap partsyss = new WeakHashMap();
+	private String glExtensions;
 
 	// for inertial modification
 	//	Vector3d lastInertAccel = new Vector3d();
@@ -177,24 +178,31 @@ public class GUIContext extends GLOContext
 			clearCaches();
 		}
 	}
+	
+	public boolean hasGLExtension(String name)
+	{
+		boolean result = glExtensions.indexOf(" GL_" + name + ' ') >= 0;
+		System.out.println("Has " + name + ": " + result);
+		return result;
+	}
 
 	// query for extensions, etc
 	void queryGLParams()
 	{
-		String exts = gl.glGetString(GL.GL_EXTENSIONS);
-		System.out.println("GL Extensions: " + exts);
+		this.glExtensions = ' ' + gl.glGetString(GL.GL_EXTENSIONS) + ' ';
+		System.out.println("GL Extensions: " + glExtensions);
 		// check for multitexture
-		glMultiTex = (exts.indexOf("ARB_multitexture") >= 0);
+		glMultiTex = hasGLExtension("ARB_multitexture");
 		if (glMultiTex)
 		{
 			// get the max tex units
 			int[] arr = new int[1];
 			gl.glGetIntegerv(GL.GL_MAX_TEXTURE_UNITS, arr, 0);
 			glTexUnits = arr[0];
+			System.out.println(glTexUnits + " texture units");
 		}
 		// are we palette boy?
-		glPaletting = (exts.indexOf("EXT_paletted_texture") >= 0);
-		System.out.println("Paletted textures: " + glPaletting);
+		glPaletting = hasGLExtension("EXT_paletted_texture");
 		// fluffing (neccessary?)
 		fluffGLDriver();
 	}

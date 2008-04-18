@@ -92,6 +92,7 @@ public class PlanetTextureCache implements Runnable
 	public static final int DO_LIGHTMAP = 0x400;
 	public static final int DO_NIGHTLIGHTS = 0x800;
 	public static final int DO_PALETTE = 0x1000;
+	public static final int DO_NORMALMAP = 0x2000;
 
 	//
 
@@ -505,7 +506,23 @@ public class PlanetTextureCache implements Runnable
 				// load source map
 				TexQuad srcquad = getSourceQuad(x, y, level);
 
-				if ((flags & (DO_BUMPMAP | DO_LIGHTMAP)) != 0 && elevmodel != null)
+				if ((flags & DO_NORMALMAP) != 0 && elevmodel != null)
+				{
+					makeBumpMapper(); // if it isn't there already
+					destbuf.position(0);
+					if (level>7)
+						bmapper.makeNormalMap(
+							srcquad,
+							destbuf,
+							imgw,
+							imgh,
+							(float) lolat,
+							(float) lolon,
+							(float) hilat,
+							(float) hilon);
+					destbuf.rewind();
+				}
+				else if ((flags & (DO_BUMPMAP | DO_LIGHTMAP)) != 0 && elevmodel != null)
 				{
 					// load elevation map
 					byte[] emap;

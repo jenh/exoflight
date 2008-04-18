@@ -48,10 +48,11 @@ public class PlanetRenderer implements Constants
 	ViewVolume viewvol = new ViewVolume(); // for mesh renderer
 
 	public ROAMPlanet roam, cloudroam;
-	public PlanetTextureCache ptc, bumpptc, cloudptc, allptc;
-	public PlanetTextureCache nightptc;
+	
+	PlanetTextureCache ptc, bumpptc, cloudptc, allptc;
+	PlanetTextureCache nightptc, normalptc;
 
-	public SectorMeshProvider smp;
+	SectorMeshProvider smp;
 
 	public float skyHeight = 0;
 	public Func1d atmoStartFunc;
@@ -61,8 +62,9 @@ public class PlanetRenderer implements Constants
 	public boolean isIrregular = false;
 	public boolean showAxes = false;
 	public boolean doFog = false;
-	public boolean doNormals = false;
-	public boolean doLightMap = true;
+	public boolean doNormals = true;
+	public boolean doLightMap = false;
+	public boolean doNormalMap = false;
 	public boolean doClouds = true;
 	public boolean doDetail = true;
 	public boolean doSkyBox = true;
@@ -124,7 +126,12 @@ public class PlanetRenderer implements Constants
 			doNormals = ini.getBoolean("Settings", "normals", true);
 			isIrregular = ini.getBoolean("Settings", "irregular", false);
 			doLightMap = false;
-
+			/*
+			doNormalMap = guictx.glMultiTex
+					&& guictx.hasGLExtension("ARB_texture_env_combine")
+					&& guictx.hasGLExtension("ARB_texture_env_dot3")
+					&& (guictx.glTexUnits >= 3);
+			*/
 			doFog = ini.getBoolean("Settings", "fog", false);
 
 			ambientColor.set(
@@ -147,7 +154,7 @@ public class PlanetRenderer implements Constants
 				ptc = getPTC(ini, "Color", ptc.SRC_COLOR, GL.GL_RGB16);
 			//   		ptc = getPTC(ini, "Color", ptc.SRC_NIGHT, GL.GL_RGB16);
 			//   		ptc.nightptp.setPixelConfabulator(new PointLightPixelConfabulator());
-			allptc = getPTC(ini, "All", ptc.SRC_COLOR | ptc.DO_BUMPMAP | ptc.DO_CLOUDS, GL.GL_RGB16);
+			//allptc = getPTC(ini, "All", ptc.SRC_COLOR | ptc.DO_BUMPMAP | ptc.DO_CLOUDS, GL.GL_RGB16);
 
 			ElevationModel elevmodel = planet.getElevationModel();
 
@@ -169,6 +176,7 @@ public class PlanetRenderer implements Constants
 				{
 					bumpptc = getPTC(ini, "Bump", ptc.SRC_ELEV | ptc.DO_LIGHTMAP, GL.GL_LUMINANCE);
 				}
+				normalptc = getPTC(ini, "Normal", ptc.SRC_ELEV | ptc.DO_NORMALMAP, GL.GL_RGB);
 			}
 			else
 			{
@@ -640,6 +648,7 @@ public class PlanetRenderer implements Constants
 	private void renderROAMSpheres()
 	{
 		int glTexUnits = guictx.glTexUnits;
+		roam.clearTextureStages();
 
 		// if we are below the clouds, draw them first
 		if (haveClouds && belowClouds)
@@ -670,7 +679,40 @@ public class PlanetRenderer implements Constants
 		{
 			roam.setTextureStage(1, bumpptc);
 		}
-		else
+		else if (doNormalMap && !nightVision)
+		{
+			// TODO : we don't need to compute normals when using a map
+			roam.setTextureStage(0, normalptc);
+			roam.setTextureStage(1, ptc);
+			// scale and bias light vector
+			double sk = 0.5/sunpos.length();
+			gl.glColor4d(sk*sunpos.x+0.5, sk*sunpos.y+0.5, sk*sunpos.z+0.5, 1);
+			gl.glDisable(GL.GL_LIGHTING);
+
+			// combine texture w/ light vector dot3 
+			gl.glActiveTexture(GL.GL_TEXTURE0);
+			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
+		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB,  GL.GL_DOT3_RGB);
+
+		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_TEXTURE);
+		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+
+		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_PRIMARY_COLOR);
+		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
+
+		   // combine light map with texture color
+			gl.glActiveTexture(GL.GL_TEXTURE1);
+			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
+			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB,  GL.GL_MODULATE);
+
+			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_TEXTURE);
+			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+
+			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_PREVIOUS);
+			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
+			   
+		}
+		else 
 		{
 			if (glTexUnits > 1)
 			{
@@ -683,6 +725,10 @@ public class PlanetRenderer implements Constants
 		}
 
 		roam.renderGo(guictx);
+		
+		gl.glActiveTexture(GL.GL_TEXTURE0);
+		gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
+		gl.glEnable(GL.GL_LIGHTING);
 
 		if (doDetail && doLightMap)
 		{
@@ -874,11 +920,14 @@ public class PlanetRenderer implements Constants
 			}
 
 			ptc.update();
-			allptc.update();
+			if (allptc != null)
+				allptc.update();
 			if (bumpptc != null)
 				bumpptc.update();
 			if (cloudptc != null)
 				cloudptc.update();
+			if (normalptc != null)
+				normalptc.update();
 
 		}
 		finally
@@ -891,7 +940,8 @@ public class PlanetRenderer implements Constants
 	{
 		this.sunpos.set(sunpos);
 		ptc.setSunPos(sunpos);
-		allptc.setSunPos(sunpos);
+		if (allptc != null)
+			allptc.setSunPos(sunpos);
 		if (bumpptc != null)
 			bumpptc.setSunPos(sunpos);
 		if (cloudptc != null)

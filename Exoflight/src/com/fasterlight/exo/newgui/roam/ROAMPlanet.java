@@ -217,6 +217,11 @@ public class ROAMPlanet
 				rad /= 2; //SQRT_2;
 		}
 	}
+	
+	public void clearTextureStages()
+	{
+		setNumberOfTexStages(0);
+	}
 
 	private void setTextureStage(int ts)
 	{
