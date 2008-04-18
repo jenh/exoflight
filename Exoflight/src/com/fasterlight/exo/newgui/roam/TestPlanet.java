@@ -39,7 +39,7 @@ extends GLOAWTComponent
 	ROAMPlanet cloudrs;
 	ParamWindow paramwnd;
 
-	String planetname = "Earth";
+	String planetname = "Luna";
 
 	float minrad,maxrad;
 	float h = 100;
@@ -60,7 +60,7 @@ extends GLOAWTComponent
 	boolean doBumpMap = false;
 	boolean showAxes = false;
 	boolean withSectors = false;
-	boolean trackGround = true;
+	boolean trackGround = false;
 
 	Random rnd = new Random();
 
@@ -432,10 +432,6 @@ extends GLOAWTComponent
 						case GLOKeyEvent.VK_C:
 							prend.doClouds = !prend.doClouds;
 							System.out.println("doClouds = " + prend.doClouds);
-							break;
-						case GLOKeyEvent.VK_B:
-							prend.doLightMap = !prend.doLightMap;
-							System.out.println("doLightMap = " + prend.doLightMap);
 							break;
 						case GLOKeyEvent.VK_M:
 							prend.useMeshes = !prend.useMeshes;

@@ -516,6 +516,7 @@ public class PlanetTextureCache implements Runnable
 							destbuf,
 							imgw,
 							imgh,
+							(float) planet.getRadius(),
 							(float) lolat,
 							(float) lolon,
 							(float) hilat,

@@ -63,7 +63,6 @@ public class PlanetRenderer implements Constants
 	public boolean showAxes = false;
 	public boolean doFog = false;
 	public boolean doNormals = true;
-	public boolean doLightMap = false;
 	public boolean doNormalMap = false;
 	public boolean doClouds = true;
 	public boolean doDetail = true;
@@ -125,13 +124,13 @@ public class PlanetRenderer implements Constants
 
 			doNormals = ini.getBoolean("Settings", "normals", true);
 			isIrregular = ini.getBoolean("Settings", "irregular", false);
-			doLightMap = false;
-			/*
+			
 			doNormalMap = guictx.glMultiTex
 					&& guictx.hasGLExtension("ARB_texture_env_combine")
 					&& guictx.hasGLExtension("ARB_texture_env_dot3")
-					&& (guictx.glTexUnits >= 3);
-			*/
+					&& (guictx.glTexUnits >= 2);
+			//doNormalMap = false;
+			
 			doFog = ini.getBoolean("Settings", "fog", false);
 
 			ambientColor.set(
@@ -178,10 +177,6 @@ public class PlanetRenderer implements Constants
 				}
 				normalptc = getPTC(ini, "Normal", ptc.SRC_ELEV | ptc.DO_NORMALMAP, GL.GL_RGB);
 			}
-			else
-			{
-				doLightMap = false;
-			}
 
 			// do we have clouds?
 			skyHeight = ini.getFloat("Clouds", "height", 0);
@@ -189,15 +184,7 @@ public class PlanetRenderer implements Constants
 			{
 				cloudroam = new ROAMPlanet(guictx, (float) planet.getMinRadius() + skyHeight);
 				cloudroam.skyHeight = skyHeight;
-				if (doLightMap)
-					cloudptc =
-						getPTC(
-							ini,
-							"Clouds",
-							ptc.SRC_SOLID | ptc.DO_CLOUDS | ptc.DO_BUMPMAP,
-							GL.GL_LUMINANCE_ALPHA);
-				else
-					cloudptc = getPTC(ini, "Clouds", ptc.SRC_CLOUDS, GL.GL_INTENSITY);
+				cloudptc = getPTC(ini, "Clouds", ptc.SRC_CLOUDS, GL.GL_INTENSITY);
 				cloudptc.solidColor = 0;
 				cloudroam.setTextureStage(0, cloudptc);
 			}
@@ -675,11 +662,7 @@ public class PlanetRenderer implements Constants
 
 		// set up roam texture caches
 		roam.setTextureStage(0, ptc);
-		if (doLightMap && !nightVision && glTexUnits > 1)
-		{
-			roam.setTextureStage(1, bumpptc);
-		}
-		else if (doNormalMap && !nightVision)
+		if (doNormalMap && !nightVision)
 		{
 			// TODO : we don't need to compute normals when using a map
 			roam.setTextureStage(0, normalptc);
@@ -703,13 +686,13 @@ public class PlanetRenderer implements Constants
 		   // combine light map with texture color
 			gl.glActiveTexture(GL.GL_TEXTURE1);
 			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB,  GL.GL_MODULATE);
+			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB,  GL.GL_MODULATE);
 
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_TEXTURE);
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_PREVIOUS);
+			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
 
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_PREVIOUS);
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
+			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_TEXTURE);
+			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
 			   
 		}
 		else 
@@ -729,28 +712,6 @@ public class PlanetRenderer implements Constants
 		gl.glActiveTexture(GL.GL_TEXTURE0);
 		gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
 		gl.glEnable(GL.GL_LIGHTING);
-
-		if (doDetail && doLightMap)
-		{
-			if (glTexUnits > 1)
-			{
-				setDetailTex(roam, 1, colorDetailPower1);
-			}
-			setDetailTex(roam, 0, colorDetailPower2);
-			gl.glPushAttrib(GL.GL_ENABLE_BIT | GL.GL_DEPTH_BUFFER_BIT);
-			try
-			{
-				gl.glDisable(GL.GL_LIGHTING);
-				gl.glEnable(GL.GL_BLEND);
-				gl.glBlendFunc(GL.GL_DST_COLOR, GL.GL_ZERO);
-				gl.glDepthFunc(GL.GL_EQUAL);
-				roam.renderGo(guictx);
-			}
-			finally
-			{
-				gl.glPopAttrib();
-			}
-		}
 
 		/***
 				// for crazy cloud layer effect

@@ -140,7 +140,7 @@ public class BumpMapper
 		float lolat, float lolon, float hilat, float hilon,
 		float sunlatf)
 	{
-		int x,y;
+		int x;
 
 		for (x=0; x<256; x++)
 		{
@@ -152,6 +152,8 @@ public class BumpMapper
 		// define right triangle with adjacent = xscale or yscale
 		// opposite = slope
 		// thus tan(a) = slope/scale
+		xscale = 1f/(255*xscale);
+		yscale = 1f/(255*yscale);
 		for (x=-255; x<=255; x++)
 		{
 			double atanx = Math.atan(x*xscale);
@@ -398,13 +400,19 @@ public class BumpMapper
 	}
 	public void makeNormalMap(TexQuad srcquad, IntBuffer destbuf,
 			int imgw, int imgh,
+			float radius,
 			float lolat, float lolon, float hilat, float hilon)
 	{
+		// compute range of elevations
 		float range = srcquad.maxvalue - srcquad.minvalue;
 		// TODO: account for border
 		// TODO: scale?
 		float xscale,yscale;
-		xscale = yscale = 1f/255;
+		// compute 1/distance between texels at this level
+		// distance = circumference/(texelwidth*range)
+		xscale = (radius * 2 * 3.141592f) / ((2 << srcquad.level) * range);
+		yscale = (float)(xscale * Math.cos((lolat+hilat)/2));
+		//System.out.println(xscale + " " + yscale + " " + range);
 		buildTables(xscale, yscale, lolat, lolon, hilat, hilon, 0);
 		byte[] arr = srcquad.getByteData();
 		for (int y=0; y<imgh; y++)
@@ -437,7 +445,14 @@ public class BumpMapper
 						sinlat
 				);
 				// TODO: do the Y vector as well
-				nml = new Vector3f(
+				/*
+				nml.set(
+						nml.x,
+						nml.y * cosyslope[yslope+256] - nml.z * sinyslope[yslope+256],
+						-nml.y * sinyslope[yslope+256] + nml.z * cosyslope[yslope+256]
+				);
+				*/
+				nml.set(
 						nml.x * cosxslope[xslope+256] - nml.y * sinxslope[xslope+256],
 						-nml.x * sinxslope[xslope+256] + nml.y * cosxslope[xslope+256],
 						nml.z
