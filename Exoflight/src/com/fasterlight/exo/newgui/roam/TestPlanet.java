@@ -56,8 +56,6 @@ extends GLOAWTComponent
 	boolean depthtest=true;
 
 	boolean doFog = false;
-	boolean doClouds = false;
-	boolean doBumpMap = false;
 	boolean showAxes = false;
 	boolean withSectors = false;
 	boolean trackGround = false;

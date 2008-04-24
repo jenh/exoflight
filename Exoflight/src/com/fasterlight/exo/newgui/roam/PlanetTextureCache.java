@@ -510,17 +510,16 @@ public class PlanetTextureCache implements Runnable
 				{
 					makeBumpMapper(); // if it isn't there already
 					destbuf.position(0);
-					if (level>7)
-						bmapper.makeNormalMap(
-							srcquad,
-							destbuf,
-							imgw,
-							imgh,
-							(float) planet.getRadius(),
-							(float) lolat,
-							(float) lolon,
-							(float) hilat,
-							(float) hilon);
+					bmapper.makeNormalMap(
+						srcquad,
+						destbuf,
+						imgw,
+						imgh,
+						(float) planet.getRadius(),
+						(float) lolat,
+						(float) lolon,
+						(float) hilat,
+						(float) hilon);
 					destbuf.rewind();
 				}
 				else if ((flags & (DO_BUMPMAP | DO_LIGHTMAP)) != 0 && elevmodel != null)

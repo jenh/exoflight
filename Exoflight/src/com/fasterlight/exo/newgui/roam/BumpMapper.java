@@ -398,11 +398,18 @@ public class BumpMapper
 			System.out.println("Iteration " + i + ": " + (t2-t1) + " msec");
 		}
 	}
+	int getMask(int level, int texPower)
+	{
+		return (level >= texPower)
+			? ((1 << (texPower + texPower)) - 1)
+			: (1 << (level + texPower)) - 1;
+	}
 	public void makeNormalMap(TexQuad srcquad, IntBuffer destbuf,
 			int imgw, int imgh,
 			float radius,
 			float lolat, float lolon, float hilat, float hilon)
 	{
+		int mask = getMask(srcquad.level, 8);
 		// compute range of elevations
 		float range = srcquad.maxvalue - srcquad.minvalue;
 		// TODO: account for border
@@ -424,14 +431,14 @@ public class BumpMapper
 			int i = (yy*imgw)+1;
 			for (int x=1; x<imgw-1; x++)
 			{
-				int n1 = (arr[i-imgw-1] & 0xff);
-				int n2 = (arr[i-imgw] & 0xff);
-				int n3 = (arr[i-imgw+1] & 0xff);
-				int n4 = (arr[i-1] & 0xff);
-				int n6 = (arr[i+1] & 0xff);
-				int n7 = (arr[i+imgw-1] & 0xff);
-				int n8 = (arr[i+imgw] & 0xff);
-				int n9 = (arr[i+imgw+1] & 0xff);
+				int n1 = (arr[(i-imgw-1)] & 0xff);
+				int n2 = (arr[(i-imgw) & mask] & 0xff);
+				int n3 = (arr[(i-imgw+1) & mask] & 0xff);
+				int n4 = (arr[(i-1) & mask] & 0xff);
+				int n6 = (arr[(i+1) & mask] & 0xff);
+				int n7 = (arr[(i+imgw-1) & mask] & 0xff);
+				int n8 = (arr[(i+imgw) & mask] & 0xff);
+				int n9 = (arr[(i+imgw+1)] & 0xff);
 				// 7/5 is close
 				int xslope = ((n6-n4)*10 + (n3+n9-n1-n7)*7);
 				int yslope = ((n2-n8)*10 + (n1+n3-n7-n9)*7);

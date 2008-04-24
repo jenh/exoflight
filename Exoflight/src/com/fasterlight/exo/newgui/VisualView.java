@@ -242,6 +242,8 @@ public class VisualView
 		}
 		else
 		{
+			// TODO: ambient lighting for atmosphere
+			// TODO: reflected lighting
 			float[] lightNone = { l, l, l, 1.0f };
 			gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, lightNone, 0);
 		}
