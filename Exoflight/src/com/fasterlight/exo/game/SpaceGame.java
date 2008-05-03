@@ -29,10 +29,6 @@ import com.fasterlight.exo.strategy.*;
 import com.fasterlight.game.*;
 import com.fasterlight.spif.*;
 
-//todo: can't we find  away around this?
-//import com.fasterlight.glout.GLFontServer;
-
-
 /**
   * Extends the base Game object to implement
   * Exoflight-specific stuff -- notifications,
