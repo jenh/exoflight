@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Exoflight.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+ *********************************************************************/
 package com.fasterlight.exo.newgui.roam;
 
 import java.io.*;
@@ -35,10 +35,9 @@ import com.fasterlight.util.*;
 import com.fasterlight.vecmath.*;
 
 /**
-  * Takes care of rendering a planet sphere, with clouds,
-  * bumpmap, etc.
-  * todo: use config .ini files
-  */
+ * Takes care of rendering a planet sphere, with clouds, bumpmap, etc. todo: use
+ * config .ini files
+ */
 public class PlanetRenderer implements Constants
 {
 	GUIContext guictx;
@@ -48,8 +47,8 @@ public class PlanetRenderer implements Constants
 	ViewVolume viewvol = new ViewVolume(); // for mesh renderer
 
 	public ROAMPlanet roam, cloudroam;
-	
-	PlanetTextureCache ptc, bumpptc, cloudptc, allptc;
+
+	PlanetTextureCache ptc, cloudptc;
 	PlanetTextureCache nightptc, normalptc;
 
 	SectorMeshProvider smp;
@@ -63,7 +62,6 @@ public class PlanetRenderer implements Constants
 	public boolean showAxes = false;
 	public boolean doFog = false;
 	public boolean doNormals = true;
-	public boolean doLightMap = false;
 	public boolean doNormalMap = false;
 	public boolean doClouds = true;
 	public boolean doDetail = true;
@@ -79,7 +77,7 @@ public class PlanetRenderer implements Constants
 	static float FOG_BIAS = 20.0f;
 	static float MIN_FOG_DIST = 20.0f;
 
-	int cloudDetailPower = 23; //todo: const
+	int cloudDetailPower = 23; // todo: const
 	int colorDetailPower1 = 18;
 	int colorDetailPower2 = 21;
 
@@ -115,8 +113,7 @@ public class PlanetRenderer implements Constants
 			try
 			{
 				inistream = GLOUtil.getInputStream("texs/" + planetname + "/options.txt");
-			}
-			catch (IOException ioe)
+			} catch (IOException ioe)
 			{
 				System.out.println(ioe);
 				inistream = new StringBufferInputStream("");
@@ -125,19 +122,16 @@ public class PlanetRenderer implements Constants
 
 			doNormals = ini.getBoolean("Settings", "normals", true);
 			isIrregular = ini.getBoolean("Settings", "irregular", false);
-			doLightMap = false;
-			doNormalMap = guictx.glMultiTex
-					&& guictx.hasGLExtension("ARB_texture_env_combine")
-					&& guictx.hasGLExtension("ARB_texture_env_dot3")
-					&& (guictx.glTexUnits >= 3);
+			doNormalMap = guictx.glMultiTex && guictx.hasGLExtension("ARB_texture_env_combine")
+					&& guictx.hasGLExtension("ARB_texture_env_dot3") && (guictx.glTexUnits >= 3);
 			if (doNormalMap)
 				doNormals = false; // TODO: turn off?
 			doFog = ini.getBoolean("Settings", "fog", false);
 
-			ambientColor.set(
-				AstroUtil.parseVector(ini.getString("Settings", "ambientcolor", "0.05,0.05,0.05")));
-			diffuseColor.set(
-				AstroUtil.parseVector(ini.getString("Settings", "diffusecolor", "2.5,2.5,2.5")));
+			ambientColor.set(AstroUtil.parseVector(ini.getString("Settings", "ambientcolor",
+				"0.05,0.05,0.05")));
+			diffuseColor.set(AstroUtil.parseVector(ini.getString("Settings", "diffusecolor",
+				"2.5,2.5,2.5")));
 
 			// ring stuff
 			ringTexture = ini.getString("Rings", "texture", null);
@@ -149,12 +143,13 @@ public class PlanetRenderer implements Constants
 			if (guictx.glPaletting)
 			{
 				ptc = getPTC(ini, "Color", ptc.SRC_COLOR | ptc.DO_PALETTE, GL.GL_COLOR_INDEX);
-			}
-			else
+			} else
 				ptc = getPTC(ini, "Color", ptc.SRC_COLOR, GL.GL_RGB16);
-			//   		ptc = getPTC(ini, "Color", ptc.SRC_NIGHT, GL.GL_RGB16);
-			//   		ptc.nightptp.setPixelConfabulator(new PointLightPixelConfabulator());
-			//allptc = getPTC(ini, "All", ptc.SRC_COLOR | ptc.DO_BUMPMAP | ptc.DO_CLOUDS, GL.GL_RGB16);
+			// ptc = getPTC(ini, "Color", ptc.SRC_NIGHT, GL.GL_RGB16);
+			// ptc.nightptp.setPixelConfabulator(new
+			// PointLightPixelConfabulator());
+			// allptc = getPTC(ini, "All", ptc.SRC_COLOR | ptc.DO_BUMPMAP |
+			// ptc.DO_CLOUDS, GL.GL_RGB16);
 
 			ElevationModel elevmodel = planet.getElevationModel();
 
@@ -163,24 +158,15 @@ public class PlanetRenderer implements Constants
 				roam.setElevationModel(elevmodel);
 				try
 				{
-					VarianceTree vt =
-						new VarianceTree("texs/" + planetname + "/" + planetname + ".vtr");
+					VarianceTree vt = new VarianceTree("texs/" + planetname + "/" + planetname
+							+ ".vtr");
 					roam.setVarianceTree(vt);
-				}
-				catch (IOException ioe)
+				} catch (IOException ioe)
 				{
 					System.out.println(ioe);
 				}
 
-				if (!doNormals)
-				{
-					bumpptc = getPTC(ini, "Bump", ptc.SRC_ELEV | ptc.DO_LIGHTMAP, GL.GL_LUMINANCE);
-				}
 				normalptc = getPTC(ini, "Normal", ptc.SRC_ELEV | ptc.DO_NORMALMAP, GL.GL_RGB);
-			}
-			else
-			{
-				doLightMap = false;
 			}
 
 			// do we have clouds?
@@ -189,15 +175,7 @@ public class PlanetRenderer implements Constants
 			{
 				cloudroam = new ROAMPlanet(guictx, (float) planet.getMinRadius() + skyHeight);
 				cloudroam.skyHeight = skyHeight;
-				if (doLightMap)
-					cloudptc =
-						getPTC(
-							ini,
-							"Clouds",
-							ptc.SRC_SOLID | ptc.DO_CLOUDS | ptc.DO_BUMPMAP,
-							GL.GL_LUMINANCE_ALPHA);
-				else
-					cloudptc = getPTC(ini, "Clouds", ptc.SRC_CLOUDS, GL.GL_INTENSITY);
+				cloudptc = getPTC(ini, "Clouds", ptc.SRC_CLOUDS, GL.GL_INTENSITY);
 				cloudptc.solidColor = 0;
 				cloudroam.setTextureStage(0, cloudptc);
 			}
@@ -212,14 +190,13 @@ public class PlanetRenderer implements Constants
 				atmoEndFunc = CurveParser.parseCurve1d(tmp);
 			}
 
-		}
-		catch (IOException ioe)
+		} catch (IOException ioe)
 		{
 			ioe.printStackTrace();
 			throw new RuntimeException(ioe.toString());
 		}
 	}
-	
+
 	public PlanetTextureCache getTextureCacheColor()
 	{
 		return ptc;
@@ -246,8 +223,7 @@ public class PlanetRenderer implements Constants
 		{
 			if (!b)
 				displayListMode = 0;
-		}
-		else
+		} else
 		{
 			if (b)
 			{
@@ -259,7 +235,7 @@ public class PlanetRenderer implements Constants
 	}
 
 	private PlanetTextureCache getPTC(INIFile ini, String section, int source, int gltype)
-		throws IOException
+			throws IOException
 	{
 		source = Integer.parseInt(ini.getString(section, "source", "" + source));
 		gltype = Integer.parseInt(ini.getString(section, "gltype", "" + gltype));
@@ -279,7 +255,7 @@ public class PlanetRenderer implements Constants
 	public double sectorInFrustum(int x, int y, int level, Vector3f vp)
 	{
 		if (level <= 8)
-			return 0.001; //true
+			return 0.001; // true
 
 		float xmin, ymin, zmin;
 		float xmax, ymax, zmax;
@@ -289,7 +265,7 @@ public class PlanetRenderer implements Constants
 		// compute bounding box for sector
 		// todo: add factor for min-max elevation
 		double prad = planet.getRadius();
-		//System.out.println(x + " " + y + " " + level);
+		// System.out.println(x + " " + y + " " + level);
 		for (int i = 0; i < 4; i++)
 		{
 			int xp = ((i & 1) == 0) ? x : (x + 1);
@@ -298,7 +274,7 @@ public class PlanetRenderer implements Constants
 			double lon = -Math.PI + xp * Math.PI / (1 << (level - 8));
 			Vector3d corner = sect_tmp1;
 			corner.set(lon, lat, prad);
-			//System.out.println("   " + corner);
+			// System.out.println(" " + corner);
 			planet.llr2ijk(corner);
 			xmin = Math.min(xmin, (float) corner.x);
 			xmax = Math.max(xmax, (float) corner.x);
@@ -312,7 +288,7 @@ public class PlanetRenderer implements Constants
 		boolean inter = false;
 		int flags = 0x3f;
 		Vector3f p = sect_tmp3;
-		for (int j = 0; j < 8; j++) //box corner
+		for (int j = 0; j < 8; j++) // box corner
 		{
 			p.x = ((j & 1) == 0) ? xmax : xmin;
 			p.y = ((j & 2) == 0) ? ymax : ymin;
@@ -325,11 +301,8 @@ public class PlanetRenderer implements Constants
 			}
 		}
 		/*
-				if (!inter)
-				{
-					System.out.println(level+"-"+x+"-"+y+" f=" + flags);
-				}
-		*/
+		 * if (!inter) { System.out.println(level+"-"+x+"-"+y+" f=" + flags); }
+		 */
 		if (showBoundingBoxes && inter)
 		{
 			gl.glPushMatrix();
@@ -355,8 +328,7 @@ public class PlanetRenderer implements Constants
 					mindist = dist;
 			}
 			return mindist;
-		}
-		else
+		} else
 			return -1;
 	}
 
@@ -371,7 +343,8 @@ public class PlanetRenderer implements Constants
 			else
 			{
 				desiredlevel = AstroUtil.log2((long) (planet.getRadius() * 1024 / Math.sqrt(dist)));
-				//System.out.println(level+"-"+x+"-"+y+", desired=" + desiredlevel + ", dist=" + dist);
+				// System.out.println(level+"-"+x+"-"+y+", desired=" +
+				// desiredlevel + ", dist=" + dist);
 			}
 			if (level >= desiredlevel)
 			{
@@ -383,8 +356,7 @@ public class PlanetRenderer implements Constants
 
 				mesh.setTexCoords(key);
 				mesh.render();
-			}
-			else
+			} else
 			{
 				renderRecursiveMesh(level + 1, x * 2, y * 2, vp);
 				renderRecursiveMesh(level + 1, x * 2 + 1, y * 2, vp);
@@ -408,7 +380,7 @@ public class PlanetRenderer implements Constants
 		// get dimension stuff
 
 		viewvol.setup(gl);
-		//viewvol.printStats(System.out);
+		// viewvol.printStats(System.out);
 
 		renderRecursiveMesh(8, 0, 0, vp);
 		renderRecursiveMesh(8, 1, 0, vp);
@@ -428,9 +400,8 @@ public class PlanetRenderer implements Constants
 		{
 			renderWithMeshes(spherelevel, vp, vpdist);
 			spherelevel = 11;
-			return; //todo
-		}
-		else
+			return; // todo
+		} else
 		{
 			gl.glPushMatrix();
 			float r = (float) planet.getRadius();
@@ -475,7 +446,7 @@ public class PlanetRenderer implements Constants
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBegin(GL.GL_QUAD_STRIP);
-		//		gl.glNormal3f(0,0,1);
+		// gl.glNormal3f(0,0,1);
 		int ndivs = 128;
 		double rad = 0;
 		double radinc = (Math.PI * 2) / ndivs;
@@ -603,7 +574,7 @@ public class PlanetRenderer implements Constants
 		gl.glMatrixMode(GL.GL_TEXTURE);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
-		//		System.out.println(texy1 + " " + texy2);
+		// System.out.println(texy1 + " " + texy2);
 		gl.glTranslated(texx, texy2 * 2, 0);
 		gl.glScaled(1, texy1 - texy2 * 2, 1);
 
@@ -627,7 +598,7 @@ public class PlanetRenderer implements Constants
 		gl.glPopAttrib();
 		gl.glPopMatrix();
 
-		//System.out.println("sundot=" + sundot);
+		// System.out.println("sundot=" + sundot);
 		return sundot;
 	}
 
@@ -666,8 +637,7 @@ public class PlanetRenderer implements Constants
 				gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 				gl.glEnable(GL.GL_BLEND);
 				cloudroam.renderGo(guictx);
-			}
-			finally
+			} finally
 			{
 				gl.glPopAttrib();
 			}
@@ -675,129 +645,83 @@ public class PlanetRenderer implements Constants
 
 		// set up roam texture caches
 		roam.setTextureStage(0, ptc);
-		if (doLightMap && !nightVision && glTexUnits > 1)
-		{
-			roam.setTextureStage(1, bumpptc);
-		}
-		else if (doNormalMap && !nightVision)
+		if (doNormalMap && !nightVision)
 		{
 			// TODO : we don't need to compute normals when using a map
 			// scale and bias light vector
 			// normalize to 1/2 unit vector
-			double sk = 0.5/sunpos.length();
-			gl.glColor4d(sk*sunpos.x+0.5, sk*sunpos.y+0.5, sk*sunpos.z+0.5, 1);
+			double sk = 0.5 / sunpos.length();
+			gl.glColor4d(sk * sunpos.x + 0.5, sk * sunpos.y + 0.5, sk * sunpos.z + 0.5, 1);
 			gl.glDisable(GL.GL_LIGHTING); // TODO: necc?
 
-			// combine texture w/ light vector dot3 
+			// combine texture w/ light vector dot3
 			roam.setTextureStage(0, normalptc);
 			gl.glActiveTexture(GL.GL_TEXTURE0);
-			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
-		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB,  GL.GL_DOT3_RGB);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, GL.GL_DOT3_RGB);
 
-		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_TEXTURE);
-		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_TEXTURE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
 
-		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_PRIMARY_COLOR);
-		   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_PRIMARY_COLOR);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
 
-		   // combine light map with texture color
+			// combine light map with texture color
 			roam.setTextureStage(1, ptc);
 			gl.glActiveTexture(GL.GL_TEXTURE1);
-			gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB,  GL.GL_MODULATE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, GL.GL_MODULATE);
 
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_PREVIOUS);
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_PREVIOUS);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
 
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_TEXTURE);
-			   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
-			   
-			  // detail texture
-				setDetailTex(roam, 2, colorDetailPower1);
-				   gl.glActiveTexture(GL.GL_TEXTURE2);
-				gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
-				   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB,  GL.GL_MODULATE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_TEXTURE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_SRC_COLOR);
 
-				   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_PREVIOUS);
-				   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+			// detail texture
+			setDetailTex(roam, 2, colorDetailPower1);
+			gl.glActiveTexture(GL.GL_TEXTURE2);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, GL.GL_MODULATE);
 
-				   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_TEXTURE);
-				   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_ADD_SIGNED);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_PREVIOUS);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
 
-					  // detail texture 2
-				if (glTexUnits > 3)
-				{
-					setDetailTex(roam, 3, colorDetailPower2);
-					   gl.glActiveTexture(GL.GL_TEXTURE3);
-					gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
-					   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB,  GL.GL_MODULATE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_TEXTURE);
+			gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_ADD_SIGNED);
 
-					   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_PREVIOUS);
-					   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+			// detail texture 2
+			if (glTexUnits > 3)
+			{
+				setDetailTex(roam, 3, colorDetailPower2);
+				gl.glActiveTexture(GL.GL_TEXTURE3);
+				gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
+				gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, GL.GL_MODULATE);
 
-					   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_TEXTURE);
-					   gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_ADD_SIGNED);
-				}
-				   
+				gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_SOURCE0_RGB, GL.GL_PREVIOUS);
+				gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB, GL.GL_SRC_COLOR);
+
+				gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_SOURCE1_RGB, GL.GL_TEXTURE);
+				gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, GL.GL_ADD_SIGNED);
+			}
+
 			gl.glActiveTexture(GL.GL_TEXTURE0);
-		}
-		else 
+		} else
 		{
 			if (glTexUnits > 1)
 			{
 				setDetailTex(roam, 1, colorDetailPower1);
 				if (glTexUnits > 2)
 					setDetailTex(roam, 2, colorDetailPower2);
-			}
-			else
+			} else
 				roam.setNumberOfTexStages(1);
 		}
 
 		roam.renderGo(guictx);
-		
+
 		gl.glActiveTexture(GL.GL_TEXTURE0);
-		gl.glTexEnvf (GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
+		gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
 		gl.glEnable(GL.GL_LIGHTING);
-
-		if (doDetail && doLightMap)
-		{
-			if (glTexUnits > 1)
-			{
-				setDetailTex(roam, 1, colorDetailPower1);
-			}
-			setDetailTex(roam, 0, colorDetailPower2);
-			gl.glPushAttrib(GL.GL_ENABLE_BIT | GL.GL_DEPTH_BUFFER_BIT);
-			try
-			{
-				gl.glDisable(GL.GL_LIGHTING);
-				gl.glEnable(GL.GL_BLEND);
-				gl.glBlendFunc(GL.GL_DST_COLOR, GL.GL_ZERO);
-				gl.glDepthFunc(GL.GL_EQUAL);
-				roam.renderGo(guictx);
-			}
-			finally
-			{
-				gl.glPopAttrib();
-			}
-		}
-
-		/***
-				// for crazy cloud layer effect
-				gl.glPushMatrix();
-				float sf = 1.001f;
-				float alph = 1.0f;
-				float alrate = 0.75f;
-				gl.glEnable(GL.GL_BLEND);
-				gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-				for (int i=0; i<5; i++)
-				{
-					alph *= alrate;
-					gl.glColor4f(1,1,1,alph);
-					gl.glScalef(sf,sf,sf);
-					roam.renderGo(guictx);
-				}
-				gl.glPopMatrix();
-		***/
 
 		if (haveClouds && !belowClouds)
 		{
@@ -813,8 +737,7 @@ public class PlanetRenderer implements Constants
 				float rat = (pr + skyHeight) / pr;
 				gl.glScalef(rat, rat, rat);
 				thisroam = roam;
-			}
-			else
+			} else
 				thisroam = cloudroam;
 			if (doDetail && glTexUnits > 1)
 			{
@@ -840,13 +763,13 @@ public class PlanetRenderer implements Constants
 				gl.glFogi(GL.GL_FOG_MODE, GL.GL_LINEAR);
 				float fogstart = Math.max(MIN_FOG_DIST, roam.height + FOG_BIAS);
 				gl.glFogf(GL.GL_FOG_START, fogstart);
-				gl.glFogf(
-					GL.GL_FOG_END,
-					Math.max(fogstart, Math.abs(roam.horizon_dist) / sundot) + FOG_BIAS);
-				//System.out.println("height=" + roam.height + " horizon=" + roam.horizon_dist);
+				gl.glFogf(GL.GL_FOG_END, Math.max(fogstart, Math.abs(roam.horizon_dist) / sundot)
+						+ FOG_BIAS);
+				// System.out.println("height=" + roam.height + " horizon=" +
+				// roam.horizon_dist);
 				gl.glFogfv(GL.GL_FOG_COLOR, fogcolor, 0);
 			}
-			gl.glDisable(GL.GL_BLEND); //todo: why needed?
+			gl.glDisable(GL.GL_BLEND); // todo: why needed?
 		}
 	}
 
@@ -871,22 +794,18 @@ public class PlanetRenderer implements Constants
 			try
 			{
 				gl.glLoadIdentity();
-				double neard =
-					Math.max(neardist, (roam.vpl - planet.getMaxRadius() - skyHeight) / 2);
-				glu.gluPerspective(
-					fov,
-					(float) cmpt.getWidth() / (float) cmpt.getHeight(),
-					neard,
+				double neard = Math.max(neardist,
+					(roam.vpl - planet.getMaxRadius() - skyHeight) / 2);
+				glu.gluPerspective(fov, (float) cmpt.getWidth() / (float) cmpt.getHeight(), neard,
 					roam.visible_dist);
 
 				roam.setFrustum(gl);
 
 				// find vel-per-frame
 				/**
-						Vector3f fvel = new Vector3f(vel);
-						fvel.scale(1f/guictx.getLastFPS());
-						roam.setVelocity(fvel);
-				**/
+				 * Vector3f fvel = new Vector3f(vel);
+				 * fvel.scale(1f/guictx.getLastFPS()); roam.setVelocity(fvel);
+				 */
 
 				roam.setScreenDims(scrnheight, fov);
 
@@ -900,29 +819,25 @@ public class PlanetRenderer implements Constants
 				{
 					belowClouds = roam.height < skyHeight;
 					closeClouds = (skyHeight * scrnheight * 90 / (roam.height * fov) < 1.0f);
-					//todo!
+					// todo!
 					if (!closeClouds)
 					{
 						cloudroam.doNormals = roam.doNormals;
 						cloudroam.doubleSided = true;
 						cloudroam.setViewpoint(vp);
 						gl.glLoadIdentity();
-						glu.gluPerspective(
-							fov,
-							(float) cmpt.getWidth() / (float) cmpt.getHeight(),
-							neard,
-							cloudroam.visible_dist);
+						glu.gluPerspective(fov, (float) cmpt.getWidth() / (float) cmpt.getHeight(),
+							neard, cloudroam.visible_dist);
 						cloudroam.setFrustum(gl);
 						/**
-							cloudroam.setVelocity(fvel);
-						**/
+						 * cloudroam.setVelocity(fvel);
+						 */
 						cloudroam.setScreenDims(scrnheight, fov);
 						if (!frozen)
 							cloudroam.renderSetup();
 					}
 				}
-			}
-			finally
+			} finally
 			{
 				gl.glPopMatrix();
 				gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -931,10 +846,10 @@ public class PlanetRenderer implements Constants
 			// render the ROAM clouds, and main surface
 			switch (displayListMode)
 			{
-				default :
+				default:
 					renderROAMSpheres();
 					break;
-				case 1 :
+				case 1:
 					System.out.println("Rendering to list " + displayList);
 					gl.glNewList(displayList, GL.GL_COMPILE);
 					renderROAMSpheres();
@@ -942,24 +857,19 @@ public class PlanetRenderer implements Constants
 					GLOContext.checkGL();
 					displayListMode = 2;
 					break;
-				case 2 :
+				case 2:
 					gl.glCallList(displayList);
 					GLOContext.checkGL();
 					break;
 			}
 
 			ptc.update();
-			if (allptc != null)
-				allptc.update();
-			if (bumpptc != null)
-				bumpptc.update();
 			if (cloudptc != null)
 				cloudptc.update();
 			if (normalptc != null)
 				normalptc.update();
 
-		}
-		finally
+		} finally
 		{
 			gl.glPopAttrib();
 		}
@@ -969,10 +879,6 @@ public class PlanetRenderer implements Constants
 	{
 		this.sunpos.set(sunpos);
 		ptc.setSunPos(sunpos);
-		if (allptc != null)
-			allptc.setSunPos(sunpos);
-		if (bumpptc != null)
-			bumpptc.setSunPos(sunpos);
 		if (cloudptc != null)
 			cloudptc.setSunPos(sunpos);
 	}
@@ -988,10 +894,10 @@ public class PlanetRenderer implements Constants
 		if (guictx != null)
 		{
 			ptc.close();
-			if (bumpptc != null)
-				bumpptc.close();
 			if (cloudptc != null)
 				cloudptc.close();
+			if (normalptc != null)
+				normalptc.update();
 			guictx = null;
 		}
 	}
