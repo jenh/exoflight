@@ -1,0 +1,1 @@
+For support, your best bets are to look at the [FAQ](FAQ.md) and the [List of Issues](http://code.google.com/p/exoflight/issues/list).
